@@ -1,0 +1,38 @@
+body {
+    background: white;
+}
+
+pre#example {
+    font-family: monospace;
+    font-size: 11pt;
+    user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select: none;
+    -moz-user-select:none;
+    -khtml-user-select:none;
+    -webkit-user-drag:none;
+    -khtml-user-drag:none;
+}
+
+textarea#drill {
+    font-size: 11pt;
+    width:  550px;
+    height: 150px;
+}
+
+span#counter {
+    /* border: solid black 1pt; */
+    padding: 3px;
+    margin: 2px;
+    width: 1em;
+}
+
+.red { color: red; }
+
+.yes { background-color: red; color: white;}
+.hkimura { background: blue; color: white;}
+
+span.mmm { margin-left: 2em;}
+
+.btn#counter { font-family: monospace;}
+

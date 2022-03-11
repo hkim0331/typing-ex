@@ -1,0 +1,43 @@
+/target
+/logs
+/classes
+/checkouts
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+/.dir-locals.el
+/profiles.clj
+/dev/resources/local.edn
+/dev/src/local.clj
+
+# hkimura added
+## commmon-lisp
+*.fasl
+*.dx32fsl
+*.dx64fsl
+*.lx32fsl
+*.lx64fsl
+*.x86f
+
+## clojure
+!/initdb.d/*.sql
+/.calva
+/.clj-kondo
+/.env
+/.lsp
+/.m2
+/.shadow-cljs
+/.nrepl-port
+/.prepl-port
+/.rebel_readline_history
+/.yarn.lock
+/data
+/node_modules
+/resources/typing_ex/public/js
+/utils/excerpt/out.txt
+/utils/excerpt/out/*
+!/utils/excerpt/out/.placeholder
+/start-stop/
