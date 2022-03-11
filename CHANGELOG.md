@@ -20,6 +20,7 @@
 - reagent 1.0.0 -> 1.1.1
 - devtools 0.9.4 -> 1.0.5, なんに使うんだ？
 - Dockerfile の ENTRYPOINT [ "lein", "repl", ":headless" ] のコンマを忘れる。
+- https://github.com/hkim0331/typing-ex.git
 
 ---
 
