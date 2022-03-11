@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:12.10
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=l22
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - TZ=Asia/Tokyo
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgres/data
+  app:
+    build: .
+    tty: true
+    environment:
+      LEIN_REPL_PORT: 8888
+      LEIN_REPL_HOST: 0.0.0.0
+    ports:
+      - "3000:3000"
+      - "8888:8888"
+    volumes:
+      - .:/usr/src/app
+volumes:
+  data:

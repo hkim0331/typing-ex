@@ -1,0 +1,81 @@
+{:duct.profile/base
+ {:duct.core/project-ns typing-ex
+
+  :duct.router/ataraxy
+  {:routes
+   {[:get "/login"] [:typing-ex.handler.core/login]
+    [:post "/login" {params :form-params}]
+    [:typing-ex.handler.core/login-post params]
+
+    [:get "/logout"]  [:typing-ex.handler.core/logout]
+
+    [:get "/sign-on"]  [:typing-ex.handler.core/sign-on]
+    [:post "/sign-on"] [:typing-ex.handler.core/sign-on-post]
+
+    [:get  "/nickname"] ^:auth [:typing-ex.handler.core/nickname]
+    [:post "/nickname" {params :form-params}]
+    [:typing-ex.handler.core/nickname-post params]
+
+    [:get  "/password"] ^:auth [:typing-ex.handler.core/password]
+    [:post "/password" {params :form-params}]
+    [:typing-ex.handler.core/password-post params]
+
+    [:get "/"] ^:auth [:typing-ex.handler.core/typing]
+
+    ;; FIXME: CSRF.
+    ;; 本来は post のはず。
+    [:get "/score"] ^:auth [:typing-ex.handler.core/score-post]
+    ;;
+    [:get "/scores"] ^:auth [:typing-ex.handler.core/scores]
+
+    [:get "/record/" nick] ^:auth [:typing-ex.handler.core/record nick]
+
+    [:get "/drill/" n] [:typing-ex.handler.core/drill ^int n]
+
+    [:get "/users"] ^:auth [:typing-ex.handler.core/users]
+
+    [:get "/ban"] [:typing-ex.handler.core/ban-index]
+    [:get "/example"] ^:probe [:typing-ex.handler/example]}
+
+   :middleware {:auth #ig/ref :typing-ex.middleware/auth
+                :cors #ig/ref :typing-ex.middleware/cors
+                :probe #ig/ref :typing-ex.middleware/probe}}
+
+  :typing-ex.middleware/auth {:db #ig/ref :duct.database/sql}
+  :typing-ex.middleware/probe {:db #ig/ref :duct.database/sql}
+  :typing-ex.middleware/cors {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/nickname   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/nickname-post {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/password   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/password-post {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/sign-on      {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/sign-on-post {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
+  ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/users {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/ban-index {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler/example {:db #ig/ref :duct.database/sql}}
+
+ :duct.profile/dev   #duct/include "dev"
+ :duct.profile/local #duct/include "local"
+ :duct.profile/prod  {}
+
+ :duct.module/logging {}
+ :duct.module.web/site {}
+ :duct.module/sql {}}
