@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre :refer [debug]]))
 
-(def ^:private version "1.1.0")
+(def ^:private version "1.2.0-SNAPSHOT")
 
 (timbre/set-level! :debug)
 

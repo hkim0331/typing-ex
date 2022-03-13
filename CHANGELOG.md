@@ -1,4 +1,4 @@
-# ex-tying
+# typing-ex
 
 * Clojure/ClojureScript
 * duct
@@ -13,9 +13,14 @@
 - nick コラムは login コラムに名称替え。
 - users_nick がよろしくない。login だな。新しくは。
 - ページのデザイン。
-  - タイプし終えたら自動でボーナス
+  - タイプし終えたら自動でボーナス。
   - detail よりも、回数、平均、最高点を表示したら？
 
+
+## 1.2.0-SNAPSHOT
+### Changed
+- typing.cljs: scores ボタンを logout ボタンの左に。
+- タイプを始めると自動でスタートする。
 
 ## 1.1.0 - 2022-03-14
 ### Changed

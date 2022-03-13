@@ -9,22 +9,23 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.1.0")
+(def ^:private version "1.2.0-SNAPSHOT")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
                           :counter 60
                           :errors 0}))
-
 (defonce how-many-typing (atom 0))
+(defonce first-key (atom false))
+
+;; こういうのにはコメントしとかないと。
 (def ^:private report-alert 10)
 
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill/" 0)))]
         (swap! app-state assoc :text (:body response))))
-  (swap! app-state assoc :answer "")
-  (swap! app-state assoc :counter 60)
-  (swap! app-state assoc :errors 0))
+  (swap! app-state assoc :answer "" :counter 60 :errors 0)
+  (reset! first-key false))
 
 ;; 0.5.3-SNAPSHOT
 ;; + counter if finished.
@@ -75,19 +76,22 @@
             (js/alert "がんばってんねー。一旦、休憩入れたら？"))))))
 
 (defn count-down []
-  (swap! app-state update :counter dec)
-  (when (neg? (:counter @app-state))
-    (swap! app-state update :counter inc)
-    (send-score)))
+  (when @first-key
+    (swap! app-state update :counter dec)
+    (when (neg? (:counter @app-state))
+      (swap! app-state update :counter inc)
+      (send-score))))
 
-(js/setInterval count-down 1000)
+;;(js/setInterval count-down 1000)
 
 (defn by-dots [n]
   (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
-  (when (= key "Backspace")
-    (swap! app-state update :errors inc)))
+  (if (= key "Backspace")
+    (swap! app-state update :errors inc)
+    (when-not @first-key
+      (swap! first-key not))))
 
 (defn error-component []
   [:p (by-dots (:errors @app-state))])
@@ -110,22 +114,25 @@
    [error-component]
    [:div
     [:input {:type  "button"
-             :id "counter"
+             :id    "counter"
              :class "btn btn-primary btn-sm"
              :value (:counter @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
-   [:ul
-    [:li [:a {:href "/scores"} "scores"]]
-    [:li [:a {:href "/nickname"} "nickname"]
-     "（変更すると過去データが消える）"]
-    [:li [:a {:href "/password"} "password"]
-     "（忘れるとログインできない）"]]
-   [:p[:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+  ;;  [:ul
+  ;;   [:li [:a {:href "/nickname"} "nickname"]
+  ;;    "（変更すると過去データが消える）"]
+  ;;   [:li [:a {:href "/password"} "password"]
+  ;;    "（忘れるとログインできない）"]]
+   [:p
+    [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
+    " "
+    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
    [:div "hkimura, " version]])
 
 (defn start []
-  (rdom/render [ex-page] (js/document.getElementById "app")))
+  (rdom/render [ex-page] (js/document.getElementById "app"))
+  (js/setInterval count-down 1000))
 
 (defn ^:export init []
   (reset-app-state!)
@@ -145,4 +152,5 @@
 (defn stop []
   ;; stop is called before any code is reloaded
   ;; this is controlled by :before-load in the config
-  (js/console.log "stop"))
+  (js/console.log "stop")
+  (js/setInterval count-down 9999999))
