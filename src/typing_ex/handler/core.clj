@@ -90,8 +90,8 @@
       (scores-page ret nick DAYS))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
-  (fn [{[_ n] :ataraxy/result :as req}]
-    (let [ret (drills/fetch-drill db n)]
+  (fn [{[_ n] :ataraxy/result}]
+    (let [ret (drills/fetch-drill db)]
       [::response/ok ret])))
 
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
