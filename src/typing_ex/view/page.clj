@@ -8,7 +8,7 @@
 
 (def ^:private version "1.2.0-SNAPSHOT")
 
-(timbre/set-level! :debug)
+;; (timbre/set-level! :debug)
 
 (defn page [& contents]
  [::response/ok
@@ -123,6 +123,7 @@
 ;; see handler.core/scores
 ;; 7days, 30days must sync with the code.
 (defn scores-page [ret nick days]
+  (timbre/debug "scores-page")
   (page
    [:h2 "Typing: Scores(last " days " days)"]
    [:p
@@ -159,7 +160,7 @@
                            (= users_nick nick) "yes"
                            (= users_nick "hkimura") "hkimura"
                            :else "other")}
-                 users_nick]])])
+              users_nick]])])
    [:p
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
@@ -205,7 +206,7 @@
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: active users"]
-   (debug "active-users-pate" ret)
+   ;;(debug "active-users-page" ret)
    (into [:ol]
          (for [[u & _] ret]
            [:li (:users_nick u) " " (ss (:timestamp u))]))))

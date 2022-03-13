@@ -16,6 +16,9 @@
 
 (def DAYS 30)
 
+;;(timbre/set-level! :debug)
+
+;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "nick888"}]
     ;;(debug "admin?" s)

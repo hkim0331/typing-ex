@@ -19,6 +19,8 @@
 (defonce first-key (atom false))
 
 ;; こういうのにはコメントしとかないと。
+;; report-alert 回数練習したら一度、アラートを出す。
+;; この場所で定義するのがいいのか？
 (def ^:private report-alert 10)
 
 (defn reset-app-state! []
@@ -47,10 +49,10 @@
   (let [s1 (str users_nick " さんのスコアは " pt " 点です。")
         s2 (condp < pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90 "がんばった。もう少しで 100 点だね。"
-             60 "だいぶ上手です。この調子でがんばれ。"
-             30 "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")]
+              90 "がんばった。もう少しで 100 点だね。"
+              60 "だいぶ上手です。この調子でがんばれ。"
+              30 "指先を見ずに、ゆっくり、ミスを少なく。"
+              "練習あるのみ。")]
     (str s1 "\n" s2)))
 
 (defn send-score []
@@ -72,6 +74,8 @@
           (reset-app-state!)
           (js/alert (nick-pt-message (read-string (:body response))))
           (swap! how-many-typing inc)
+          ;; report-alert 回数練習したら一度、アラートを出す。
+          ;; この場所で定義するのがいいのか？
           (when (= 0 (mod @how-many-typing report-alert))
             (js/alert "がんばってんねー。一旦、休憩入れたら？"))))))
 
@@ -79,7 +83,8 @@
   (when @first-key
     (swap! app-state update :counter dec)
     (when (neg? (:counter @app-state))
-      (swap! app-state update :counter inc)
+      ;; FIXME: zero を定義するべき。
+      (swap! app-state update :counter constantly 0)
       (send-score))))
 
 ;;(js/setInterval count-down 1000)
