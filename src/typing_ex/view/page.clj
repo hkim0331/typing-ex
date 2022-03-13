@@ -6,7 +6,9 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre :refer [debug]]))
 
-(def ^:private version "1.0.0")
+(def ^:private version "1.1.0")
+
+(timbre/set-level! :debug)
 
 (defn page [& contents]
  [::response/ok
@@ -143,8 +145,7 @@
     ;;  "GS"]
     [:a {:href "http://ex.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
-     "EX"]
-    ]
+     "EX"]]
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
    (into [:ol
@@ -167,10 +168,12 @@
 (defn plot [w h coll]
   (let [n (count coll)
         dx (/ w (count coll))]
+    ;;(timbre/debug "plot: " coll)
     (into
      [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
-      [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]]
+      [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
+      [:line {:x1 0 :y1 (- h 100) :x2 w :y2 (- h 100) :stroke "red"}]]
      (for [[x y] (map list (range n) (map :pt coll))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
