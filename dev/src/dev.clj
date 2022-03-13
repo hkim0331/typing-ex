@@ -12,8 +12,6 @@
             [integrant.repl.state :refer [config system]]
             [taoensso.timbre :as timbre]))
 
-(timbre/set-level! :debug)
-
 (duct/load-hierarchy)
 
 (defn read-config []
@@ -31,3 +29,6 @@
   (load "local"))
 
 (integrant.repl/set-prep! #(duct/prep-config (read-config) profiles))
+
+(timbre/set-level! :debug)
+(timbre/info "set-level! :debug")
