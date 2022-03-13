@@ -21,7 +21,7 @@
 ### Changed
 - utils/ds-opt
 - renamed initdb.d/*.bb as initdb.d/*.clj
-- グラフに100点の赤線
+- グラフに 100 点の赤線
 
 ## 1.0.0 - 2022-03-11
 2022 version started. 昨年のバージョンをベースに改良を加える。
