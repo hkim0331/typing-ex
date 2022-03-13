@@ -143,8 +143,7 @@
     ;;  "GS"]
     [:a {:href "http://ex.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
-     "EX"]
-    ]
+     "EX"]]
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
    (into [:ol
@@ -167,6 +166,7 @@
 (defn plot [w h coll]
   (let [n (count coll)
         dx (/ w (count coll))]
+    (timbre/debug "plot: " coll)
     (into
      [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]

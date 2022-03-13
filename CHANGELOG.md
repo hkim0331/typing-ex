@@ -9,11 +9,19 @@
 
 ## Unreleased
 - グラフに100点の赤線
+- detail よりも、回数、平均、最高点を表示したら？
+- タイプし終えたら自動でボーナス
+- 各行ごとに集計
+- 認証を l22 データベースで
+- nick コラムは login コラムに名称替え。
 - users_nick がよろしくない。login だな。新しくは。
+- ページのデザイン。
+
 
 ## 1.1.0-SNAPSHOT
 ### Changed
 - utils/ds-opt
+- renamed initdb.d/*.bb as initdb.d/*.clj
 
 ## 1.0.0 - 2022-03-11
 2022 version started. 昨年のバージョンをベースに改良を加える。

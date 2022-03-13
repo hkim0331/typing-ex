@@ -8,14 +8,11 @@
    [typing-ex.boundary.results :as results]
    [typing-ex.view.page :refer
     [login-page sign-on-page scores-page
-     ;self-records-page
      nickname-page password-page svg-self-records active-users-page
      sign-on-stop]]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre :refer [info debug]]))
-
-(timbre/set-level! :info)
+   [taoensso.timbre :as timbre :refer [debug]]))
 
 (def DAYS 30)
 
@@ -94,8 +91,11 @@
     (let [ret (drills/fetch-drill db)]
       [::response/ok ret])))
 
+;; FIXME: 関数の役目がわからない。特に Admin Only とか。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ nick] :ataraxy/result :as req}]
+    ;; この if は何をしてるか？ 自分のレコードしか見せないってこと？
+    ;; ログインしているユーザが/record/nick と一致するかってこと？
     (if (or (= nick "hkimura")
             (= nick (get-nick req))
             (admin? (get-nick req)))
