@@ -83,7 +83,6 @@
   (when @first-key
     (swap! app-state update :counter dec)
     (when (neg? (:counter @app-state))
-      ;; FIXME: zero を定義するべき。
       (swap! app-state update :counter constantly 0)
       (send-score))))
 
