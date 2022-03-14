@@ -11,9 +11,6 @@
    #_[ring.middleware.params :refer [wrap-params]]
    [taoensso.timbre :as timbre]))
 
-;; FIXME: ここか？ dev/src あたりじゃないの？
-(timbre/set-level! :info)
-
 (defn unauthorized-handler
   [request _]
   (if (authenticated? request)

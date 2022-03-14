@@ -16,8 +16,6 @@
 
 (def DAYS 30)
 
-;;(timbre/set-level! :debug)
-
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "nick888"}]
@@ -31,7 +29,8 @@
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
-  (fn [_]
+  (fn [req]
+    ;;(debug ":anti-forgery-token: " (:anti-forgery-token req))
     (login-page)))
 
 (defn auth? [db nick password]
@@ -68,7 +67,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [{token :anti-forgery-token :as req}]
     ;; FIXME これを利用できないか？
-    ;;(debug "/typing (:anti-forgery-token req):" token)
+    (debug "/typing (:anti-forgery-token req):" token)
     [::response/ok (io/resource "typing_ex/handler/index.html")]))
 
 ;; FIXME: CSRF post

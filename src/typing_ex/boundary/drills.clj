@@ -5,7 +5,6 @@
    [duct.database.sql]))
 
 (defprotocol Drills
-  ;; FIXME: n is not used
   (fetch-drill [db]))
 
 (extend-protocol Drills

@@ -8,8 +8,6 @@
 
 (def ^:private version "1.2.0-SNAPSHOT")
 
-;; (timbre/set-level! :debug)
-
 (defn page [& contents]
  [::response/ok
   (html5
