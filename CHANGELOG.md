@@ -1,4 +1,4 @@
-# ex-tying
+# typing-ex
 
 * Clojure/ClojureScript
 * duct
@@ -10,12 +10,23 @@
 ## Unreleased
 - 各行ごとに集計
 - 認証を l22 データベースで
-- nick コラムは login コラムに名称替え。
+- コラム名 nick を login に名称替えをする。
 - users_nick がよろしくない。login だな。新しくは。
 - ページのデザイン。
-  - タイプし終えたら自動でボーナス
+  - タイプし終えたら自動でボーナス。タイプが終わったことをどう判断するか？
   - detail よりも、回数、平均、最高点を表示したら？
+- app.melt へのデプロイ。
 
+
+## 1.2.0 - 2022-03-15
+### Changed
+- typing.cljs: scores ボタンを logout ボタンの左に。
+- タイプを始めると自動でスタートする。
+- boudary/users.clj: ds をやめ、全て ds-opt を使うようにした。
+- send-score omit zero test
+- cljs から post. clj 側から埋め込んだ anti-forgery-token を cljs で読んで、
+  {:form-params {:__anti-forgery-token token}}
+  のようにパラメータに埋め戻して post する。
 
 ## 1.1.0 - 2022-03-14
 ### Changed

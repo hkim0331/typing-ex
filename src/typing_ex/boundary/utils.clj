@@ -3,6 +3,7 @@
    [next.jdbc :as jdbc]
    [next.jdbc.result-set :as rs]))
 
+;; duct.database/sql インタフェース。
 (defn ds [db]
   (-> db :spec :datasource))
 
@@ -10,4 +11,4 @@
   (jdbc/with-options (ds db) {:builder-fn rs/as-unqualified-lower-maps}))
 
 ;; no use.
-(def b-fn {:builder-fn rs/as-unqualified-lower-maps})
+;; (def b-fn {:builder-fn rs/as-unqualified-lower-maps})

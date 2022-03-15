@@ -6,16 +6,16 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
-   [typing-ex.view.page :refer
-    [login-page sign-on-page scores-page
-     nickname-page password-page svg-self-records active-users-page
-     sign-on-stop]]
+   ;; FIXME: refer
+   [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre :refer [debug]]))
+   [taoensso.timbre :as timbre]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 (def DAYS 30)
 
+;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "nick888"}]
     ;;(debug "admin?" s)
@@ -29,7 +29,7 @@
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
   (fn [_]
-    (login-page)))
+    (view/login-page)))
 
 (defn auth? [db nick password]
   (let [ret (users/find-user-by-nick db nick)]
@@ -37,7 +37,7 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [nick password]}] :ataraxy/result}]
-    (debug "/login-post" nick)
+    (timbre/debug "/login-post" nick)
     (if (and (seq nick) (auth? db nick password))
       (-> (redirect "/scores")
           (assoc-in [:session :identity] (keyword nick)))
@@ -50,10 +50,10 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
   (fn [_]
-    (debug "/sign-on")
+    (timbre/debug "/sign-on")
     ;; Changed: 新規登録はまた来年。
     ;;(sign-on-page)
-    (sign-on-stop)))
+    (view/sign-on-stop)))
 
 (defmethod ig/init-key :typing-ex.handler.core/sign-on-post [_ {:keys [db]}]
   (fn [{{:strs [sid nick password]} :form-params}]
@@ -62,19 +62,38 @@
         [::response/found "/login"]
         [::response/found "/sign-on"]))))
 
+;; index. anti-forgery-field を埋め込むために。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
-  (fn [{token :anti-forgery-token :as req}]
-    ;; FIXME これを利用できないか？
-    ;;(debug "/typing (:anti-forgery-token req):" token)
-    [::response/ok (io/resource "typing_ex/handler/index.html")]))
+  (fn [_]
+    [::response/ok
+     (str
+      "<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css' integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2' crossorigin='anonymous'>
+    <link href='css/style.css' rel='stylesheet' type='text/css'>
+    <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
+  </head>
+  <body>"
+      (anti-forgery-field)
+      "<div class='container'>
+    <div id='app'>
+      Shadow-cljs rocks!
+    </div>
+    <script src='js/compiled/main.js' type='text/javascript'></script>
+    <script>typing_ex.typing.init();</script>
+    </div>
+  </body>
+</html>")]))
 
-;; FIXME: CSRF post
+;; works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
-  (fn [req]
-    (let [pt (get-in req [:params :pt])
-          nick (get-nick req)
+  (fn [{{:strs [pt]} :form-params :as req}]
+    (let [nick (get-nick req)
           rcv {:pt (Integer/parseInt pt) :users_nick nick}]
-      (debug "/score-post pt" rcv)
+      (timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -84,10 +103,10 @@
     ;; must fix view/page.clj at the same time.
     (let [ret (results/find-max-pt db DAYS)
           nick (get-nick req)]
-      (scores-page ret nick DAYS))))
+      (view/scores-page ret nick DAYS))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
-  (fn [{[_ n] :ataraxy/result}]
+  (fn [_]
     (let [ret (drills/fetch-drill db)]
       [::response/ok ret])))
 
@@ -101,7 +120,7 @@
             (admin? (get-nick req)))
       (let [ret (results/fetch-records db nick)]
         ;;(self-records-page nick ret)
-        (svg-self-records nick ret))
+        (view/svg-self-records nick ret))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
 (defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
@@ -111,7 +130,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/nickname [_ _]
   (fn [req]
     (let [nick (get-nick req)]
-      (nickname-page nick))))
+      (view/nickname-page nick))))
 
 ;; nick は foreign key のため、アップデートで変更できない。
 ;; https://takeokunn.xyz/blog/post/postgresql-remove-foreign-key-constraint
@@ -127,14 +146,14 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/password [_ _]
   (fn [_]
-    (password-page)))
+    (view/password-page)))
 
 (defmethod ig/init-key :typing-ex.handler.core/password-post [_ {:keys [db]}]
   (fn [{[_ {:strs [old-pass pass]}] :ataraxy/result :as req}]
     (let [nick (get-nick req)
           user (users/find-user-by-nick db nick)]
-      (debug "user" user)
-      (debug "old-pass" old-pass "pass" pass)
+      ;;(debug "user" user)
+      ;;(debug "old-pass" old-pass "pass" pass)
       (if (= old-pass (:password user))
         (do
           (users/update-user db {:password pass} (:id user))
@@ -144,5 +163,5 @@
 (defmethod ig/init-key :typing-ex.handler.core/users [_ {:keys [db]}]
   (fn [req]
     (if (admin? (get-nick req))
-      (active-users-page (results/active-users db 40))
+      (view/active-users-page (results/active-users db 40))
       [::response/forbidden "<h1>Admin Only</h1>"])))

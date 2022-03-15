@@ -1,6 +1,6 @@
 (ns typing-ex.boundary.users
   (:require
-   [typing-ex.boundary.utils :refer [ds ds-opt]]
+   [typing-ex.boundary.utils :refer [ds-opt]]
    #_[next.jdbc :refer [with-transaction] :as jdbc]
    [next.jdbc.sql :as sql]
    [duct.database.sql]
@@ -16,7 +16,7 @@
   duct.database.sql.Boundary
   (insert-user [db user]
     (try
-      (let [ret (sql/insert! (ds db) :users user)]
+      (let [ret (sql/insert! (ds-opt db) :users user)]
         ;; FIXME: debug も println も表示されない。
         (timbre/info "insert-user" ret)
         true)
@@ -33,7 +33,7 @@
 
   (update-user [db m id]
     (let [ret (sql/update!
-               (ds db)
+               (ds-opt db)
                :users m {:id id})]
       (timbre/info "update-user returned" ret)
       (= 1 (:next.jdbc/update-count ret)))))
