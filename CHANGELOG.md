@@ -24,6 +24,7 @@
 - typing.cljs: scores ボタンを logout ボタンの左に。
 - タイプを始めると自動でスタートする。
 - boudary/users.clj: ds をやめ、全て ds-opt を使うようにした。
+- send-score omit zero test
 
 ## 1.1.0 - 2022-03-14
 ### Changed

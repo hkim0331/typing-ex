@@ -24,7 +24,7 @@
 
     ;; FIXME: CSRF.
     ;; 本来は post のはず。
-    [:get "/score"] ^:auth [:typing-ex.handler.core/score-post]
+    [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
     ;;
     [:get "/scores"] ^:auth [:typing-ex.handler.core/scores]
 

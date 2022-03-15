@@ -60,22 +60,20 @@
 ;; request ヘッダ中に見つかる
 ;; ring.middleware.anti-forgery/anti-forgery-token を利用できないか？
 (defn send-score []
-  (if (zero? (count (:answer @app-state)))
-    (do
-      (js/alert "チャレンジ、忘れてるよ。打つべし！")
-      (reset-app-state!))
-    ;; (go (let))で書いた部分は並列性を持つ、これが非同期ってことか、
-    ;; 周りと同じように書いたら混乱する。
-    ;; ロジック、実行の順番に注意してプログラムすること。
-    (do
-      (go (let [response (<! (http/get (str "/score?pt=" (pt @app-state))))]
-            (js/alert (nick-pt-message (read-string (:body response))))
-            (reset-app-state!)))
+  (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
+            _ (js/alert token)
+            response (<! (http/post
+                          "/score"
+                          {:pt (pt @app-state)
+                           :__anti-forgery-token token}))]
+        (js/alert (str response))
+        (js/alert (nick-pt-message (read-string (:body response))))
+        (reset-app-state!)))
       ;; report-alert 回数練習したら一度、アラートを出す。
       ;; この場所で定義するのがいいのか？
-      (swap! how-many-typing inc)
-      (when (= 0 (mod @how-many-typing report-alert))
-        (js/alert "がんばってんねー。一旦、休憩入れたら？")))))
+  (swap! how-many-typing inc)
+  (when (= 0 (mod @how-many-typing report-alert))
+    (js/alert "がんばってんねー。一旦、休憩入れたら？")))
 
 (defn count-down []
   (when @first-key
