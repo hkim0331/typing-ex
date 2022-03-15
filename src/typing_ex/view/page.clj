@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre :refer [debug]]))
 
-(def ^:private version "1.2.0")
+(def ^:private version "1.2.1")
 
 (defn page [& contents]
  [::response/ok
@@ -45,14 +45,7 @@
      [:li "コンスタントに練習しないと成績は落ちる。"]
      [:li "やらない人の「できません」はいただけない。"
        "成績に影響しない欠席ひとつに神経質になるより、"
-       "しっかりタイピング平常点稼いだ方が建設的。"]
-     [:li "ニックネーム、パスワードの変更はログイン後、チャレンジページから。"]
-     [:li "学生番号の登録は"
-      [:a {:href "/sign-on"} "こちら"]
-      "。一度だけ。"]
-     [:li "驚愕。半角小文字で学生番号打てない受講生が 170人中"
-      [:span {:class "red"} " 126 "] "人。"
-      "不注意なだけよね？"]]))
+       "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
 ;; FIXME: l22 アプリに飛ばそう。2022-03-11
 (defn sign-on-stop []

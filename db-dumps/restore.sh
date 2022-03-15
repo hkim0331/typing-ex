@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ -z "$1" ]; then
-  echo "usage: $0 file.dump"
+  echo "usage: $0 file.sql"
   exit
 fi
 
