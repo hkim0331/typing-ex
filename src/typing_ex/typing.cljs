@@ -15,13 +15,15 @@
                           :answer ""
                           :counter 60
                           :errors 0}))
-(defonce how-many-typing (atom 0))
+
+
 (defonce first-key (atom false))
 
 ;; こういうのにはコメントしとかないと。
 ;; report-alert 回数練習したら一度、アラートを出す。
 ;; この場所で定義するのがいいのか？
-(def ^:private report-alert 10)
+;; (defonce how-many-typing (atom 0))
+;; (def ^:private report-alert 10)
 
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill/" 0)))]
@@ -104,10 +106,10 @@
                                   :answer
                                   (-> % .-target .-value))}]
    [error-component]
-   [:div
+   [:p
     [:input {:type  "button"
              :id    "counter"
-             :class "btn btn-primary btn-sm"
+             :class "btn btn-success btn-sm"
              :value (:counter @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
   ;;  [:ul
@@ -128,14 +130,6 @@
 
 (defn ^:export init []
   (reset-app-state!)
-;;   (js/alert "今、タイピングやってるのはレポート終わった人だね？
-;; レポートがんばれたか？
-;; 困っている人を QA 他で助けるんだぞ。")
-;;   (js/alert "レポートやってるか？アップロード試したか？動作チェックしたか？
-;; 全てわかっている人以外、
-;; レポートで自分が理解してない部分を洗い出した方がいい。
-;; 本来レポートはそういうもの。
-;; ダメなのはわかったフリをする。")
   ;; init is called ONCE when the page loads
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds

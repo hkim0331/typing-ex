@@ -3,6 +3,7 @@ body {
 }
 
 pre#example {
+    padding-left: 5px;
     font-family: monospace;
     font-size: 11pt;
     user-select:none;
@@ -15,9 +16,10 @@ pre#example {
 }
 
 textarea#drill {
+    font-family: monospace;
     font-size: 11pt;
     width:  550px;
-    height: 150px;
+    height: 100px;
 }
 
 span#counter {
