@@ -141,17 +141,17 @@
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
    (into [:ol
-          (for [{:keys [max users_nick]} ret]
+          (for [{:keys [max login]} ret]
             [:li
              max
              " "
-             [:a {:href (str "/record/" users_nick)
+             [:a {:href (str "/record/" login)
                   ;; FIXME: case を書くと予想したようには動作しない。本当か？
                   :class (cond
-                           (= users_nick nick) "yes"
-                           (= users_nick "hkimura") "hkimura"
+                           (= login nick) "yes"
+                           (= login "hkimura") "hkimura"
                            :else "other")}
-              users_nick]])])
+              login]])])
    [:p
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
@@ -197,4 +197,4 @@
    ;;(debug "active-users-page" ret)
    (into [:ol]
          (for [[u & _] ret]
-           [:li (:users_nick u) " " (ss (:timestamp u))]))))
+           [:li (:login u) " " (ss (:timestamp u))]))))

@@ -44,8 +44,8 @@
       (+ score err seconds)
       (+ score err))))
 
-(defn nick-pt-message [{:keys [pt users_nick]}]
-  (let [s1 (str users_nick " さんのスコアは " pt " 点です。")
+(defn nick-pt-message [{:keys [pt login]}]
+  (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すんばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"

@@ -92,7 +92,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [nick (get-nick req)
-          rcv {:pt (Integer/parseInt pt) :users_nick nick}]
+          rcv {:pt (Integer/parseInt pt) :login nick}]
       (timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
