@@ -127,38 +127,38 @@
   (fn [_]
     [::response/forbidden "access not allowed"]))
 
-(defmethod ig/init-key :typing-ex.handler.core/loginname [_ _]
-  (fn [req]
-    (let [login (get-login req)]
-      (view/loginname-page login))))
+;; (defmethod ig/init-key :typing-ex.handler.core/loginname [_ _]
+;;   (fn [req]
+;;     (let [login (get-login req)]
+;;       (view/loginname-page login))))
 
-;; login は foreign key のため、アップデートで変更できない。
-;; https://takeokunn.xyz/blog/post/postgresql-remove-foreign-key-constraint
-;; テーブルから foreign key 制約を外した。外道の対応だ。
-;; 今後、foreign key は将来的に変更の可能性がないフィールドに付与しよう。
-(defmethod ig/init-key :typing-ex.handler.core/loginname-post [_ {:keys [db]}]
-  (fn [{[_ {:strs [new-login]}] :ataraxy/result :as req}]
-    (let [login (get-login req)
-          user (users/find-user-by-login db login)]
-      (if (users/update-user db {:login new-login} (:id user))
-        [::response/found "/login"]
-        [::response/forbidden "something wrong happened"]))))
+;; ;; login は foreign key のため、アップデートで変更できない。
+;; ;; https://takeokunn.xyz/blog/post/postgresql-remove-foreign-key-constraint
+;; ;; テーブルから foreign key 制約を外した。外道の対応だ。
+;; ;; 今後、foreign key は将来的に変更の可能性がないフィールドに付与しよう。
+;; (defmethod ig/init-key :typing-ex.handler.core/loginname-post [_ {:keys [db]}]
+;;   (fn [{[_ {:strs [new-login]}] :ataraxy/result :as req}]
+;;     (let [login (get-login req)
+;;           user (users/find-user-by-login db login)]
+;;       (if (users/update-user db {:login new-login} (:id user))
+;;         [::response/found "/login"]
+;;         [::response/forbidden "something wrong happened"]))))
 
-(defmethod ig/init-key :typing-ex.handler.core/password [_ _]
-  (fn [_]
-    (view/password-page)))
+;; (defmethod ig/init-key :typing-ex.handler.core/password [_ _]
+;;   (fn [_]
+;;     (view/password-page)))
 
-(defmethod ig/init-key :typing-ex.handler.core/password-post [_ {:keys [db]}]
-  (fn [{[_ {:strs [old-pass pass]}] :ataraxy/result :as req}]
-    (let [login (get-login req)
-          user (users/find-user-by-login db login)]
-      ;;(debug "user" user)
-      ;;(debug "old-pass" old-pass "pass" pass)
-      (if (= old-pass (:password user))
-        (do
-          (users/update-user db {:password pass} (:id user))
-          [::response/found "/login"])
-        [::response/forbidden "password does not match."]))))
+;; (defmethod ig/init-key :typing-ex.handler.core/password-post [_ {:keys [db]}]
+;;   (fn [{[_ {:strs [old-pass pass]}] :ataraxy/result :as req}]
+;;     (let [login (get-login req)
+;;           user (users/find-user-by-login db login)]
+;;       ;;(debug "user" user)
+;;       ;;(debug "old-pass" old-pass "pass" pass)
+;;       (if (= old-pass (:password user))
+;;         (do
+;;           (users/update-user db {:password pass} (:id user))
+;;           [::response/found "/login"])
+;;         [::response/forbidden "password does not match."]))))
 
 (defmethod ig/init-key :typing-ex.handler.core/users [_ {:keys [db]}]
   (fn [req]
