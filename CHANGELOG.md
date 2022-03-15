@@ -10,12 +10,19 @@
 ## Unreleased
 - 各行ごとに集計
 - 認証を l22 データベースで
-- コラム名 nick を login に名称替えをする。
 - users_nick がよろしくない。login だな。新しくは。
 - ページのデザイン。
   - タイプし終えたら自動でボーナス。タイプが終わったことをどう判断するか？
   - detail よりも、回数、平均、最高点を表示したら？
+
+
+## 1.2.1 - 2022-03-15
+- textarea の高さを 100px に変更した。
+- textarea の font-family を見本テキストと同じ monospace に変更した。
+- login 関係の不要なメッセージを消した。
+- shadow-cljs release app を実行せずにデプロイしたらどうなるかのチェック。
 - app.melt へのデプロイ。
+- font-size: 12pt;
 
 
 ## 1.2.0 - 2022-03-15
