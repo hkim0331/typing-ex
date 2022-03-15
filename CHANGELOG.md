@@ -16,15 +16,17 @@
   - タイプし終えたら自動でボーナス。タイプが終わったことをどう判断するか？
   - detail よりも、回数、平均、最高点を表示したら？
 - app.melt へのデプロイ。
-- cljs から post. get-csrf-token みたいな関数を書ければいいのか？
 
 
-## 1.2.0-SNAPSHOT
+## 1.2.0 - 2022-03-15
 ### Changed
 - typing.cljs: scores ボタンを logout ボタンの左に。
 - タイプを始めると自動でスタートする。
 - boudary/users.clj: ds をやめ、全て ds-opt を使うようにした。
 - send-score omit zero test
+- cljs から post. clj 側から埋め込んだ anti-forgery-token を cljs で読んで、
+  {:form-params {:__anti-forgery-token token}}
+  のようにパラメータに埋め戻して post する。
 
 ## 1.1.0 - 2022-03-14
 ### Changed

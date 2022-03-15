@@ -90,18 +90,13 @@
   </body>
 </html>")]))
 
-;; FIXME: CSRF post
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
-  (fn [req]
-    (timbre/debug "score-post:" (str req))
-    [::response/ok (str {:pt 100 :users_nick "you"})]))
-  ;; (fn [req]
-  ;;   (let [pt (get-in req [:params :pt])
-  ;;         nick (get-nick req)
-  ;;         rcv {:pt (Integer/parseInt pt) :users_nick nick}]
-  ;;     (debug "/score-post pt" rcv)
-  ;;     (results/insert-pt db rcv)
-  ;;     [::response/ok (str rcv)])))
+  (fn [{{:strs [pt]} :form-params :as req}]
+    (let [nick (get-nick req)
+          rcv {:pt (Integer/parseInt pt) :users_nick nick}]
+      ;;(debug "/score-post pt" rcv)
+      (results/insert-pt db rcv)
+      [::response/ok (str rcv)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]

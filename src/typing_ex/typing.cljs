@@ -55,25 +55,19 @@
               "練習あるのみ。")]
     (str s1 "\n" s2)))
 
-;; FIXME: CSRF
-;; 本来は post だが、CSRF 問題がクリアできず、get で実装している。
-;; request ヘッダ中に見つかる
-;; ring.middleware.anti-forgery/anti-forgery-token を利用できないか？
+;; it worked!
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
-            _ (js/alert token)
             response (<! (http/post
                           "/score"
-                          {:pt (pt @app-state)
-                           :__anti-forgery-token token}))]
-        (js/alert (str response))
+                          {:form-params
+                            {:pt (pt @app-state)
+                             :__anti-forgery-token token}}))]
         (js/alert (nick-pt-message (read-string (:body response))))
-        (reset-app-state!)))
-      ;; report-alert 回数練習したら一度、アラートを出す。
-      ;; この場所で定義するのがいいのか？
-  (swap! how-many-typing inc)
-  (when (= 0 (mod @how-many-typing report-alert))
-    (js/alert "がんばってんねー。一旦、休憩入れたら？")))
+        (reset-app-state!))))
+  ;; (swap! how-many-typing inc)
+  ;; (when (= 0 (mod @how-many-typing report-alert))
+  ;;   (js/alert "がんばってんねー。一旦、休憩入れたら？")))
 
 (defn count-down []
   (when @first-key
@@ -81,8 +75,6 @@
     (when (neg? (:counter @app-state))
       (swap! app-state update :counter constantly 0)
       (send-score))))
-
-;;(js/setInterval count-down 1000)
 
 (defn by-dots [n]
   (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
