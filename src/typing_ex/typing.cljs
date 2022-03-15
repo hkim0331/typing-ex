@@ -9,7 +9,7 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.2.2")
+(def ^:private version "1.2.3")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
