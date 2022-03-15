@@ -19,7 +19,6 @@
 
 (defonce first-key (atom false))
 
-;; こういうのにはコメントしとかないと。
 ;; report-alert 回数練習したら一度、アラートを出す。
 ;; この場所で定義するのがいいのか？
 ;; (defonce how-many-typing (atom 0))
@@ -31,8 +30,6 @@
   (swap! app-state assoc :answer "" :counter 60 :errors 0)
   (reset! first-key false))
 
-;; 0.5.3-SNAPSHOT
-;; + counter if finished.
 (defn pt [{:keys [text answer counter errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
@@ -42,19 +39,19 @@
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         err   (* -1 (* errors errors))
         score (int (* (- (/ goods all) (/ bads goods)) 100))]
-    (js/console.log goods bads all err score)
+    (js/console.log "goods bads all error score: " goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err counter)
       (+ score err))))
 
 (defn nick-pt-message [{:keys [pt users_nick]}]
   (let [s1 (str users_nick " さんのスコアは " pt " 点です。")
-        s2 (condp < pt
-             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-              90 "がんばった。もう少しで 100 点だね。"
-              60 "だいぶ上手です。この調子でがんばれ。"
-              30 "指先を見ずに、ゆっくり、ミスを少なく。"
-              "練習あるのみ。")]
+        s2 (condp <= pt
+             100 "すんばらしい。最高点取れた？平均で 80 点越えよう。"
+             90 "がんばった。もう少しで 100 点だね。"
+             60 "だいぶ上手です。この調子でがんばれ。"
+             30 "指先を見ずに、ゆっくり、ミスを少なく。"
+             "練習あるのみ。")]
     (str s1 "\n" s2)))
 
 ;; it worked!
@@ -88,7 +85,7 @@
       (swap! first-key not))))
 
 (defn error-component []
-  [:p (by-dots (:errors @app-state))])
+  [:p "　" (by-dots (:errors @app-state))])
 
 (defn ex-page []
   [:div
