@@ -12,13 +12,13 @@
     [:get "/sign-on"]  [:typing-ex.handler.core/sign-on]
     [:post "/sign-on"] [:typing-ex.handler.core/sign-on-post]
 
-    [:get  "/nickname"] ^:auth [:typing-ex.handler.core/nickname]
-    [:post "/nickname" {params :form-params}]
-    [:typing-ex.handler.core/nickname-post params]
+    ;; [:get  "/nickname"] ^:auth [:typing-ex.handler.core/nickname]
+    ;; [:post "/nickname" {params :form-params}]
+    ;; [:typing-ex.handler.core/nickname-post params]
 
-    [:get  "/password"] ^:auth [:typing-ex.handler.core/password]
-    [:post "/password" {params :form-params}]
-    [:typing-ex.handler.core/password-post params]
+    ;; [:get  "/password"] ^:auth [:typing-ex.handler.core/password]
+    ;; [:post "/password" {params :form-params}]
+    ;; [:typing-ex.handler.core/password-post params]
 
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
 
@@ -48,11 +48,10 @@
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/nickname   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/nickname-post {:db #ig/ref :duct.database/sql}
-
-  :typing-ex.handler.core/password   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/password-post {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/nickname   {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/nickname-post {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/password   {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/password-post {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
 
