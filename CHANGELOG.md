@@ -15,8 +15,11 @@
   - タイプし終えたら自動でボーナス。タイプが終わったことをどう判断するか？
   - detail よりも、回数、平均、最高点を表示したら？
 
+## 1.2.2 - 2022-03-15
+- バージョン上がっているかチェック。
 
 ## 1.2.1 - 2022-03-15
+### Changed
 - textarea の高さを 100px に変更した。
 - textarea の font-family を見本テキストと同じ monospace に変更した。
 - login 関係の不要なメッセージを消した。
@@ -31,6 +34,7 @@
 - タイプを始めると自動でスタートする。
 - boudary/users.clj: ds をやめ、全て ds-opt を使うようにした。
 - send-score omit zero test
+### Milestone
 - cljs から post. clj 側から埋め込んだ anti-forgery-token を cljs で読んで、
   {:form-params {:__anti-forgery-token token}}
   のようにパラメータに埋め戻して post する。

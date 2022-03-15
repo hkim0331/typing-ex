@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre :refer [debug]]))
 
-(def ^:private version "1.2.1")
+(def ^:private version "1.2.2")
 
 (defn page [& contents]
  [::response/ok
@@ -165,7 +165,7 @@
      [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
       [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
-      [:line {:x1 0 :y1 (- h 100) :x2 w :y2 (- h 100) :stroke "red"}]]
+      [:line {:x1 0 :y1 (- h 110) :x2 w :y2 (- h 110) :stroke "red"}]]
      (for [[x y] (map list (range n) (map :pt coll))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
@@ -176,23 +176,20 @@
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 (defn svg-self-records [nick ret]
-  (let [rev-ret (reverse ret)
-        avg (/ (reduce + (map :pt (take 10 rev-ret)))
-               10.0)]
+  (let [avg (/ (reduce + (map :pt (take 10 (reverse ret)))) 10.0)]
     (page
      [:h2 "Typing: " nick " records"]
-     [:p "過去の最高得点よりも最近の平均が大切。" "現在値は " avg "."
-         [:br]
-         "付け焼き刃はもろい。毎日、10分、練習しよう。"]
-     (plot 300 150 ret)
-     [:p]
+     [:p "付け焼き刃はもろい。毎日、10分、練習しよう。"]
+     [:div (plot 300 150 ret)]
+     [:ul
+      [:li "練習回数 &nbsp;" (count ret)]
+      [:li "最近平均 &nbsp;" avg]
+      [:li "最高点　&nbsp;" (apply max (map :pt ret))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
-     [:h4 nick " detail"]
-     [:p "detail よりも、回数、平均、最高点を表示したら？"]
-     (into
-      [:ol {:reversed "reversed"}]
-      (for [{:keys [pt timestamp]} rev-ret]
-        [:li pt ", " (ss timestamp)])))))
+     #_(into
+        [:ol {:reversed "reversed"}]
+        (for [{:keys [pt timestamp]} (reverse ret)]
+          [:li pt ", " (ss timestamp)])))))
 
 (defn active-users-page [ret]
   (page
