@@ -9,11 +9,11 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.2.2")
+(def ^:private version "1.2.3")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
-                          :counter 60
+                          :seconds 60
                           :errors 0}))
 
 
@@ -27,10 +27,10 @@
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill/" 0)))]
         (swap! app-state assoc :text (:body response))))
-  (swap! app-state assoc :answer "" :counter 60 :errors 0)
+  (swap! app-state assoc :answer "" :seconds 60 :errors 0)
   (reset! first-key false))
 
-(defn pt [{:keys [text answer counter errors]}]
+(defn pt [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
         s1<>s2 (map list s1 s2)
@@ -41,11 +41,11 @@
         score (int (* (- (/ goods all) (/ bads goods)) 100))]
     (js/console.log "goods bads all error score: " goods bads all err score)
     (if (= all (+ goods bads))
-      (+ score err counter)
+      (+ score err seconds)
       (+ score err))))
 
-(defn nick-pt-message [{:keys [pt users_nick]}]
-  (let [s1 (str users_nick " さんのスコアは " pt " 点です。")
+(defn login-pt-message [{:keys [pt login]}]
+  (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すんばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
@@ -62,7 +62,7 @@
                           {:form-params
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
-        (js/alert (nick-pt-message (read-string (:body response))))
+        (js/alert (login-pt-message (read-string (:body response))))
         (reset-app-state!))))
   ;; (swap! how-many-typing inc)
   ;; (when (= 0 (mod @how-many-typing report-alert))
@@ -70,19 +70,19 @@
 
 (defn count-down []
   (when @first-key
-    (swap! app-state update :counter dec)
-    (when (neg? (:counter @app-state))
-      (swap! app-state update :counter constantly 0)
-      (send-score))))
+    (swap! app-state update :seconds dec))
+  (when (zero? (:seconds @app-state))
+    ;;(swap! app-state update :seconds constantly 0)
+    (send-score)))
 
 (defn by-dots [n]
   (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
-  (if (= key "Backspace")
-    (swap! app-state update :errors inc)
-    (when-not @first-key
-      (swap! first-key not))))
+  (when-not @first-key
+    (swap! first-key not))
+  (when (= key "Backspace")
+    (swap! app-state update :errors inc)))
 
 (defn error-component []
   [:p "　" (by-dots (:errors @app-state))])
@@ -105,15 +105,10 @@
    [error-component]
    [:p
     [:input {:type  "button"
-             :id    "counter"
+             :id    "seconds"
              :class "btn btn-success btn-sm"
-             :value (:counter @app-state)
+             :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
-  ;;  [:ul
-  ;;   [:li [:a {:href "/nickname"} "nickname"]
-  ;;    "（変更すると過去データが消える）"]
-  ;;   [:li [:a {:href "/password"} "password"]
-  ;;    "（忘れるとログインできない）"]]
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
     " "
