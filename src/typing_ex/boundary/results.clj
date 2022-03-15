@@ -7,15 +7,15 @@
 (defprotocol Results
   (insert-pt [db rcv])
   (find-max-pt [db n])
-  (fetch-records [db nick])
+  (fetch-records [db login])
   (active-users [db n])
   (delete-result-by-id [db id]))
 
 (extend-protocol Results
   duct.database.sql.Boundary
 
-  (insert-pt [db nick-pt]
-    (sql/insert! (ds-opt db) :results nick-pt))
+  (insert-pt [db login-pt]
+    (sql/insert! (ds-opt db) :results login-pt))
 
   (find-max-pt [db n]
     (let [ret (sql/query
@@ -29,13 +29,13 @@
                  order by max(pt) desc"])]
       ret))
 
-  (fetch-records [db nick]
+  (fetch-records [db login]
     (let [ret (sql/query
                (ds-opt db)
                ["select pt, timestamp from results
                  where login=?
                  order by id asc"
-                nick])]
+                login])]
       ret))
 
   (active-users [db n]
