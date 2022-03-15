@@ -10,10 +10,8 @@
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre :refer [debug]]
+   [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
-
-(timbre/set-level! :debug)
 
 (def DAYS 30)
 
@@ -39,7 +37,7 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [nick password]}] :ataraxy/result}]
-    (debug "/login-post" nick)
+    (timbre/debug "/login-post" nick)
     (if (and (seq nick) (auth? db nick password))
       (-> (redirect "/scores")
           (assoc-in [:session :identity] (keyword nick)))
@@ -52,7 +50,7 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
   (fn [_]
-    (debug "/sign-on")
+    (timbre/debug "/sign-on")
     ;; Changed: 新規登録はまた来年。
     ;;(sign-on-page)
     (view/sign-on-stop)))
@@ -64,7 +62,7 @@
         [::response/found "/login"]
         [::response/found "/sign-on"]))))
 
-;; index.
+;; index. anti-forgery-field を埋め込むために。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [_]
     [::response/ok
@@ -90,11 +88,12 @@
   </body>
 </html>")]))
 
+;; works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [nick (get-nick req)
           rcv {:pt (Integer/parseInt pt) :users_nick nick}]
-      ;;(debug "/score-post pt" rcv)
+      (timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -153,8 +152,8 @@
   (fn [{[_ {:strs [old-pass pass]}] :ataraxy/result :as req}]
     (let [nick (get-nick req)
           user (users/find-user-by-nick db nick)]
-      (debug "user" user)
-      (debug "old-pass" old-pass "pass" pass)
+      ;;(debug "user" user)
+      ;;(debug "old-pass" old-pass "pass" pass)
       (if (= old-pass (:password user))
         (do
           (users/update-user db {:password pass} (:id user))
