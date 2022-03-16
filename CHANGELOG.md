@@ -10,13 +10,26 @@
 ## Unreleased
 - 各行ごとに集計
 - 認証を l22 データベースで
-- users_nick がよろしくない。login だな。新しくは。
+- users_nick がよろしくない。login だな。新しくは。それよりも別のこと勉強しましょ。
 - ページのデザイン。
   - タイプし終えたら自動でボーナス。タイプが終わったことをどう判断するか？
-  - detail よりも、回数、平均、最高点を表示したら？
+- 日本語例文。
+- 残り秒数(seconds)の表示幅が伸びたり縮んだりする。monospaced font 使えるか？
 
+## 1.2.3 - 2022-03-16
+### Changed
+- カウントが 0 の次にブランクになるのをフィックス。
+- カウント(count) に代わって seconds を使った。
+- textarea の幅が足りない例文があるため、660px 120px に変更した。
+### Milestone
+- nick を login に変更。milestone.
+
+## 1.2.2 - 2022-03-15
+- バージョン上がっているかチェック。
+- detail ではなく、回数、平均、最高点を表示する。
 
 ## 1.2.1 - 2022-03-15
+### Changed
 - textarea の高さを 100px に変更した。
 - textarea の font-family を見本テキストと同じ monospace に変更した。
 - login 関係の不要なメッセージを消した。
@@ -31,6 +44,7 @@
 - タイプを始めると自動でスタートする。
 - boudary/users.clj: ds をやめ、全て ds-opt を使うようにした。
 - send-score omit zero test
+### Milestone
 - cljs から post. clj 側から埋め込んだ anti-forgery-token を cljs で読んで、
   {:form-params {:__anti-forgery-token token}}
   のようにパラメータに埋め戻して post する。
