@@ -9,7 +9,7 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.2.2")
+(def ^:private version "1.2.3")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -44,8 +44,8 @@
       (+ score err seconds)
       (+ score err))))
 
-(defn nick-pt-message [{:keys [pt users_nick]}]
-  (let [s1 (str users_nick " さんのスコアは " pt " 点です。")
+(defn login-pt-message [{:keys [pt login]}]
+  (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すんばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
@@ -62,7 +62,7 @@
                           {:form-params
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
-        (js/alert (nick-pt-message (read-string (:body response))))
+        (js/alert (login-pt-message (read-string (:body response))))
         (reset-app-state!))))
   ;; (swap! how-many-typing inc)
   ;; (when (= 0 (mod @how-many-typing report-alert))
@@ -109,11 +109,6 @@
              :class "btn btn-success btn-sm"
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
-  ;;  [:ul
-  ;;   [:li [:a {:href "/nickname"} "nickname"]
-  ;;    "（変更すると過去データが消える）"]
-  ;;   [:li [:a {:href "/password"} "password"]
-  ;;    "（忘れるとログインできない）"]]
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
     " "

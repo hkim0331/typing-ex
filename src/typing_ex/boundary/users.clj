@@ -8,7 +8,7 @@
 
 (defprotocol Users
   (insert-user [db user])
-  (find-user-by-nick [db nick])
+  (find-user-by-login [db login])
   (update-user [db m id])
   #_(delete-user-by-id [db id]))
 
@@ -24,10 +24,10 @@
         (timbre/info (.getMessage e))
         false)))
 
-  (find-user-by-nick [db nick]
+  (find-user-by-login [db login]
     (let [ret (sql/query
                (ds-opt db)
-               ["select * from users where nick=?" nick])]
+               ["select * from users where login=?" login])]
       ;; not found?
       (-> ret first)))
 
