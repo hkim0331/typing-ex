@@ -12,6 +12,7 @@
   (delete-result-by-id [db id]))
 
 (extend-protocol Results
+
   duct.database.sql.Boundary
 
   (insert-pt [db login-pt]
