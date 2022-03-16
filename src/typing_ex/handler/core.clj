@@ -2,6 +2,7 @@
   (:require
    ;;[ataraxy.core :as ataraxy]
    [ataraxy.response :as response]
+   [buddy.hashers :as hashers]
    [clojure.java.io :as io]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
@@ -33,7 +34,9 @@
 
 (defn auth? [db login password]
   (let [ret (users/find-user-by-login db login)]
-    (and (some? ret) (= (:password ret) password))))
+    (and (some? ret)
+         ;;(= (:password ret) password)
+         (hashers/check password (:password ret)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
