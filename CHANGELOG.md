@@ -19,9 +19,10 @@
 - 開設ポートを変更するには？
 
 
-## 1.2.4-SNAPSHOT
+## 1.2.4 - 2022-03-17
 ### Changed
 - password hash
+- in development, use 3023/tcp
 
 ## 1.2.3 - 2022-03-16
 ### Changed
