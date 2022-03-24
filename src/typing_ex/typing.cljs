@@ -9,7 +9,7 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.2.4")
+(def ^:private version "1.2.5")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -25,7 +25,7 @@
 ;; (def ^:private report-alert 10)
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill/" 0)))]
+  (go (let [response (<! (http/get (str "/drill")))]
         (swap! app-state assoc :text (:body response))))
   (swap! app-state assoc :answer "" :seconds 60 :errors 0)
   (reset! first-key false))

@@ -9,8 +9,8 @@
 
     [:get "/logout"]  [:typing-ex.handler.core/logout]
 
-    [:get "/sign-on"]  [:typing-ex.handler.core/sign-on]
-    [:post "/sign-on"] [:typing-ex.handler.core/sign-on-post]
+    ;;[:get "/sign-on"]  [:typing-ex.handler.core/sign-on]
+    ;;[:post "/sign-on"] [:typing-ex.handler.core/sign-on-post]
 
     ;; [:get  "/nickname"] ^:auth [:typing-ex.handler.core/nickname]
     ;; [:post "/nickname" {params :form-params}]
@@ -22,15 +22,13 @@
 
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
 
-    ;; FIXME: CSRF.
-    ;; 本来は post のはず。
-    [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
-    ;;
-    [:get "/scores"] ^:auth [:typing-ex.handler.core/scores]
+    [:get  "/scores"] ^:auth [:typing-ex.handler.core/scores]
+    ;; require auth?
+    [:post "/score"]  ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" nick] ^:auth [:typing-ex.handler.core/record nick]
 
-    [:get "/drill/" n] [:typing-ex.handler.core/drill ^int n]
+    [:get "/drill"] [:typing-ex.handler.core/drill]
 
     [:get "/users"] ^:auth [:typing-ex.handler.core/users]
 
@@ -55,8 +53,8 @@
 
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/sign-on      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/sign-on-post {:db #ig/ref :duct.database/sql}
+  ;;:typing-ex.handler.core/sign-on      {:db #ig/ref :duct.database/sql}
+  ;;:typing-ex.handler.core/sign-on-post {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
 
