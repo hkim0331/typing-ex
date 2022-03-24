@@ -21,7 +21,7 @@
      :crossorigin "anonymous"}]
    [:link
     {:rel "stylesheet"
-     :href "css/style.css"}]
+     :href "/css/style.css"}]
    [:title "Typing-Ex"]
    [:body
     [:div {:class "container"}
@@ -136,7 +136,6 @@
      "L22"]]
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
-   [:p (str ret)]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li

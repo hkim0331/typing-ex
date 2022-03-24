@@ -121,8 +121,8 @@
     (if (or (= login "hkimura")
             (= login (get-login req))
             (admin? (get-login req)))
-      (let [ret (results/fetch-records db login)]
-        ;;(self-records-page login ret)
+      (let [ret (->> (results/fetch-records db login)
+                     (map #(assoc % :pt (max 0 (:pt %)))))]
         (view/svg-self-records login ret))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
