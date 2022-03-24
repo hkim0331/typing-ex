@@ -25,7 +25,7 @@
 ;; (def ^:private report-alert 10)
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill/" 0)))]
+  (go (let [response (<! (http/get (str "/drill")))]
         (swap! app-state assoc :text (:body response))))
   (swap! app-state assoc :answer "" :seconds 60 :errors 0)
   (reset! first-key false))

@@ -28,7 +28,7 @@
 
     [:get "/record/" nick] ^:auth [:typing-ex.handler.core/record nick]
 
-    [:get "/drill/"] [:typing-ex.handler.core/drill]
+    [:get "/drill"] [:typing-ex.handler.core/drill]
 
     [:get "/users"] ^:auth [:typing-ex.handler.core/users]
 
