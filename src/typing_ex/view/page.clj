@@ -22,7 +22,7 @@
    [:link
     {:rel "stylesheet"
      :href "css/style.css"}]
-   [:title "Typing TEST"]
+   [:title "Typing-Ex"]
    [:body
     [:div {:class "container"}
       contents
@@ -35,7 +35,7 @@
     (form-to
       [:post "/login"]
       (anti-forgery-field)
-      (text-field {:placeholder "ニックネーム"} "login")
+      (text-field {:placeholder "アカウント"} "login")
       (password-field {:placeholder "パスワード"} "password")
       (submit-button "login"))
     [:br]
@@ -184,7 +184,7 @@
      [:ul
       [:li "練習回数 &nbsp;" (count ret)]
       [:li "最近平均 &nbsp;" avg]
-      [:li "最高点　&nbsp;" (apply max (map :pt ret))]]
+      [:li "最高点 &nbsp;" (apply max (map :pt ret))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
      #_(into
         [:ol {:reversed "reversed"}]
