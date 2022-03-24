@@ -128,16 +128,13 @@
          :class "btn btn-info btn-sm"}
      "QA"]
     " "
-    [:a {:href "http://ul.melt.kyutech.ac.jp/"
+    [:a {:href "http:/mt.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
-     "UL"]
+     "MT"]
     " "
-    ;; [:a {:href "http://gs.melt.kyutech.ac.jp/"
-    ;;      :class "btn btn-info btn-sm"}
-    ;;  "GS"]
-    [:a {:href "http://ex.melt.kyutech.ac.jp/"
+    [:a {:href "http://l22.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
-     "EX"]]
+     "L22"]]
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
    (into [:ol
