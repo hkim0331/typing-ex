@@ -51,19 +51,19 @@
     (-> (redirect "/login")
         (assoc :session {}))))
 
-(defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
-  (fn [_]
-    (timbre/debug "/sign-on")
-    ;; Changed: 新規登録はまた来年。
-    ;;(sign-on-page)
-    (view/sign-on-stop)))
+;; (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
+;;   (fn [_]
+;;     (timbre/debug "/sign-on")
+;;     ;; Changed: 新規登録はまた来年。
+;;     ;;(sign-on-page)
+;;     (view/sign-on-stop)))
 
-(defmethod ig/init-key :typing-ex.handler.core/sign-on-post [_ {:keys [db]}]
-  (fn [{{:strs [sid login password]} :form-params}]
-    (let [user {:sid sid :login login :password password}]
-      (if (users/insert-user db user)
-        [::response/found "/login"]
-        [::response/found "/sign-on"]))))
+;; (defmethod ig/init-key :typing-ex.handler.core/sign-on-post [_ {:keys [db]}]
+;;   (fn [{{:strs [sid login password]} :form-params}]
+;;     (let [user {:sid sid :login login :password password}]
+;;       (if (users/insert-user db user)
+;;         [::response/found "/login"]
+;;         [::response/found "/sign-on"]))))
 
 ;; index. anti-forgery-field を埋め込むために。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]

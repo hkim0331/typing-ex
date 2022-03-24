@@ -48,68 +48,68 @@
        "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
 ;; FIXME: l22 アプリに飛ばそう。2022-03-11
-(defn sign-on-stop []
-  (page
-   [:h2 "Typing"]
-   [:p "新規登録はまた来年"]))
+;; (defn sign-on-stop []
+;;   (page
+;;    [:h2 "Typing"]
+;;    [:p "新規登録はまた来年"]))
 
-(defn sign-on-page []
-  (page
-   [:h2 "Typing: 登録"]
-   (form-to
-    [:post "/sign-on"]
-    (anti-forgery-field)
-    (text-field {:placeholder "学生番号"} "sid")
-    (label "sid" "半角小文字。全角文字は不可。")
-    [:br]
-    (text-field {:placeholder "ニックネーム"} "login")
-    (label "login" "他ユーザと違う 8 文字以内の文字列。ログインに使います。")
-    [:br]
-    (text-field {:placeholder "パスワード"} "password")
-    (label "password" "エコーバックします。何かに記録しておく。")
-    [:br]
-    (submit-button "登録"))
-   [:br]
-   [:ul
-    [:li "こういうアカウント作成のときに軽気で日本語入れる人いる。"
-     "ま、少ないけど。"]
-    [:li "google, facebook, instagram でやったらどんな感じになる？"
-     "次週のお勉強にとっておく。"]
-    [:li "メールアドレス、サーバ名(ドメイン名)とかに"
-     "日本語はまだまだ通用しないじゃね？"]
-    [:li "成績つかないなど、"
-     "その他の不利を理解しているなら強気で行ってよい。"]
-    [:li "ニックネーム変更できない時は 214 行く🦌。"]]
-   [:p [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
+;; (defn sign-on-page []
+;;   (page
+;;    [:h2 "Typing: 登録"]
+;;    (form-to
+;;     [:post "/sign-on"]
+;;     (anti-forgery-field)
+;;     (text-field {:placeholder "学生番号"} "sid")
+;;     (label "sid" "半角小文字。全角文字は不可。")
+;;     [:br]
+;;     (text-field {:placeholder "ニックネーム"} "login")
+;;     (label "login" "他ユーザと違う 8 文字以内の文字列。ログインに使います。")
+;;     [:br]
+;;     (text-field {:placeholder "パスワード"} "password")
+;;     (label "password" "エコーバックします。何かに記録しておく。")
+;;     [:br]
+;;     (submit-button "登録"))
+;;    [:br]
+;;    [:ul
+;;     [:li "こういうアカウント作成のときに軽気で日本語入れる人いる。"
+;;      "ま、少ないけど。"]
+;;     [:li "google, facebook, instagram でやったらどんな感じになる？"
+;;      "次週のお勉強にとっておく。"]
+;;     [:li "メールアドレス、サーバ名(ドメイン名)とかに"
+;;      "日本語はまだまだ通用しないじゃね？"]
+;;     [:li "成績つかないなど、"
+;;      "その他の不利を理解しているなら強気で行ってよい。"]
+;;     [:li "ニックネーム変更できない時は 214 行く🦌。"]]
+;;    [:p [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
 
-(defn loginname-page [login]
-  (page
-   [:h2 "Typing: loginname"]
-   [:p "ニックネームを変更すると過去データが消える。"
-    [:br]
-    "正確には、過去データと自分の学生番号とのつながりが切れる。"
-    "復旧できない。"]
-   [:p]
-   [:p "現在ニックネーム： " login]
-   (form-to
-    [:post "/loginname"]
-    (anti-forgery-field)
-    (label "new-login" "新ニックネーム： ")
-    (text-field {:placeholder "半角英数字、8文字以内"} "new-login")
-    (submit-button "change"))
-   [:p [:a {:href "/"} "back"]]))
+;; (defn loginname-page [login]
+;;   (page
+;;    [:h2 "Typing: loginname"]
+;;    [:p "ニックネームを変更すると過去データが消える。"
+;;     [:br]
+;;     "正確には、過去データと自分の学生番号とのつながりが切れる。"
+;;     "復旧できない。"]
+;;    [:p]
+;;    [:p "現在ニックネーム： " login]
+;;    (form-to
+;;     [:post "/loginname"]
+;;     (anti-forgery-field)
+;;     (label "new-login" "新ニックネーム： ")
+;;     (text-field {:placeholder "半角英数字、8文字以内"} "new-login")
+;;     (submit-button "change"))
+;;    [:p [:a {:href "/"} "back"]]))
 
-(defn password-page []
-  (page
-   [:h2 "Typing: Password"]
-   [:p "パスワード忘れると当たり前にログインできない。"]
-   (form-to
-    [:post "/password"]
-    (anti-forgery-field)
-    (text-field {:placeholder "旧パスワード"} "old-pass")
-    (text-field {:placeholder "新パスワード"} "pass")
-    (submit-button "change"))
-   [:p [:a {:href "/"} "back"]]))
+;; (defn password-page []
+;;   (page
+;;    [:h2 "Typing: Password"]
+;;    [:p "パスワード忘れると当たり前にログインできない。"]
+;;    (form-to
+;;     [:post "/password"]
+;;     (anti-forgery-field)
+;;     (text-field {:placeholder "旧パスワード"} "old-pass")
+;;     (text-field {:placeholder "新パスワード"} "pass")
+;;     (submit-button "change"))
+;;    [:p [:a {:href "/"} "back"]]))
 
 ;; see handler.core/scores
 ;; 7days, 30days must sync with the code.
