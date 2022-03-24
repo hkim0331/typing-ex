@@ -113,8 +113,7 @@
 
 ;; see handler.core/scores
 ;; 7days, 30days must sync with the code.
-(defn scores-page [ret login days]
-  (timbre/debug "scores-page")
+(defn scores-page [ret user days]
   (page
    [:h2 "Typing: Scores(last " days " days)"]
    [:p
@@ -128,7 +127,7 @@
          :class "btn btn-info btn-sm"}
      "QA"]
     " "
-    [:a {:href "http:/mt.melt.kyutech.ac.jp/"
+    [:a {:href "http://mt.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
      "MT"]
     " "
@@ -137,16 +136,15 @@
      "L22"]]
 
    [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
+   [:p (str ret)]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li
              max
              " "
              [:a {:href (str "/record/" login)
-                  ;; FIXME: case を書くと予想したようには動作しない。本当か？
                   :class (cond
-                           (= login login) "yes"
-                           (= login "hkimura") "hkimura"
+                           (= login user) "yes"
                            :else "other")}
               login]])])
    [:p
