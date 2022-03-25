@@ -3,7 +3,8 @@
    ;;[ataraxy.core :as ataraxy]
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
-   [clojure.java.io :as io]
+   ;;[clojure.java.io :as io]
+   [clojure.string :as str]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
@@ -25,11 +26,11 @@
     (get admins s)))
 
 (defn get-login
-  "request ヘッダの id 情報を文字列で返す"
+  "request ヘッダの id 情報を文字列で返す。エラーの場合は nil."
   [req]
-  (let [ret (name (get-in req [:session :identity]))]
-    (timbre/debug "get-login" ret)
-    ret))
+  (try
+    (name (get-in req [:session :identity]))
+    (catch Exception _ nil)))
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
@@ -73,9 +74,15 @@
 ;;         [::response/found "/login"]
 ;;         [::response/found "/sign-on"]))))
 
+(defn login-field [login]
+ (str/replace "<input type='hidden' id='login' value='xxx'>"
+              #"xxx"
+              login))
+
 ;; index. anti-forgery-field を埋め込むために。
+;; ついでに login も埋め込むか。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
-  (fn [_]
+  (fn [req]
     [::response/ok
      (str
       "<!DOCTYPE html>
@@ -89,6 +96,7 @@
   </head>
   <body>"
       (anti-forgery-field)
+      (login-field (get-login req))
       "<div class='container'>
     <div id='app'>
       Shadow-cljs rocks!
@@ -135,13 +143,11 @@
         (view/svg-self-records login ret))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
-;;
-(defmethod ig/init-key :typing-ex.handler.core/todays-score [_ {:keys [db]}]
-  (fn [req]
-    (let [results (results/todays-score db "hkimura")]
-      [:status 200
-       :headers {"content-type" "application/raw"}
-       :body (map #(assoc % :pt (max 0 (:pt %))) results)])))
+;; req から login をとるのはどうかな。
+(defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (let [results (results/todays-score db login)]
+      [::response/ok (str results)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
   (fn [_]

@@ -116,7 +116,7 @@
 ;; 7days, 30days must sync with the code.
 (defn scores-page [ret user days]
   (page
-   [:h2 "Typing: Scores(last " days " days)"]
+   [:h2 "Typing: Scores (last " days " days)"]
    [:p
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
@@ -136,7 +136,8 @@
          :class "btn btn-info btn-sm"}
      "L22"]]
 
-   [:p "直近の " days " 日間、練習したユーザのリスト。名前をクリックするとグラフ表示。"]
+   [:p "直近の " days " 日間に練習したユーザのリスト。
+名前をクリックすると全データ表示。"]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li

@@ -42,8 +42,8 @@
   (todays-score [db login]
     (let [ret (sql/query
                (ds-opt db)
-               ["select pt, timestamp from results
-                 where login=?
+               ["select pt from results
+                 where login=? and date(timestamp) = CURRENT_DATE
                  order by id asc"
                 login])]
       ret))

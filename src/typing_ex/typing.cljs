@@ -3,8 +3,8 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
+   [cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
-   [clojure.edn :refer [read-string]]
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
@@ -17,25 +17,23 @@
                           :errors 0}))
 
 (defonce first-key (atom false))
-(defonce todays-score (atom {}))
+(defonce todays (atom {}))
 
-;; report-alert 回数練習したら一度、アラートを出す。
-;; この場所で定義するのがいいのか？
-;; (defonce how-many-typing (atom 0))
-;; (def ^:private report-alert 10)
-  ;; (go (let [{body :body} (<! (http/get "/todays-score"))]
-  ;;       (reset! todays-score body)
-  ;;       (.log js/console @todays-score))))
+(defn get-login []
+ (-> (.getElementById js/document "login")
+     (.-value)))
 
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill")))
-            {data :data} (<! (http/get "/todays-score"))]
+            {s :body} (<! (http/get (str "/todays/" (get-login))))]
         (swap! app-state assoc :text (:body response)
                                :answer ""
                                :seconds 60
                                :errors 0)
+        (.log js/console "text" s)
         (reset! first-key false)
-        (reset! todays-score [{:pt (rand-int 100)} {:pt (rand-int 100)} {:pt (rand-int 100)}]))))
+        (reset! todays (->> (read-string s)
+                            (map #(assoc % :pt (max 0 (:pt %)))))))))
 
 (defn pt [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -61,8 +59,6 @@
              "練習あるのみ。")]
     (str s1 "\n" s2)))
 
-
-
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
             response (<! (http/post
@@ -71,6 +67,7 @@
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
         (reset-app-state!)
+        ;; need check
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
@@ -129,7 +126,10 @@
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
    ;;チャレンジのたびに更新したいが。
-   [plot 300 150 @todays-score]
+   [:p
+    "Your todays:"
+    [:br]
+    [plot 300 150 @todays]]
    ;;
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
