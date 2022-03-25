@@ -32,7 +32,8 @@
                                :errors 0)
         (.log js/console "text" s)
         (reset! first-key false)
-        (reset! todays (read-string s)))))
+        (reset! todays (->> (read-string s)
+                            (map #(assoc % :pt (max 0 (:pt %)))))))))
 
 (defn pt [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -125,7 +126,10 @@
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
    ;;チャレンジのたびに更新したいが。
-   [plot 300 150 @todays]
+   [:p
+    "Your todays:"
+    [:br]
+    [plot 300 150 @todays]]
    ;;
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
