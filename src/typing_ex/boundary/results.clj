@@ -20,8 +20,8 @@
   (find-max-pt [db n]
     (let [ret (sql/query
                (ds-opt db)
-               ;; FIXME: 7 days を引数にとる。
-               ;;        ["?" n] で n が渡らない。
+               ;; FIXME: 7 days を引数にとる。["?" n] で n が渡らない。
+               ;; '' の内側だからか？
                ["select login, max(pt) from
                 (select * from results where
                    timestamp > CURRENT_TIMESTAMP - interval '30 days') as rslt
