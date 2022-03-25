@@ -163,7 +163,7 @@
      (for [[x y] (map list (range n) (map :pt coll))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "green"}]))))
+         :fill "green"}])))) ;; was green
 
 (defn- ss [s]
   (subs (str s) 0 19))

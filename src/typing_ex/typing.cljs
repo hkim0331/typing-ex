@@ -16,7 +16,6 @@
                           :seconds 60
                           :errors 0}))
 
-
 (defonce first-key (atom false))
 
 ;; report-alert 回数練習したら一度、アラートを出す。
@@ -54,25 +53,25 @@
              "練習あるのみ。")]
     (str s1 "\n" s2)))
 
-;; it worked!
+(defonce todays-score (atom {}))
+
 (defn send-score []
+  (go (let [{body :body} (<! (http/get "/todays-score"))]
+        (reset! todays-score body)
+        (.log js/console @todays-score)))
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
             response (<! (http/post
                           "/score"
                           {:form-params
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
-        (js/alert (login-pt-message (read-string (:body response))))
-        (reset-app-state!))))
-  ;; (swap! how-many-typing inc)
-  ;; (when (= 0 (mod @how-many-typing report-alert))
-  ;;   (js/alert "がんばってんねー。一旦、休憩入れたら？")))
+        (reset-app-state!)
+        (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
   (when @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
-    ;;(swap! app-state update :seconds constantly 0)
     (send-score)))
 
 (defn by-dots [n]
@@ -86,6 +85,21 @@
 
 (defn error-component []
   [:p "　" (by-dots (:errors @app-state))])
+
+;; FIXME: same funtion. cljc?
+(defn plot [w h data]
+  (let [n (count data)
+        dx (/ w (count data))]
+    ;;(.log js/console (str "plot called with " (read-string data)))
+    (into
+     [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
+      [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
+      [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
+      [:line {:x1 0 :y1 (- h 110) :x2 w :y2 (- h 110) :stroke "red"}]]
+     (for [[x y] (map list (range n) (map :pt data))]
+       [:rect
+        {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
+         :fill "red"}])))) ;; was green
 
 (defn ex-page []
   [:div
@@ -109,6 +123,9 @@
              :class "btn btn-success btn-sm"
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
+   ;;チャレンジのたびに更新したいが。
+   ;;[plot 300 150 @todays-score]
+   ;;
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
     " "

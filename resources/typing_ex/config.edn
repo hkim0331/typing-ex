@@ -27,6 +27,8 @@
     [:post "/score"]  ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" nick] ^:auth [:typing-ex.handler.core/record nick]
+    
+    [:get "/todays-score"] [:typing-ex.handler.core/todays-score]
 
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
@@ -62,6 +64,7 @@
   :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/todays-score {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
 
