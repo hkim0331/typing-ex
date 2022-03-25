@@ -3,13 +3,13 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
+   [cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
-   [clojure.edn :refer [read-string]]
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.2.6")
+(def ^:private version "1.3.0")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -17,17 +17,23 @@
                           :errors 0}))
 
 (defonce first-key (atom false))
+(defonce todays (atom {}))
 
-;; report-alert 回数練習したら一度、アラートを出す。
-;; この場所で定義するのがいいのか？
-;; (defonce how-many-typing (atom 0))
-;; (def ^:private report-alert 10)
+(defn get-login []
+ (-> (.getElementById js/document "login")
+     (.-value)))
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill")))]
-        (swap! app-state assoc :text (:body response))))
-  (swap! app-state assoc :answer "" :seconds 60 :errors 0)
-  (reset! first-key false))
+  (go (let [response (<! (http/get (str "/drill")))
+            {s :body} (<! (http/get (str "/todays/" (get-login))))]
+        (swap! app-state assoc :text (:body response)
+                               :answer ""
+                               :seconds 60
+                               :errors 0)
+        (.log js/console "text" s)
+        (reset! first-key false)
+        (reset! todays (->> (read-string s)
+                            (map #(assoc % :pt (max 0 (:pt %)))))))))
 
 (defn pt [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -53,12 +59,7 @@
              "練習あるのみ。")]
     (str s1 "\n" s2)))
 
-(defonce todays-score (atom {}))
-
 (defn send-score []
-  (go (let [{body :body} (<! (http/get "/todays-score"))]
-        (reset! todays-score body)
-        (.log js/console @todays-score)))
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
             response (<! (http/post
                           "/score"
@@ -66,6 +67,7 @@
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
         (reset-app-state!)
+        ;; need check
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
@@ -90,7 +92,7 @@
 (defn plot [w h data]
   (let [n (count data)
         dx (/ w (count data))]
-    ;;(.log js/console (str "plot called with " (read-string data)))
+    (.log js/console (str "plot called with " data))
     (into
      [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -99,7 +101,7 @@
      (for [[x y] (map list (range n) (map :pt data))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "red"}])))) ;; was green
+         :fill "green"}])))) ;; was green
 
 (defn ex-page []
   [:div
@@ -124,7 +126,10 @@
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
    ;;チャレンジのたびに更新したいが。
-   ;;[plot 300 150 @todays-score]
+   [:p
+    "Your todays:"
+    [:br]
+    [plot 300 150 @todays]]
    ;;
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
