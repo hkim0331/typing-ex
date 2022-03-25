@@ -30,7 +30,7 @@
                                :answer ""
                                :seconds 60
                                :errors 0)
-        (.log js/console "text" s)
+        ;;(.log js/console "text" s)
         (reset! first-key false)
         (reset! todays (->> (read-string s)
                             (map #(assoc % :pt (max 0 (:pt %)))))))))
@@ -67,7 +67,6 @@
                             {:pt (pt @app-state)
                              :__anti-forgery-token token}}))]
         (reset-app-state!)
-        ;; need check
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
@@ -92,7 +91,7 @@
 (defn plot [w h data]
   (let [n (count data)
         dx (/ w (count data))]
-    (.log js/console (str "plot called with " data))
+    ;;(.log js/console (str "plot called with " data))
     (into
      [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -125,7 +124,6 @@
              :class "btn btn-success btn-sm"
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
-   ;;チャレンジのたびに更新したいが。
    [:p
     "Your todays:"
     [:br]

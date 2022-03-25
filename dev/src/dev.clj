@@ -31,3 +31,4 @@
 (integrant.repl/set-prep! #(duct/prep-config (read-config) profiles))
 
 (timbre/set-level! :debug)
+(timbre/info "timbre/set-level! :debug")
