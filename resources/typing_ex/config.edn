@@ -26,8 +26,8 @@
     ;; require auth?
     [:post "/score"]  ^:auth [:typing-ex.handler.core/score-post]
 
-    [:get "/record/" nick] ^:auth [:typing-ex.handler.core/record nick]
-    
+    [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
+
     [:get "/todays-score"] [:typing-ex.handler.core/todays-score]
 
     [:get "/drill"] [:typing-ex.handler.core/drill]

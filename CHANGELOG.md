@@ -19,6 +19,12 @@
 - 本日グラフをタイプ練習のページに表示する。
   Scores ページかはら全データが辿れるとかではどうか？
 
+## 1.2.6 - 2022-03-25
+### Bugfix
+- docker postgresql の l22.results テーブルのコラム login が nick に戻っていた。
+### Added
+- login 失敗時に flash メッセージを表示する。
+
 ## 1.2.5 - 2022-03-24
 ### Changed
 - scores に意味のあるリンク（ボタン）
