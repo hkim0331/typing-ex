@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre :refer [debug]]))
 
-(def ^:private version "1.2.5")
+(def ^:private version "1.2.6")
 
 (defn page [& contents]
  [::response/ok
@@ -29,9 +29,10 @@
      [:hr]
      "hkimura, " version "."]])])
 
-(defn login-page []
+(defn login-page [req]
   (page
     [:h2 "Typing: Login"]
+    [:div.text-danger (:flash req)]
     (form-to
       [:post "/login"]
       (anti-forgery-field)
@@ -163,7 +164,7 @@
      (for [[x y] (map list (range n) (map :pt coll))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "green"}]))))
+         :fill "green"}])))) ;; was green
 
 (defn- ss [s]
   (subs (str s) 0 19))
