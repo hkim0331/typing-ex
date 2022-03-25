@@ -19,21 +19,18 @@
 (defonce first-key (atom false))
 (defonce todays-score (atom {}))
 
-;; report-alert 回数練習したら一度、アラートを出す。
-;; この場所で定義するのがいいのか？
-;; (defonce how-many-typing (atom 0))
-;; (def ^:private report-alert 10)
-  ;; (go (let [{body :body} (<! (http/get "/todays-score"))]
-  ;;       (reset! todays-score body)
-  ;;       (.log js/console @todays-score))))
+(defn get-login []
+ (-> (.getElementById js/document "login")
+     (.-value)))
 
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill")))
-            {data :data} (<! (http/get "/todays-score"))]
+            {data :body} (<! (http/get (str "/todays-score/" (get-login))))]
         (swap! app-state assoc :text (:body response)
                                :answer ""
                                :seconds 60
                                :errors 0)
+        (.log js/console "data:" data)
         (reset! first-key false)
         (reset! todays-score [{:pt (rand-int 100)} {:pt (rand-int 100)} {:pt (rand-int 100)}]))))
 
@@ -60,8 +57,6 @@
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
     (str s1 "\n" s2)))
-
-
 
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))

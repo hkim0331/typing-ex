@@ -28,7 +28,7 @@
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
 
-    [:get "/todays-score"] [:typing-ex.handler.core/todays-score]
+    [:get "/todays-score/" login] [:typing-ex.handler.core/todays-score login]
 
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
