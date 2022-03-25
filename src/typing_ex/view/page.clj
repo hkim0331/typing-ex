@@ -29,9 +29,10 @@
      [:hr]
      "hkimura, " version "."]])])
 
-(defn login-page []
+(defn login-page [req]
   (page
     [:h2 "Typing: Login"]
+    [:div.text-danger (:flash req)]
     (form-to
       [:post "/login"]
       (anti-forgery-field)

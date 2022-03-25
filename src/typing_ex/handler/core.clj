@@ -29,8 +29,8 @@
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
-  (fn [_]
-    (view/login-page)))
+  (fn [req]
+    (view/login-page req)))
 
 (defn auth? [db login password]
   (let [ret (users/find-user-by-login db login)]
@@ -44,7 +44,8 @@
     (if (and (seq login) (auth? db login password))
       (-> (redirect "/scores")
           (assoc-in [:session :identity] (keyword login)))
-      [::response/found "/login"])))
+      (-> (redirect "/login")
+          (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
