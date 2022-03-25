@@ -14,6 +14,8 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
+(timbre/set-level! :debug)
+
 (def DAYS 30)
 
 ;; FIXME: データベースに持っていこ。
@@ -25,7 +27,9 @@
 (defn get-login
   "request ヘッダの id 情報を文字列で返す"
   [req]
-  (name (get-in req [:session :identity])))
+  (let [ret (name (get-in req [:session :identity]))]
+    (timbre/debug "get-login" ret)
+    ret))
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
@@ -34,16 +38,19 @@
 
 (defn auth? [db login password]
   (let [ret (users/find-user-by-login db login)]
+    (timbre/debug "auth?" login password)
     (and (some? ret)
          ;;(= (:password ret) password)
          (hashers/check password (:password ret)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
-    (timbre/debug "/login-post" login)
+    (timbre/debug "/login-post" login password)
     (if (and (seq login) (auth? db login password))
-      (-> (redirect "/scores")
-          (assoc-in [:session :identity] (keyword login)))
+      (do
+        (timbre/debug "login success")
+        (-> (redirect "/scores")
+            (assoc-in [:session :identity] (keyword login))))
       (-> (redirect "/login")
           (assoc :flash "login failure")))))
 
@@ -92,7 +99,7 @@
   </body>
 </html>")]))
 
-;; works!
+;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
@@ -105,8 +112,9 @@
   (fn [req]
     ;; 30 days max.
     ;; must fix view/page.clj at the same time.
-    (let [ret (results/find-max-pt db DAYS)
-          login (get-login req)]
+    (let [login (get-login req)
+          ret (results/find-max-pt db DAYS)]
+      (timbre/debug "/scores" login ret)
       (view/scores-page ret login DAYS))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
