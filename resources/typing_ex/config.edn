@@ -1,6 +1,8 @@
 {:duct.profile/base
  {:duct.core/project-ns typing-ex
+
   ;;:duct.server.http/jetty {:port 3023}
+
   :duct.router/ataraxy
   {:routes
    {[:get "/login"] [:typing-ex.handler.core/login]
@@ -28,7 +30,7 @@
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
 
-    [:get "/todays-score/" login] [:typing-ex.handler.core/todays-score login]
+    [:get "/todays/" login] [:typing-ex.handler.core/todays login]
 
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
@@ -64,7 +66,7 @@
   :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/todays-score {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/todays      {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
 

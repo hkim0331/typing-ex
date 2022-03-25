@@ -144,10 +144,10 @@
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
 ;; req から login をとるのはどうかな。
-(defmethod ig/init-key :typing-ex.handler.core/todays-score [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result}]
     (let [results (results/todays-score db login)]
-      [::response/ok (map #(assoc % :pt (max 0 (:pt %))) results)])))
+      [::response/ok (str results)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
   (fn [_]
