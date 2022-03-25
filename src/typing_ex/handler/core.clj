@@ -135,11 +135,13 @@
         (view/svg-self-records login ret))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
+;;
 (defmethod ig/init-key :typing-ex.handler.core/todays-score [_ {:keys [db]}]
   (fn [req]
     (let [results (results/todays-score db "hkimura")]
-      (timbre/info "results" results)
-      [::response/ok (map #(assoc % :pt (max 0 (:pt %))) results)])))
+      [:status 200
+       :headers {"content-type" "application/raw"}
+       :body (map #(assoc % :pt (max 0 (:pt %))) results)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
   (fn [_]

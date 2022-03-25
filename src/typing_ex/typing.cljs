@@ -17,17 +17,25 @@
                           :errors 0}))
 
 (defonce first-key (atom false))
+(defonce todays-score (atom {}))
 
 ;; report-alert 回数練習したら一度、アラートを出す。
 ;; この場所で定義するのがいいのか？
 ;; (defonce how-many-typing (atom 0))
 ;; (def ^:private report-alert 10)
+  ;; (go (let [{body :body} (<! (http/get "/todays-score"))]
+  ;;       (reset! todays-score body)
+  ;;       (.log js/console @todays-score))))
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill")))]
-        (swap! app-state assoc :text (:body response))))
-  (swap! app-state assoc :answer "" :seconds 60 :errors 0)
-  (reset! first-key false))
+  (go (let [response (<! (http/get (str "/drill")))
+            {data :data} (<! (http/get "/todays-score"))]
+        (swap! app-state assoc :text (:body response)
+                               :answer ""
+                               :seconds 60
+                               :errors 0)
+        (reset! first-key false)
+        (reset! todays-score [{:pt (rand-int 100)} {:pt (rand-int 100)} {:pt (rand-int 100)}]))))
 
 (defn pt [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -53,12 +61,9 @@
              "練習あるのみ。")]
     (str s1 "\n" s2)))
 
-(defonce todays-score (atom {}))
+
 
 (defn send-score []
-  (go (let [{body :body} (<! (http/get "/todays-score"))]
-        (reset! todays-score body)
-        (.log js/console @todays-score)))
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
             response (<! (http/post
                           "/score"
@@ -90,7 +95,7 @@
 (defn plot [w h data]
   (let [n (count data)
         dx (/ w (count data))]
-    ;;(.log js/console (str "plot called with " (read-string data)))
+    (.log js/console (str "plot called with " data))
     (into
      [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -99,7 +104,7 @@
      (for [[x y] (map list (range n) (map :pt data))]
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "red"}])))) ;; was green
+         :fill "green"}])))) ;; was green
 
 (defn ex-page []
   [:div
@@ -124,7 +129,7 @@
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
    ;;チャレンジのたびに更新したいが。
-   ;;[plot 300 150 @todays-score]
+   [plot 300 150 @todays-score]
    ;;
    [:p
     [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
