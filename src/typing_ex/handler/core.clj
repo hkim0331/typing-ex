@@ -15,14 +15,11 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
-(timbre/set-level! :debug)
-
 (def DAYS 30)
 
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "login888"}]
-    ;;(debug "admin?" s)
     (get admins s)))
 
 (defn get-login

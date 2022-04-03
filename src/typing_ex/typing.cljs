@@ -9,7 +9,7 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.3.0")
+(def ^:private version "1.3.1")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -17,20 +17,23 @@
                           :errors 0}))
 
 (defonce first-key (atom false))
+
 (defonce todays (atom {}))
 
+
+
 (defn get-login []
- (-> (.getElementById js/document "login")
-     (.-value)))
+  (-> (.getElementById js/document "login")
+      (.-value)))
 
 (defn reset-app-state! []
   (go (let [response (<! (http/get (str "/drill")))
             {s :body} (<! (http/get (str "/todays/" (get-login))))]
         (swap! app-state assoc :text (:body response)
-                               :answer ""
-                               :seconds 60
-                               :errors 0)
-        (.log js/console "text" s)
+               :answer ""
+               :seconds 60
+               :errors 0)
+        ;;(.log js/console "text" s)
         (reset! first-key false)
         (reset! todays (->> (read-string s)
                             (map #(assoc % :pt (max 0 (:pt %)))))))))
@@ -52,7 +55,7 @@
 (defn login-pt-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
-             100 "すんばらしい。最高点取れた？平均で 80 点越えよう。"
+             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
@@ -64,10 +67,9 @@
             response (<! (http/post
                           "/score"
                           {:form-params
-                            {:pt (pt @app-state)
-                             :__anti-forgery-token token}}))]
+                           {:pt (pt @app-state)
+                            :__anti-forgery-token token}}))]
         (reset-app-state!)
-        ;; need check
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
@@ -76,6 +78,12 @@
   (when (zero? (:seconds @app-state))
     (send-score)))
 
+;; FIXME: when moving below block to top of this code,
+;;        becomes not counting down.
+;;(declare count-down)
+(defonce updater (js/setInterval count-down 1000))
+
+;; FIXME: function name
 (defn by-dots [n]
   (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
 
@@ -92,7 +100,7 @@
 (defn plot [w h data]
   (let [n (count data)
         dx (/ w (count data))]
-    (.log js/console (str "plot called with " data))
+    ;;(.log js/console (str "plot called with " data))
     (into
      [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -123,9 +131,9 @@
     [:input {:type  "button"
              :id    "seconds"
              :class "btn btn-success btn-sm"
+             :style {:font-family "monospace"}
              :value (:seconds @app-state)
              :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
-   ;;チャレンジのたびに更新したいが。
    [:p
     "Your todays:"
     [:br]
@@ -139,8 +147,7 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (rdom/render [ex-page] (js/document.getElementById "app"))
-  (js/setInterval count-down 1000))
+  (rdom/render [ex-page] (js/document.getElementById "app")))
 
 (defn ^:export init []
   (reset-app-state!)
@@ -152,5 +159,4 @@
 (defn stop []
   ;; stop is called before any code is reloaded
   ;; this is controlled by :before-load in the config
-  (js/console.log "stop")
-  (js/setInterval count-down 9999999))
+  (js/console.log "stop"))
