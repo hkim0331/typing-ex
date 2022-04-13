@@ -127,11 +127,9 @@
     (let [ret (drills/fetch-drill db)]
       [::response/ok ret])))
 
-;; FIXME: 関数の役目がわからない。特に Admin Only とか。
+;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    ;; この if は何をしてるか？ 自分のレコードしか見せないってこと？
-    ;; ログインしているユーザが/record/login と一致するかってこと？
     (if (or (= login "hkimura")
             (= login (get-login req))
             (admin? (get-login req)))
