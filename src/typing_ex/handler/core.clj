@@ -119,7 +119,7 @@
     ;; must fix view/page.clj at the same time.
     (let [login (get-login req)
           ret (results/find-max-pt db DAYS)]
-      (timbre/debug "/scores" login ret)
+      ;;(timbre/debug "/scores" login ret)
       (view/scores-page ret login DAYS))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
@@ -133,9 +133,7 @@
     (if (or (= login "hkimura")
             (= login (get-login req))
             (admin? (get-login req)))
-      (let [ret (->> (results/fetch-records db login)
-                     (map #(assoc % :pt (max 0 (:pt %)))))]
-        (view/svg-self-records login ret))
+      (view/svg-self-records login (results/fetch-records db login))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
 ;; req から login をとるのはどうかな。

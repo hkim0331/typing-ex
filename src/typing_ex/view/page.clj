@@ -4,7 +4,7 @@
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button label]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [taoensso.timbre :as timbre :refer [debug]]))
+   [taoensso.timbre :as timbre]))
 
 (def ^:private version "1.3.1")
 
@@ -156,7 +156,6 @@
 (defn plot [w h coll]
   (let [n (count coll)
         dx (/ w (count coll))]
-    ;;(timbre/debug "plot: " coll)
     (into
      [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -167,20 +166,25 @@
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
          :fill "green"}])))) ;; was green
 
+;; not good
 (defn- ss [s]
   (subs (str s) 0 19))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
+;; ret は lazySeq
 (defn svg-self-records [login ret]
-  (let [avg (/ (reduce + (map :pt (take 10 (reverse ret)))) 10.0)]
+  (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
+        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
     (page
      [:h2 "Typing: " login " records"]
      [:p "付け焼き刃はもろい。毎日、10分、練習しよう。"]
-     [:div (plot 300 150 ret)]
+     [:div (plot 300 150 positives)]
+     [:br]
      [:ul
-      [:li "練習回数 &nbsp;" (count ret)]
-      [:li "最近平均 &nbsp;" avg]
-      [:li "最高点 &nbsp;" (apply max (map :pt ret))]]
+      [:li "Exercises &nbsp;" (count positives)]
+      [:li "Last Exercise &nbsp;" (ss (str (:timestamp (last ret))))]
+      [:li "Last 10 Average &nbsp;" avg]
+      [:li "Max &nbsp;" (apply max (map :pt positives))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
      #_(into
         [:ol {:reversed "reversed"}]
@@ -190,7 +194,6 @@
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: active users"]
-   ;;(debug "active-users-page" ret)
    (into [:ol]
          (for [[u & _] ret]
            [:li (:login u) " " (ss (:timestamp u))]))))
