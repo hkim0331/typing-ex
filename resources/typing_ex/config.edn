@@ -34,7 +34,7 @@
 
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
-    [:get "/users"] ^:auth [:typing-ex.handler.core/users]
+    [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
 
     [:get "/ban"] [:typing-ex.handler.core/ban-index]
     [:get "/example"] ^:probe [:typing-ex.handler/example]}
@@ -66,7 +66,8 @@
 
   :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/users {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/trials {:db #ig/ref :duct.database/sql}
+
   :typing-ex.handler.core/ban-index {:db #ig/ref :duct.database/sql}
   :typing-ex.handler/example {:db #ig/ref :duct.database/sql}}
 

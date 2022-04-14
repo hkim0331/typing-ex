@@ -153,7 +153,7 @@
   (fn [_]
     [::response/forbidden "access not allowed"]))
 
-(defmethod ig/init-key :typing-ex.handler.core/users [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/trials [_ {:keys [db]}]
   (fn [req]
     (if (admin? (get-login req))
       (view/active-users-page (results/active-users db 40))

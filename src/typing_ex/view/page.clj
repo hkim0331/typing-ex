@@ -56,7 +56,7 @@
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
     " "
-    [:a {:href "/users" :class "btn btn-danger btn-sm"} "users"]
+    [:a {:href "/trials" :class "btn btn-danger btn-sm"} "trials"]
     [:span {:class "mmm"} " "]
     [:a {:href "http://qa.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
@@ -127,7 +127,7 @@
 
 (defn active-users-page [ret]
   (page
-   [:h2 "Typing: active users"]
+   [:h2 "Typing: last trials"]
    (into [:ol]
          (for [[u & _] ret]
            [:li (:login u) " " (ss (:timestamp u))]))))
