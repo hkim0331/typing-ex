@@ -24,9 +24,9 @@
 
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
 
-    [:get  "/scores"] ^:auth [:typing-ex.handler.core/scores]
-    ;; require auth?
-    [:post "/score"]  ^:auth [:typing-ex.handler.core/score-post]
+    [:get  "/scores"]    ^:auth [:typing-ex.handler.core/scores]
+    [:get "/scores-all"] ^:auth [:typing-ex.handler.core/scores-all]
+    [:post "/score"]     ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
 
@@ -50,11 +50,6 @@
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
 
-  ;; :typing-ex.handler.core/nickname   {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/nickname-post {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/password   {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/password-post {:db #ig/ref :duct.database/sql}
-
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
 
   ;;:typing-ex.handler.core/sign-on      {:db #ig/ref :duct.database/sql}
@@ -64,6 +59,7 @@
 
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/scores-all  {:db #ig/ref :duct.database/sql}
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays      {:db #ig/ref :duct.database/sql}

@@ -9,47 +9,45 @@
 (def ^:private version "1.3.2")
 
 (defn page [& contents]
- [::response/ok
-  (html5
-   [:head
-    [:meta {:charset "utf-8"}]
-    [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
-   [:link
-    {:rel "stylesheet"
-     :href "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-     :integrity "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-     :crossorigin "anonymous"}]
-   [:link
-    {:rel "stylesheet"
-     :href "/css/style.css"}]
-   [:title "Typing-Ex"]
-   [:body
-    [:div {:class "container"}
+  [::response/ok
+   (html5
+    [:head
+     [:meta {:charset "utf-8"}]
+     [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
+    [:link
+     {:rel "stylesheet"
+      :href "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      :integrity "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      :crossorigin "anonymous"}]
+    [:link
+     {:rel "stylesheet"
+      :href "/css/style.css"}]
+    [:title "Typing-Ex"]
+    [:body
+     [:div {:class "container"}
       contents
-     [:hr]
-     "hkimura, " version "."]])])
+      [:hr]
+      "hkimura, " version "."]])])
 
 (defn login-page [req]
   (page
-    [:h2 "Typing: Login"]
-    [:div.text-danger (:flash req)]
-    (form-to
-      [:post "/login"]
-      (anti-forgery-field)
-      (text-field {:placeholder "アカウント"} "login")
-      (password-field {:placeholder "パスワード"} "password")
-      (submit-button "login"))
-    [:br]
-    [:ul
-     [:li "ログイン後、スコア一覧に飛ぶ。"
-          "スコア一覧上下二箇所の Go! のいずれかからチャレンジ開始。"]
-     [:li "コンスタントに練習しないと成績は落ちる。"]
-     [:li "やらない人の「できません」はいただけない。"
-       "成績に影響しない欠席ひとつに神経質になるより、"
-       "しっかりタイピング平常点稼いだ方が建設的。"]]))
+   [:h2 "Typing: Login"]
+   [:div.text-danger (:flash req)]
+   (form-to
+    [:post "/login"]
+    (anti-forgery-field)
+    (text-field {:placeholder "アカウント"} "login")
+    (password-field {:placeholder "パスワード"} "password")
+    (submit-button "login"))
+   [:br]
+   [:ul
+    [:li "ログイン後、スコア一覧に飛ぶ。"
+     "スコア一覧上下二箇所の Go! のいずれかからチャレンジ開始。"]
+    [:li "コンスタントに練習しないと成績は落ちる。"]
+    [:li "やらない人の「できません」はいただけない。"
+     "成績に影響しない欠席ひとつに神経質になるより、"
+     "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
-;; see handler.core/scores
-;; 7days, 30days must sync with the code.
 (defn scores-page [ret user days]
   (page
    [:h2 "Typing: Scores (last " days " days)"]
@@ -72,7 +70,7 @@
          :class "btn btn-info btn-sm"}
      "L22"]]
 
-   [:p "直近の " days " 日間に練習したユーザのリスト。
+   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。
 名前をクリックすると全データ表示。"]
    (into [:ol
           (for [{:keys [max login]} ret]
