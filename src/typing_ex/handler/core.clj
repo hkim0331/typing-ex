@@ -15,7 +15,7 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
-(def DAYS 30)
+
 
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
@@ -112,6 +112,8 @@
       (timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
+
+(def DAYS 7)
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]
