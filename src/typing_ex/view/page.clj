@@ -4,9 +4,9 @@
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button label]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [taoensso.timbre :as timbre :refer [debug]]))
+   [taoensso.timbre :as timbre]))
 
-(def ^:private version "1.3.1")
+(def ^:private version "1.3.2")
 
 (defn page [& contents]
  [::response/ok
@@ -47,70 +47,6 @@
      [:li "やらない人の「できません」はいただけない。"
        "成績に影響しない欠席ひとつに神経質になるより、"
        "しっかりタイピング平常点稼いだ方が建設的。"]]))
-
-;; FIXME: l22 アプリに飛ばそう。2022-03-11
-;; (defn sign-on-stop []
-;;   (page
-;;    [:h2 "Typing"]
-;;    [:p "新規登録はまた来年"]))
-
-;; (defn sign-on-page []
-;;   (page
-;;    [:h2 "Typing: 登録"]
-;;    (form-to
-;;     [:post "/sign-on"]
-;;     (anti-forgery-field)
-;;     (text-field {:placeholder "学生番号"} "sid")
-;;     (label "sid" "半角小文字。全角文字は不可。")
-;;     [:br]
-;;     (text-field {:placeholder "ニックネーム"} "login")
-;;     (label "login" "他ユーザと違う 8 文字以内の文字列。ログインに使います。")
-;;     [:br]
-;;     (text-field {:placeholder "パスワード"} "password")
-;;     (label "password" "エコーバックします。何かに記録しておく。")
-;;     [:br]
-;;     (submit-button "登録"))
-;;    [:br]
-;;    [:ul
-;;     [:li "こういうアカウント作成のときに軽気で日本語入れる人いる。"
-;;      "ま、少ないけど。"]
-;;     [:li "google, facebook, instagram でやったらどんな感じになる？"
-;;      "次週のお勉強にとっておく。"]
-;;     [:li "メールアドレス、サーバ名(ドメイン名)とかに"
-;;      "日本語はまだまだ通用しないじゃね？"]
-;;     [:li "成績つかないなど、"
-;;      "その他の不利を理解しているなら強気で行ってよい。"]
-;;     [:li "ニックネーム変更できない時は 214 行く🦌。"]]
-;;    [:p [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
-
-;; (defn loginname-page [login]
-;;   (page
-;;    [:h2 "Typing: loginname"]
-;;    [:p "ニックネームを変更すると過去データが消える。"
-;;     [:br]
-;;     "正確には、過去データと自分の学生番号とのつながりが切れる。"
-;;     "復旧できない。"]
-;;    [:p]
-;;    [:p "現在ニックネーム： " login]
-;;    (form-to
-;;     [:post "/loginname"]
-;;     (anti-forgery-field)
-;;     (label "new-login" "新ニックネーム： ")
-;;     (text-field {:placeholder "半角英数字、8文字以内"} "new-login")
-;;     (submit-button "change"))
-;;    [:p [:a {:href "/"} "back"]]))
-
-;; (defn password-page []
-;;   (page
-;;    [:h2 "Typing: Password"]
-;;    [:p "パスワード忘れると当たり前にログインできない。"]
-;;    (form-to
-;;     [:post "/password"]
-;;     (anti-forgery-field)
-;;     (text-field {:placeholder "旧パスワード"} "old-pass")
-;;     (text-field {:placeholder "新パスワード"} "pass")
-;;     (submit-button "change"))
-;;    [:p [:a {:href "/"} "back"]]))
 
 ;; see handler.core/scores
 ;; 7days, 30days must sync with the code.
@@ -156,7 +92,6 @@
 (defn plot [w h coll]
   (let [n (count coll)
         dx (/ w (count coll))]
-    ;;(timbre/debug "plot: " coll)
     (into
      [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
       [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
@@ -167,20 +102,25 @@
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
          :fill "green"}])))) ;; was green
 
+;; not good
 (defn- ss [s]
   (subs (str s) 0 19))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
+;; ret は lazySeq
 (defn svg-self-records [login ret]
-  (let [avg (/ (reduce + (map :pt (take 10 (reverse ret)))) 10.0)]
+  (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
+        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
     (page
      [:h2 "Typing: " login " records"]
      [:p "付け焼き刃はもろい。毎日、10分、練習しよう。"]
-     [:div (plot 300 150 ret)]
+     [:div (plot 300 150 positives)]
+     [:br]
      [:ul
-      [:li "練習回数 &nbsp;" (count ret)]
-      [:li "最近平均 &nbsp;" avg]
-      [:li "最高点 &nbsp;" (apply max (map :pt ret))]]
+      [:li "Exercises &nbsp;" (count positives)]
+      [:li "Last Exercise &nbsp;" (ss (str (:timestamp (last ret))))]
+      [:li "Last 10 Average &nbsp;" avg]
+      [:li "Max &nbsp;" (apply max (map :pt positives))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
      #_(into
         [:ol {:reversed "reversed"}]
@@ -190,7 +130,6 @@
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: active users"]
-   ;;(debug "active-users-page" ret)
    (into [:ol]
          (for [[u & _] ret]
            [:li (:login u) " " (ss (:timestamp u))]))))

@@ -109,7 +109,7 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      (timbre/debug "/score-post" rcv)
+      ;;(timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -121,7 +121,7 @@
     ;; must fix view/page.clj at the same time.
     (let [login (get-login req)
           ret (results/find-max-pt db DAYS)]
-      (timbre/debug "/scores" login ret)
+      ;;(timbre/debug "/scores" login ret)
       (view/scores-page ret login DAYS))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
@@ -129,17 +129,13 @@
     (let [ret (drills/fetch-drill db)]
       [::response/ok ret])))
 
-;; FIXME: 関数の役目がわからない。特に Admin Only とか。
+;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    ;; この if は何をしてるか？ 自分のレコードしか見せないってこと？
-    ;; ログインしているユーザが/record/login と一致するかってこと？
     (if (or (= login "hkimura")
             (= login (get-login req))
             (admin? (get-login req)))
-      (let [ret (->> (results/fetch-records db login)
-                     (map #(assoc % :pt (max 0 (:pt %)))))]
-        (view/svg-self-records login ret))
+      (view/svg-self-records login (results/fetch-records db login))
       [::response/forbidden "<h2>Admin Only</h2>"])))
 
 ;; req から login をとるのはどうかな。
