@@ -15,7 +15,6 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
-(def DAYS 30)
 
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
@@ -57,6 +56,8 @@
     (-> (redirect "/login")
         (assoc :session {}))))
 
+;; signon, login は l22 に持って行った。
+;;
 ;; (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
 ;;   (fn [_]
 ;;     (timbre/debug "/sign-on")
@@ -72,12 +73,11 @@
 ;;         [::response/found "/sign-on"]))))
 
 (defn login-field [login]
- (str/replace "<input type='hidden' id='login' value='xxx'>"
-              #"xxx"
-              login))
+  (str/replace "<input type='hidden' id='login' value='xxx'>"
+               #"xxx"
+               login))
 
-;; index. anti-forgery-field を埋め込むために。
-;; ついでに login も埋め込むか。
+;; index. anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -109,18 +109,26 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      (timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
+(def DAYS 7)
+
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]
-    ;; 30 days max.
-    ;; must fix view/page.clj at the same time.
     (let [login (get-login req)
-          ret (results/find-max-pt db DAYS)]
-      ;;(timbre/debug "/scores" login ret)
-      (view/scores-page ret login DAYS))))
+          ret (results/find-max-pt db DAYS)
+          days (results/find-ex-days db)]
+      ;;(timbre/debug "days" days)
+      ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
+      (view/scores-page ret login DAYS days))))
+
+;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
+(defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
+  (fn [req]
+    (let [login (get-login req)
+          ret (results/find-max-pt db 200)]
+      (view/scores-page ret login 200 {}))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
@@ -134,7 +142,8 @@
             (= login (get-login req))
             (admin? (get-login req)))
       (view/svg-self-records login (results/fetch-records db login))
-      [::response/forbidden "<h2>Admin Only</h2>"])))
+      [::response/forbidden
+       "<h2>Admin Only</h2><p>自分のと hkimura の記録が見れます。"])))
 
 ;; req から login をとるのはどうかな。
 (defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
@@ -146,41 +155,9 @@
   (fn [_]
     [::response/forbidden "access not allowed"]))
 
-;; (defmethod ig/init-key :typing-ex.handler.core/loginname [_ _]
-;;   (fn [req]
-;;     (let [login (get-login req)]
-;;       (view/loginname-page login))))
-
-;; ;; login は foreign key のため、アップデートで変更できない。
-;; ;; https://takeokunn.xyz/blog/post/postgresql-remove-foreign-key-constraint
-;; ;; テーブルから foreign key 制約を外した。外道の対応だ。
-;; ;; 今後、foreign key は将来的に変更の可能性がないフィールドに付与しよう。
-;; (defmethod ig/init-key :typing-ex.handler.core/loginname-post [_ {:keys [db]}]
-;;   (fn [{[_ {:strs [new-login]}] :ataraxy/result :as req}]
-;;     (let [login (get-login req)
-;;           user (users/find-user-by-login db login)]
-;;       (if (users/update-user db {:login new-login} (:id user))
-;;         [::response/found "/login"]
-;;         [::response/forbidden "something wrong happened"]))))
-
-;; (defmethod ig/init-key :typing-ex.handler.core/password [_ _]
-;;   (fn [_]
-;;     (view/password-page)))
-
-;; (defmethod ig/init-key :typing-ex.handler.core/password-post [_ {:keys [db]}]
-;;   (fn [{[_ {:strs [old-pass pass]}] :ataraxy/result :as req}]
-;;     (let [login (get-login req)
-;;           user (users/find-user-by-login db login)]
-;;       ;;(debug "user" user)
-;;       ;;(debug "old-pass" old-pass "pass" pass)
-;;       (if (= old-pass (:password user))
-;;         (do
-;;           (users/update-user db {:password pass} (:id user))
-;;           [::response/found "/login"])
-;;         [::response/forbidden "password does not match."]))))
-
-(defmethod ig/init-key :typing-ex.handler.core/users [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/trials [_ {:keys [db]}]
   (fn [req]
     (if (admin? (get-login req))
       (view/active-users-page (results/active-users db 40))
-      [::response/forbidden "<h1>Admin Only</h1>"])))
+      [::response/forbidden
+       "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))

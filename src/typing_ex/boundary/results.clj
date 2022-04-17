@@ -1,8 +1,10 @@
 (ns typing-ex.boundary.results
   (:require
-    [duct.database.sql]
-    [next.jdbc.sql :as sql]
-    [typing-ex.boundary.utils :refer [ds-opt]]))
+   [clojure.string :as str]
+   [duct.database.sql]
+   [next.jdbc.sql :as sql]
+   [taoensso.timbre :as timbre]
+   [typing-ex.boundary.utils :refer [ds-opt]]))
 
 (defprotocol Results
   (insert-pt [db rcv])
@@ -10,7 +12,7 @@
   (fetch-records [db login])
   (todays-score [db login])
   (active-users [db n])
-  (delete-result-by-id [db id]))
+  (find-ex-days [db]))
 
 (extend-protocol Results
   duct.database.sql.Boundary
@@ -18,35 +20,27 @@
     (sql/insert! (ds-opt db) :results login-pt))
 
   (find-max-pt [db n]
-    (let [ret (sql/query
-               (ds-opt db)
-               ;; FIXME: 7 days を引数にとる。["?" n] で n が渡らない。
-               ;; '' の内側だからか？
-               ["select login, max(pt) from
+    (let [tmp "select login, max(pt) from
                 (select * from results where
-                   timestamp > CURRENT_TIMESTAMP - interval '30 days') as rslt
+                   timestamp > CURRENT_TIMESTAMP - interval 'XX days') as rslt
                  group by login
-                 order by max(pt) desc"])]
-      ret))
+                 order by max(pt) desc"
+          sql (str/replace tmp #"XX" (str n))]
+      (sql/query (ds-opt db) [sql])))
 
   (fetch-records [db login]
-    (let [ret (sql/query
-               (ds-opt db)
-               ["select pt, timestamp from results
+    (sql/query
+     (ds-opt db)
+     ["select pt, timestamp from results
                  where login=?
-                 order by id asc"
-                login])]
-      ret))
+                 order by id asc" login]))
 
-  ;; fixme: and where `timestamp is today`
   (todays-score [db login]
-    (let [ret (sql/query
-               (ds-opt db)
-               ["select pt from results
+    (sql/query
+     (ds-opt db)
+     ["select pt from results
                  where login=? and date(timestamp) = CURRENT_DATE
-                 order by id asc"
-                login])]
-      ret))
+                 order by id asc" login]))
 
   (active-users [db n]
     (let [ret (sql/query
@@ -56,5 +50,9 @@
            (partition-by :login)
            (take n))))
 
-  (delete-result-by-id [db id]
-    1))
+  (find-ex-days [db]
+    (let [ret (sql/query
+               (ds-opt db)
+               ["select login, date(timestamp) from results
+                 group by login, date(timestamp)"])]
+      ret)))
