@@ -1,8 +1,6 @@
 {:duct.profile/base
  {:duct.core/project-ns typing-ex
 
-  ;;:duct.server.http/jetty {:port 3023}
-
   :duct.router/ataraxy
   {:routes
    {[:get "/login"] [:typing-ex.handler.core/login]
@@ -11,50 +9,31 @@
 
     [:get "/logout"]  [:typing-ex.handler.core/logout]
 
-    ;;[:get "/sign-on"]  [:typing-ex.handler.core/sign-on]
-    ;;[:post "/sign-on"] [:typing-ex.handler.core/sign-on-post]
-
-    ;; [:get  "/nickname"] ^:auth [:typing-ex.handler.core/nickname]
-    ;; [:post "/nickname" {params :form-params}]
-    ;; [:typing-ex.handler.core/nickname-post params]
-
-    ;; [:get  "/password"] ^:auth [:typing-ex.handler.core/password]
-    ;; [:post "/password" {params :form-params}]
-    ;; [:typing-ex.handler.core/password-post params]
-
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
+    [:get "/drill"] [:typing-ex.handler.core/drill]
 
     [:get  "/scores"]    ^:auth [:typing-ex.handler.core/scores]
     [:get "/scores-all"] ^:auth [:typing-ex.handler.core/scores-all]
     [:post "/score"]     ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
-
     [:get "/todays/" login] [:typing-ex.handler.core/todays login]
 
-    [:get "/drill"] [:typing-ex.handler.core/drill]
-
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
-    [:get "/todays-act"] ^:auth [:typing-ex.handler.core/todays-act]
-
-    [:get "/ban"] [:typing-ex.handler.core/ban-index]
-    [:get "/example"] ^:probe [:typing-ex.handler/example]}
+    [:get "/daily"] ^:auth [:typing-ex.handler.core/todays-act]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth
                 :cors #ig/ref :typing-ex.middleware/cors
                 :probe #ig/ref :typing-ex.middleware/probe}}
 
-  :typing-ex.middleware/auth {:db #ig/ref :duct.database/sql}
+  :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
   :typing-ex.middleware/probe {:db #ig/ref :duct.database/sql}
-  :typing-ex.middleware/cors {:db #ig/ref :duct.database/sql}
+  :typing-ex.middleware/cors  {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
-
-  ;;:typing-ex.handler.core/sign-on      {:db #ig/ref :duct.database/sql}
-  ;;:typing-ex.handler.core/sign-on-post {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
 
@@ -67,11 +46,8 @@
 
   :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/trials {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
-
-  :typing-ex.handler.core/ban-index {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler/example {:db #ig/ref :duct.database/sql}}
+  :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

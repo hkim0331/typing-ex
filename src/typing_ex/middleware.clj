@@ -31,7 +31,7 @@
   (fn [handler]
     (-> handler
         (wrap-cors :access-control-allow-origin [#".*"]
-                   :access-control-akkiw-methods #{:get :post :delete}))))
+                   :access-control-allow-methods #{:get :post :delete}))))
 
 (defn probe [handler keys]
   (fn [req]

@@ -14,6 +14,9 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使いたいが。
 
+## 1.3.7 - 2022-04-17
+### hotfix
+- todays に auth がかかってない？
 
 ## 1.3.6 - 2022-04-17
 ### Addded
