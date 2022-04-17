@@ -51,9 +51,8 @@
            (take n))))
 
   (find-ex-days [db]
-    (let [ret (doall (sql/query
-                         (ds-opt db)
-                         ["select login, date(timestamp) from results
-              group by login, date(timestamp)"]))]
-      (timbre/debug "find-ex-days " ret)
+    (let [ret (sql/query
+               (ds-opt db)
+               ["select login, date(timestamp) from results
+                 group by login, date(timestamp)"])]
       ret)))

@@ -49,11 +49,9 @@
      "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
 (defn- count-ex-days [days login]
-  (let [ret (->> days
-                 (filter #(= (:login %) login))
-                 count)]
-    (timbre/debug "count-ex-days" login ret)
-    ret))
+  (->> days
+       (filter #(= (:login %) login))
+       count))
 
 (defn scores-page [ret user days ex-days]
   ;;(timbre/debug ex-days)
@@ -78,15 +76,14 @@
          :class "btn btn-info btn-sm"}
      "L22"]]
 
-   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。
-名前をクリックすると全データ表示。"]
+   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。カッコは練習日数。"]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li
              max
              "("
              (count-ex-days ex-days login)
-             ")"
+             ") "
              [:a {:href (str "/record/" login)
                   :class (cond
                            (= login user) "yes"
