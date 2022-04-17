@@ -1,9 +1,7 @@
 (ns typing-ex.handler.core
   (:require
-   ;;[ataraxy.core :as ataraxy]
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
-   ;;[clojure.java.io :as io]
    [clojure.string :as str]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
@@ -162,11 +160,16 @@
       [::response/forbidden
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
 
+(defn- probe [in]
+ (timbre/debug "probe" in)
+ in)
+
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [_]
-    (let [ret (results/todays-act db)]
-      (view/todays-act-page
-       (->> ret
-            (partition-by :login)
-            (map first)
-            (sort-by :timestap))))))
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret))))
+

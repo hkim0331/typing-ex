@@ -62,4 +62,5 @@
     (sql/query
      (ds-opt db)
      ["select login, timestamp from results
-      where timestamp=current_date"])))
+       where timestamp::DATE=current_date
+       order by login, timestamp desc"])))
