@@ -16,7 +16,6 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 
-
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "login888"}]
@@ -57,6 +56,8 @@
     (-> (redirect "/login")
         (assoc :session {}))))
 
+;; signon, login は l22 に持って行った。
+;;
 ;; (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
 ;;   (fn [_]
 ;;     (timbre/debug "/sign-on")
@@ -76,8 +77,7 @@
                #"xxx"
                login))
 
-;; index. anti-forgery-field を埋め込むために。
-;; ついでに login も埋め込むか。
+;; index. anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -109,7 +109,6 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      ;;(timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -118,15 +117,18 @@
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
-          ret (results/find-max-pt db DAYS)]
-      ;;(timbre/debug "/scores" login ret)
-      (view/scores-page ret login DAYS))))
+          ret (results/find-max-pt db DAYS)
+          days (results/find-ex-days db)]
+      ;;(timbre/debug "days" days)
+      ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
+      (view/scores-page ret login DAYS days))))
 
+;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
 (defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
           ret (results/find-max-pt db 200)]
-      (view/scores-page ret login 200))))
+      (view/scores-page ret login 200 {}))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]

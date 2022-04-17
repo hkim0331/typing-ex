@@ -48,7 +48,13 @@
      "成績に影響しない欠席ひとつに神経質になるより、"
      "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
-(defn scores-page [ret user days]
+(defn- count-ex-days [days login]
+  (->> days
+       (filter #(= (:login %) login))
+       count))
+
+(defn scores-page [ret user days ex-days]
+  ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Scores (last " days " days)"]
    [:p
@@ -70,13 +76,14 @@
          :class "btn btn-info btn-sm"}
      "L22"]]
 
-   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。
-名前をクリックすると全データ表示。"]
+   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。カッコは練習日数。"]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li
              max
-             " "
+             "("
+             (count-ex-days ex-days login)
+             ") "
              [:a {:href (str "/record/" login)
                   :class (cond
                            (= login user) "yes"
@@ -115,15 +122,11 @@
      [:div (plot 300 150 positives)]
      [:br]
      [:ul
-      [:li "Exercises &nbsp;" (count positives)]
-      [:li "Last Exercise &nbsp;" (ss (str (:timestamp (last ret))))]
-      [:li "Last 10 Average &nbsp;" avg]
-      [:li "Max &nbsp;" (apply max (map :pt positives))]]
-     [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
-     #_(into
-        [:ol {:reversed "reversed"}]
-        (for [{:keys [pt timestamp]} (reverse ret)]
-          [:li pt ", " (ss timestamp)])))))
+      [:li "Max " (apply max (map :pt positives))]
+      [:li "Average (last 10) " avg]
+      [:li "Exercises " (count positives)]
+      [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
+     [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
 (defn active-users-page [ret]
   (page
