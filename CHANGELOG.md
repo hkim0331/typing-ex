@@ -14,6 +14,7 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使いたいが。
 
+
 ## 1.3.6 - 2022-04-17
 ### Addded
 - todays trials as `todays`
