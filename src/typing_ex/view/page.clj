@@ -134,3 +134,10 @@
    (into [:ol]
          (for [[u & _] ret]
            [:li (:login u) " " (ss (:timestamp u))]))))
+
+(defn todays-act-page [ret]
+ (page
+  [:h2 "Typing: todays"]
+  (into [:ol]
+   (for [[login timestamp] ret]
+    [:li login (ss timestamp)]))))
