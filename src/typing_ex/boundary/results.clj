@@ -12,7 +12,8 @@
   (fetch-records [db login])
   (todays-score [db login])
   (active-users [db n])
-  (find-ex-days [db]))
+  (find-ex-days [db])
+  (todays-act [db]))   
 
 (extend-protocol Results
   duct.database.sql.Boundary
@@ -55,4 +56,11 @@
                (ds-opt db)
                ["select login, date(timestamp) from results
                  group by login, date(timestamp)"])]
-      ret)))
+      ret))
+
+  (todays-act [db]
+    (sql/query
+     (ds-opt db)
+     ["select login, timestamp from results
+       where timestamp::DATE=current_date
+       order by login, timestamp desc"])))

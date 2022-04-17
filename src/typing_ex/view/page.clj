@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]))
 
-(def ^:private version "1.3.5")
+(def ^:private version "1.3.6")
 
 (defn page [& contents]
   [::response/ok
@@ -62,7 +62,10 @@
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
     " "
-    [:a {:href "/trials" :class "btn btn-danger btn-sm"} "trials"]
+    [:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
+    " "
+    [:a {:href "/todays-act" :class "btn btn-danger btn-sm"} "todays"]
+
     [:span {:class "mmm"} " "]
     [:a {:href "http://qa.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
@@ -109,7 +112,7 @@
 
 ;; not good
 (defn- ss [s]
-  (subs (str s) 0 19))
+  (subs (str s) 0 16))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
@@ -130,7 +133,15 @@
 
 (defn active-users-page [ret]
   (page
-   [:h2 "Typing: last trials"]
+   [:h2 "Typing: Last 40 trials"]
    (into [:ol]
          (for [[u & _] ret]
-           [:li (:login u) " " (ss (:timestamp u))]))))
+           [:li (ss (:timestamp u)) " " (:login u)]))))
+
+(defn todays-act-page [ret]
+  ;;(timbre/debug ret)
+  (page
+   [:h2 "Typing: todays"]
+   (into [:ol]
+         (for [r ret]
+           [:li (ss (:timestamp r)) " " (:login r)]))))
