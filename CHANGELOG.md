@@ -13,10 +13,12 @@
 - 日本語例文。
 - 練習回数と練習日数を表示
 
-## 1.3.5-SNAPSHOT
+## 1.3.5 - 2022-04-17
 ### Changed
 - bouundary.results/find-max-pt
   文字列 tmp を引数で書き換えてSQL文にして渡す。
+### Added
+- 練習日数を表示。
 
 ## 1.3.4
 
