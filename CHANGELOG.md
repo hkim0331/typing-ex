@@ -11,10 +11,14 @@
 - 各行ごとに集計。
 - タイプ終わりを自動判断する。
 - 日本語例文。
-- improve trials. todays にするか？
+- clojure.jata-time もしくは clj-time での comparator?
+  sort-by で使いたいが。
 
-
-## 1.3.6-SNAPSHOT
+## 1.3.6 - 2022-04-17
+### Addded
+- todays trials as `todays`
+### Changed
+- rename button `trials` to `last40`
 
 ## 1.3.5 - 2022-04-17
 ### Changed
