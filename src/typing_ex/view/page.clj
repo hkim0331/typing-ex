@@ -134,6 +134,9 @@
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]
+   [:p "最近の tp ユーザ 40 名。連続するセッションを１つとするが、
+        セッションの間に別ユーザが割り込むと別セッションとカウント。
+        改良するか？"]
    (into [:ol]
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
@@ -142,6 +145,7 @@
   ;;(timbre/debug ret)
   (page
    [:h2 "Typing: todays"]
+   [:p "本日の tp ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (:timestamp r)) " " (:login r)]))))
