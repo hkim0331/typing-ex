@@ -48,8 +48,15 @@
      "成績に影響しない欠席ひとつに神経質になるより、"
      "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
+(defn- count-ex-days [days login]
+  (let [ret (->> days
+                 (filter #(= (:login %) login))
+                 count)]
+    (timbre/debug "count-ex-days" login ret)
+    ret))
+
 (defn scores-page [ret user days ex-days]
-  (timbre/debug (filter #(= (:login %) "hkimura") ex-days))
+  ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Scores (last " days " days)"]
    [:p
@@ -78,6 +85,7 @@
             [:li
              max
              "("
+             (count-ex-days ex-days login)
              ")"
              [:a {:href (str "/record/" login)
                   :class (cond

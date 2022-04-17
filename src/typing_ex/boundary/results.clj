@@ -3,6 +3,7 @@
    [clojure.string :as str]
    [duct.database.sql]
    [next.jdbc.sql :as sql]
+   [taoensso.timbre :as timbre]
    [typing-ex.boundary.utils :refer [ds-opt]]))
 
 (defprotocol Results
@@ -48,9 +49,11 @@
       (->> ret
            (partition-by :login)
            (take n))))
+
   (find-ex-days [db]
-    (let [ret (sql/query
-               (ds-opt db)
-               ["select login, date(timestamp) from results
-                group by login, date(timestamp)"])]
+    (let [ret (doall (sql/query
+                         (ds-opt db)
+                         ["select login, date(timestamp) from results
+              group by login, date(timestamp)"]))]
+      (timbre/debug "find-ex-days " ret)
       ret)))

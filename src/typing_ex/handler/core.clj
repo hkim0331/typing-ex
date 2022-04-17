@@ -119,7 +119,8 @@
     (let [login (get-login req)
           ret (results/find-max-pt db DAYS)
           days (results/find-ex-days db)]
-          ;;(timbre/debug "/scores" login ret)
+      ;;(timbre/debug "days" days)
+      ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
       (view/scores-page ret login DAYS days))))
 
 ;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
