@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]))
 
-(def ^:private version "1.3.6")
+(def ^:private version "1.3.7")
 
 (defn page [& contents]
   [::response/ok
@@ -64,7 +64,7 @@
     " "
     [:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
     " "
-    [:a {:href "/todays-act" :class "btn btn-danger btn-sm"} "todays"]
+    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
 
     [:span {:class "mmm"} " "]
     [:a {:href "http://qa.melt.kyutech.ac.jp/"

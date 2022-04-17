@@ -149,9 +149,9 @@
     (let [results (results/todays-score db login)]
       [::response/ok (str results)])))
 
-(defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
-  (fn [_]
-    [::response/forbidden "access not allowed"]))
+;;(defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
+;;  (fn [_]
+;;    [::response/forbidden "access not allowed"]))
 
 (defmethod ig/init-key :typing-ex.handler.core/trials [_ {:keys [db]}]
   (fn [req]
@@ -165,11 +165,15 @@
  in)
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
-  (fn [_]
-    (let [ret (->> (results/todays-act db)
-                   (partition-by :login)
-                   (map first)
-                   (sort-by :timestamp)
-                   reverse)]
-      (view/todays-act-page ret))))
+  (fn [req]
+    (if (admin? (get-login req))
+      (let [ret (->> (results/todays-act db)
+                     (partition-by :login)
+                     (map first)
+                     (sort-by :timestamp)
+                     reverse)]
+        (view/todays-act-page ret))
+      [::response/forbidden
+       "<h1>Admin Only</h1>
+        <p>Only admin can view. Had better open to students?</p>"])))
 
