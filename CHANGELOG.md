@@ -11,10 +11,34 @@
 - 各行ごとに集計。
 - タイプ終わりを自動判断する。
 - 日本語例文。
+- clojure.jata-time もしくは clj-time での comparator?
+  sort-by で使いたいが。
+
+## 1.3.8 - 2022-04-19
+- 説明文修正。「直近 7 日間のスコア順リスト。カッコは通算練習日数。」
+
+## 1.3.7 - 2022-04-17
+### hotfix
+- todays に auth がかかってない？
+
+## 1.3.6 - 2022-04-17
+### Addded
+- todays trials as `todays`
+### Changed
+- rename button `trials` to `last40`
+
+## 1.3.5 - 2022-04-17
+### Changed
+- bouundary.results/find-max-pt
+  文字列 tmp を引数で書き換えてSQL文にして渡す。
+### Added
+- 練習日数を表示。
+
+## 1.3.4
 
 ## 1.3.3 - 2022-04-14
 - 7 days
-- admin only にちょうい説明文
+- admin only にちょい説明文
 
 ## 1.3.2 - 2022-04-13
 - 最終練習日時。

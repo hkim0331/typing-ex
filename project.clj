@@ -1,4 +1,4 @@
-(defproject typing-ex "1.3.4"
+(defproject typing-ex "1.3.8"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -14,7 +14,7 @@
                  [duct/module.web "0.7.3"]
                  [environ "1.2.0"]
                  [hiccup "1.0.5"]
-                 [org.clojure/clojure "1.10.3"]
+                 [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.3.3"]
                  ;; no use cors now
                  [ring-cors "0.1.13"]]

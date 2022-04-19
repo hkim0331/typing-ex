@@ -9,7 +9,7 @@
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]))
 
-(def ^:private version "1.3.4")
+(def ^:private version "1.3.8")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -45,8 +45,8 @@
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        err   (* -1 (* errors errors))
-        score (int (* (- (/ goods all) (/ bads goods)) 100))]
+        err   (* -1 errors errors)
+        score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (js/console.log "goods bads all error score: " goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)

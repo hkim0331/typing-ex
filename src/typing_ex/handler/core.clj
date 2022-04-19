@@ -1,9 +1,7 @@
 (ns typing-ex.handler.core
   (:require
-   ;;[ataraxy.core :as ataraxy]
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
-   ;;[clojure.java.io :as io]
    [clojure.string :as str]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
@@ -14,7 +12,6 @@
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
-
 
 
 ;; FIXME: データベースに持っていこ。
@@ -57,6 +54,8 @@
     (-> (redirect "/login")
         (assoc :session {}))))
 
+;; signon, login は l22 に持って行った。
+;;
 ;; (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
 ;;   (fn [_]
 ;;     (timbre/debug "/sign-on")
@@ -76,8 +75,7 @@
                #"xxx"
                login))
 
-;; index. anti-forgery-field を埋め込むために。
-;; ついでに login も埋め込むか。
+;; index. anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -109,7 +107,6 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      ;;(timbre/debug "/score-post" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -118,15 +115,18 @@
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
-          ret (results/find-max-pt db DAYS)]
-      ;;(timbre/debug "/scores" login ret)
-      (view/scores-page ret login DAYS))))
+          ret (results/find-max-pt db DAYS)
+          days (results/find-ex-days db)]
+      ;;(timbre/debug "days" days)
+      ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
+      (view/scores-page ret login DAYS days))))
 
+;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
 (defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
           ret (results/find-max-pt db 200)]
-      (view/scores-page ret login 200))))
+      (view/scores-page ret login 200 {}))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
@@ -149,9 +149,9 @@
     (let [results (results/todays-score db login)]
       [::response/ok (str results)])))
 
-(defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
-  (fn [_]
-    [::response/forbidden "access not allowed"]))
+;;(defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
+;;  (fn [_]
+;;    [::response/forbidden "access not allowed"]))
 
 (defmethod ig/init-key :typing-ex.handler.core/trials [_ {:keys [db]}]
   (fn [req]
@@ -159,3 +159,21 @@
       (view/active-users-page (results/active-users db 40))
       [::response/forbidden
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
+
+(defn- probe [in]
+ (timbre/debug "probe" in)
+ in)
+
+(defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
+  (fn [req]
+    (if (admin? (get-login req))
+      (let [ret (->> (results/todays-act db)
+                     (partition-by :login)
+                     (map first)
+                     (sort-by :timestamp)
+                     reverse)]
+        (view/todays-act-page ret))
+      [::response/forbidden
+       "<h1>Admin Only</h1>
+        <p>Only admin can view. Had better open to students?</p>"])))
+
