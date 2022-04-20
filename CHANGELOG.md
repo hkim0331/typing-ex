@@ -13,6 +13,9 @@
 - 日本語例文。
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
+
+## 1.3.9 - 2022-04-20
+### Changed
 - マイナスを記録しない。
 
 ## 1.3.8 - 2022-04-19

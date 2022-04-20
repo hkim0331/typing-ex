@@ -20,8 +20,6 @@
 
 (defonce todays (atom {}))
 
-
-
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
@@ -38,7 +36,8 @@
         (reset! todays (->> (read-string s)
                             (map #(assoc % :pt (max 0 (:pt %)))))))))
 
-(defn pt [{:keys [text answer seconds errors]}]
+;;; pt will not be nagative.
+(defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
         s1<>s2 (map list s1 s2)
@@ -51,6 +50,9 @@
     (if (= all (+ goods bads))
       (+ score err seconds)
       (+ score err))))
+
+(defn pt [args]
+  (max 0 (pt-raw args)))
 
 (defn login-pt-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
