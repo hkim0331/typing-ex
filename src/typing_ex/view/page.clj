@@ -6,7 +6,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]))
 
-(def ^:private version "1.3.7")
+(def ^:private version "1.3.9")
 
 (defn page [& contents]
   [::response/ok
@@ -79,7 +79,7 @@
          :class "btn btn-info btn-sm"}
      "L22"]]
 
-   [:p "直近の " days " 日間に練習したユーザのリスト。スコア順。カッコは練習日数。"]
+   [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} ret]
             [:li
