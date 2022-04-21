@@ -84,7 +84,7 @@
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
-  (when @first-key
+  (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
     (send-score)))
@@ -95,8 +95,8 @@
 (defonce updater (js/setInterval count-down 1000))
 
 ;; FIXME: function name
-(defn by-dots [n]
-  (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
+(defn show-sorry [n]
+  (take n (repeat "🥺"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
   (when-not @first-key
@@ -105,7 +105,7 @@
     (swap! app-state update :errors inc)))
 
 (defn error-component []
-  [:p "　" (by-dots (:errors @app-state))])
+  [:p "　" (show-sorry (:errors @app-state))])
 
 (defn ex-page []
   [:div
