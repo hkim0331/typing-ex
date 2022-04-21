@@ -81,7 +81,8 @@
                            {:pt (pt @app-state)
                             :__anti-forgery-token token}}))]
         (reset-app-state!)
-        (js/alert (login-pt-message (read-string (:body response)))))))
+        (js/alert (login-pt-message (read-string (:body response))))
+        (.focus (.getElementById js/document "drill")))))
 
 (defn count-down []
   (when true ;; @first-key
@@ -143,7 +144,8 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (rdom/render [ex-page] (js/document.getElementById "app")))
+  (rdom/render [ex-page] (js/document.getElementById "app"))
+  (.focus (.getElementById js/document "drill")))
 
 (defn ^:export init []
   (reset-app-state!)
