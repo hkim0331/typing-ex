@@ -8,7 +8,7 @@
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]
-   [typing-ex.cljc :refer [plot]]))
+   [typing-ex.plot :refer [plot]]))
 
 (def ^:private version "1.3.9")
 
@@ -55,6 +55,9 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
+(defonce todays-count (atom 0))
+(def ^:private todays-max 10)
+
 (defn login-pt-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
@@ -63,7 +66,12 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (str s1 "\n" s2)))
+    (swap! todays-count inc)
+    (if (< todays-max @todays-count)
+      (do
+        (reset! todays-count 0)
+        (str s1 "\n" s2 "\n" "いったん休憩入れようか？"))
+      (str s1 "\n" s2))))
 
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
