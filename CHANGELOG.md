@@ -14,7 +14,11 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
-- テキストエリアにカーソルを入れる。
+
+
+## 1.3.12 - 2022-04-22
+### Added
+- テキストエリア id="drill" にカーソルを入れる。
 
 ## 1.3.11 - 2022-04-21
 ### Changed
