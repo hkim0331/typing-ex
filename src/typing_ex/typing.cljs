@@ -7,9 +7,10 @@
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :refer [atom]]
-   [reagent.dom :as rdom]))
+   [reagent.dom :as rdom]
+   [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.9")
+(def ^:private version "1.3.11")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -54,6 +55,9 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
+(defonce todays-count (atom 0))
+(def ^:private todays-max 10)
+
 (defn login-pt-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
@@ -62,7 +66,12 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (str s1 "\n" s2)))
+    (swap! todays-count inc)
+    (if (< todays-max @todays-count)
+      (do
+        (reset! todays-count 0)
+        (str s1 "\n" s2 "\n" "いったん休憩入れようか？"))
+      (str s1 "\n" s2))))
 
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
@@ -75,7 +84,7 @@
         (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
-  (when @first-key
+  (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
     (send-score)))
@@ -86,8 +95,8 @@
 (defonce updater (js/setInterval count-down 1000))
 
 ;; FIXME: function name
-(defn by-dots [n]
-  (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
+(defn show-sorry [n]
+  (take n (repeat "🥺"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
   (when-not @first-key
@@ -96,22 +105,7 @@
     (swap! app-state update :errors inc)))
 
 (defn error-component []
-  [:p "　" (by-dots (:errors @app-state))])
-
-;; FIXME: same funtion. cljc?
-(defn plot [w h data]
-  (let [n (count data)
-        dx (/ w (count data))]
-    ;;(.log js/console (str "plot called with " data))
-    (into
-     [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
-      [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
-      [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
-      [:line {:x1 0 :y1 (- h 110) :x2 w :y2 (- h 110) :stroke "red"}]]
-     (for [[x y] (map list (range n) (map :pt data))]
-       [:rect
-        {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "green"}])))) ;; was green
+  [:p "　" (show-sorry (:errors @app-state))])
 
 (defn ex-page []
   [:div

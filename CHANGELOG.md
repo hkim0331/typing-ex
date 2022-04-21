@@ -13,6 +13,19 @@
 - 日本語例文。
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
+- 周回ごとに ready, set, go! を表示。
+- テキストエリアにカーソルを入れる。
+
+## 1.3.11 - 2022-04-21
+### Changed
+- first-key をやめる。これは元の動作でもある。
+  カウンターがスタートする前に例文をゆっくりコピーする手がある。
+
+## 1.3.10 - 2022-04-21
+### Added
+- typing-ex/plot.cljc 初めての cljc
+### Changed
+- (resume) 10回おきに「休憩すれば？」をダイアログ表示する。
 
 ## 1.3.9 - 2022-04-20
 ### Changed
