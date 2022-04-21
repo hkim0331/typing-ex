@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.11")
+(def ^:private version "1.3.12")
 
 (defn page [& contents]
   [::response/ok
