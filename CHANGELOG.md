@@ -14,6 +14,12 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 
+## 1.3.10-SNAPSHOT
+### Added
+- typing-ex/plot.cljc 初めての cljc
+### Changed
+- (resume) 10回おきに「休憩すれば？」をダイアログ表示する。
+
 ## 1.3.9 - 2022-04-20
 ### Changed
 - マイナスを記録しない。
