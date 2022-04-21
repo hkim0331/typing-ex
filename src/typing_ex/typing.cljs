@@ -7,9 +7,10 @@
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :refer [atom]]
-   [reagent.dom :as rdom]))
+   [reagent.dom :as rdom]
+   [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.8")
+(def ^:private version "1.3.10")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -19,8 +20,6 @@
 (defonce first-key (atom false))
 
 (defonce todays (atom {}))
-
-
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -38,7 +37,8 @@
         (reset! todays (->> (read-string s)
                             (map #(assoc % :pt (max 0 (:pt %)))))))))
 
-(defn pt [{:keys [text answer seconds errors]}]
+;;; pt will not be nagative.
+(defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
         s1<>s2 (map list s1 s2)
@@ -52,6 +52,12 @@
       (+ score err seconds)
       (+ score err))))
 
+(defn pt [args]
+  (max 0 (pt-raw args)))
+
+(defonce todays-count (atom 0))
+(def ^:private todays-max 10)
+
 (defn login-pt-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
@@ -60,7 +66,12 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (str s1 "\n" s2)))
+    (swap! todays-count inc)
+    (if (< todays-max @todays-count)
+      (do
+        (reset! todays-count 0)
+        (str s1 "\n" s2 "\n" "いったん休憩入れようか？"))
+      (str s1 "\n" s2))))
 
 (defn send-score []
   (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
@@ -95,21 +106,6 @@
 
 (defn error-component []
   [:p "　" (by-dots (:errors @app-state))])
-
-;; FIXME: same funtion. cljc?
-(defn plot [w h data]
-  (let [n (count data)
-        dx (/ w (count data))]
-    ;;(.log js/console (str "plot called with " data))
-    (into
-     [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
-      [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
-      [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
-      [:line {:x1 0 :y1 (- h 110) :x2 w :y2 (- h 110) :stroke "red"}]]
-     (for [[x y] (map list (range n) (map :pt data))]
-       [:rect
-        {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-         :fill "green"}])))) ;; was green
 
 (defn ex-page []
   [:div

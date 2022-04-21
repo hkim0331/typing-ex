@@ -12,7 +12,17 @@
 - タイプ終わりを自動判断する。
 - 日本語例文。
 - clojure.jata-time もしくは clj-time での comparator?
-  sort-by で使いたいが。
+  sort-by で使えるもの。
+
+## 1.3.10 - 2022-04-21
+### Added
+- typing-ex/plot.cljc 初めての cljc
+### Changed
+- (resume) 10回おきに「休憩すれば？」をダイアログ表示する。
+
+## 1.3.9 - 2022-04-20
+### Changed
+- マイナスを記録しない。
 
 ## 1.3.8 - 2022-04-19
 - 説明文修正。「直近 7 日間のスコア順リスト。カッコは通算練習日数。」
@@ -93,7 +103,6 @@
 - shadow-cljs release app を実行せずにデプロイしたらどうなるかのチェック。
 - app.melt へのデプロイ。
 - font-size: 12pt;
-
 
 ## 1.2.0 - 2022-03-15
 ### Changed

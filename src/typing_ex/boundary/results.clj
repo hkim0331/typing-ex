@@ -13,7 +13,7 @@
   (todays-score [db login])
   (active-users [db n])
   (find-ex-days [db])
-  (todays-act [db]))   
+  (todays-act [db]))
 
 (extend-protocol Results
   duct.database.sql.Boundary
