@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.9")
+(def ^:private version "1.3.10")
 
 (defn page [& contents]
   [::response/ok
@@ -97,19 +97,6 @@
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
-
-#_(defn plot [w h coll]
-    (let [n (count coll)
-          dx (/ w (count coll))]
-      (into
-       [:svg {:width w :height h :viewbox (str "0 0 " w " " h)}
-        [:rect {:x 0 :y 0 :width w :height h :fill "#eee"}]
-        [:line {:x1 0 :y1 (- h 10) :x2 w :y2 (- h 10) :stroke "black"}]
-        [:line {:x1 0 :y1 (- h 110) :x2 w :y2 (- h 110) :stroke "red"}]]
-       (for [[x y] (map list (range n) (map :pt coll))]
-         [:rect
-          {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
-           :fill "green"}])))) ;; was green
 
 ;; not good
 (defn- ss [s]

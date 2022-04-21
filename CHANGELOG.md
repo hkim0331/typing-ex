@@ -14,7 +14,7 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 
-## 1.3.10-SNAPSHOT
+## 1.3.10 - 2022-04-21
 ### Added
 - typing-ex/plot.cljc 初めての cljc
 ### Changed
