@@ -17,9 +17,10 @@
 - last 7 days -> last 3 days
 - last 10 averages list
 - do not count 1 if the count of exercise less than 10.
-- /scores-200 をやめ、/scores/:days を作る。
 
-## 1.4.0-SNAPSHOT
+
+## 1.4.0 - 2022-04-23
+- /scores-200 をやめ、/scores/:days を作った。
 
 ## 1.3.12 - 2022-04-22
 ### Added

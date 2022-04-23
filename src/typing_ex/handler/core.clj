@@ -94,10 +94,10 @@
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
-(def DAYS 7)
+
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
-  (fn [{[_ days]:ataraxy/result :as req}]
+  (fn [{[_ days] :ataraxy/result :as req}]
     (let [login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db)]
@@ -106,15 +106,16 @@
       (view/scores-page max-pt ex-days login days))))
 
 ;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
-(defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
-  (fn [req]
-    (let [login (get-login req)
-          ret (results/find-max-pt db 200)]
-      (view/scores-page ret login 200 {}))))
+#_(defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
+    (fn [req]
+      (let [login (get-login req)
+            ret (results/find-max-pt db 200)]
+        (view/scores-page ret login 200 {}))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
-    (redirect "/scores/7")))
+    (let [DAYS 7]
+      (redirect (format "/scores/%d" DAYS)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
@@ -149,8 +150,8 @@
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
 
 (defn- probe [in]
- (timbre/debug "probe" in)
- in)
+  (timbre/debug "probe" in)
+  in)
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
