@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.12")
+(def ^:private version "1.4.0-SNAPSHOT")
 
 (defn page [& contents]
   [::response/ok
@@ -54,7 +54,7 @@
        (filter #(= (:login %) login))
        count))
 
-(defn scores-page [ret user days ex-days]
+(defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Scores (last " days " days)"]
@@ -82,12 +82,10 @@
 
    [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
    (into [:ol
-          (for [{:keys [max login]} ret]
+          (for [{:keys [max login]} max-pt]
             [:li
              max
-             "("
-             (count-ex-days ex-days login)
-             ") "
+             (format "(%d)" (count-ex-days ex-days login))
              [:a {:href (str "/record/" login)
                   :class (cond
                            (= login user) "yes"

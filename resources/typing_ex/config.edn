@@ -12,8 +12,9 @@
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
-    [:get  "/scores"]    ^:auth [:typing-ex.handler.core/scores]
-    [:get "/scores-all"] ^:auth [:typing-ex.handler.core/scores-all]
+    [:get "/scores"]       ^:auth [:typing-ex.handler.core/scores-no-arg]
+    [:get "/scores/" days] ^:auth [:typing-ex.handler.core/scores ^int days]
+
     [:post "/score"]     ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
@@ -38,8 +39,10 @@
   :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores-all  {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/scores        {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/scores-no-arg {:db #ig/ref :duct.database/sql}
+
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays      {:db #ig/ref :duct.database/sql}

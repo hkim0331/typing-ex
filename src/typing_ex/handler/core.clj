@@ -54,22 +54,6 @@
     (-> (redirect "/login")
         (assoc :session {}))))
 
-;; signon, login は l22 に持って行った。
-;;
-;; (defmethod ig/init-key :typing-ex.handler.core/sign-on [_ _]
-;;   (fn [_]
-;;     (timbre/debug "/sign-on")
-;;     ;; Changed: 新規登録はまた来年。
-;;     ;;(sign-on-page)
-;;     (view/sign-on-stop)))
-
-;; (defmethod ig/init-key :typing-ex.handler.core/sign-on-post [_ {:keys [db]}]
-;;   (fn [{{:strs [sid login password]} :form-params}]
-;;     (let [user {:sid sid :login login :password password}]
-;;       (if (users/insert-user db user)
-;;         [::response/found "/login"]
-;;         [::response/found "/sign-on"]))))
-
 (defn login-field [login]
   (str/replace "<input type='hidden' id='login' value='xxx'>"
                #"xxx"
@@ -113,13 +97,13 @@
 (def DAYS 7)
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
-  (fn [req]
+  (fn [{[_ days]:ataraxy/result :as req}]
     (let [login (get-login req)
-          ret (results/find-max-pt db DAYS)
-          days (results/find-ex-days db)]
-      ;;(timbre/debug "days" days)
+          max-pt (results/find-max-pt db days)
+          ex-days (results/find-ex-days db)]
+      (timbre/debug "days" days)
       ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
-      (view/scores-page ret login DAYS days))))
+      (view/scores-page max-pt ex-days login days))))
 
 ;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
 (defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
@@ -127,6 +111,10 @@
     (let [login (get-login req)
           ret (results/find-max-pt db 200)]
       (view/scores-page ret login 200 {}))))
+
+(defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
+  (fn [_]
+    (redirect "/scores/7")))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
