@@ -147,7 +147,7 @@
 (defn sums-page [ret]
   (page
    [:h2 "Typing: Daily Points"]
-   [:p "直近の n 日タイピング平常点ポイント。"]
+   [:p "直近の n 日タイピング平常点ポイント。上位の人、他の科目もな。"]
    (into [:ol]
          (for [r ret]
            [:li (:sum r)
