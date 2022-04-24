@@ -14,9 +14,12 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
-- last 7 days -> last 3 days
 - last 10 averages list
-- do not count 1 if the count of exercise less than 10.
+- do not treat as one exercise if the count of exercises is less than 10.
+
+## 1.4.3-SNAPSHOT
+### Changed
+- (text-field {:style "text-align:right"})
 
 ## 1.4.2 - 2022-04-24
 ### Removed
