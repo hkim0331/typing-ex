@@ -18,11 +18,15 @@
 - last 10 averages list
 - do not count 1 if the count of exercise less than 10.
 
+## 1.4.2 - 2022-04-24
+### Removed
+- /scores のヘッダから last40 を削除。QA に 1.4.2 のアナウンス。
+
 ## 1.4.1 - 2022-04-24
 ### Added
 - /recent URL をいじらずに、フォームから n-days を入力。
   綺麗じゃないコード。get /recent を追加した。
- 
+
 ## 1.4.0 - 2022-04-23
 - /scores-200 をやめ、/scores/:days を作った。
 
