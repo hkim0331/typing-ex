@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.2")
+(def ^:private version "1.4.3")
 
 (defn page [& contents]
   [::response/ok
@@ -57,7 +57,7 @@
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
-   [:h2 "Typing: Last " days " days scores"]
+   [:h2 "Typing: Last " days " days Maxes"]
    [:p
     [:div.row
      [:div.d-inline
@@ -65,13 +65,15 @@
       " "
       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
       " "
-      #_[:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
+      [:a {:href "/sum/3" :class "btn btn-danger btn-sm"} "last 3"]
       " "
-      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
-      " list "]
+      #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+      " max "]
      [:div.d-inline
       (form-to [:get "/recent"]
-               (text-field {:size 3 :value "7"} "n"))]
+               (text-field {:size 2
+                            :value "7"
+                            :style "text-align:right"} "n"))]
      [:div.d-inline
       " days, "
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
@@ -90,7 +92,7 @@
           (for [{:keys [max login]} max-pt]
             [:li
              max
-             (format "(%d)" (count-ex-days ex-days login))
+             (format "(%d) " (count-ex-days ex-days login))
              [:a {:href (str "/record/" login)
                   :class (cond
                            (= login user) "yes"
@@ -100,6 +102,7 @@
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
+
 
 ;; not good
 (defn- ss [s]
@@ -112,7 +115,7 @@
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日、10分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日、10 分、練習しよう。"]
      [:div (plot 300 150 positives)]
      [:br]
      [:ul
@@ -125,9 +128,8 @@
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]
-   [:p "最近の tp ユーザ 40 名。連続するセッションを１つとするが、
-        セッションの間に別ユーザが割り込むと別セッションとカウント。
-        改良するか？"]
+   [:p "最近の Typing ユーザ 40 件。連続するセッションを１つとカウントするが、
+        セッションの間に別ユーザが割り込むと別セッションに。改良するか？"]
    (into [:ol]
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
@@ -136,7 +138,19 @@
   ;;(timbre/debug ret)
   (page
    [:h2 "Typing: todays"]
-   [:p "本日の tp ユーザ。重複を省いて最終利用時間で並べ替え。"]
+   [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (:timestamp r)) " " (:login r)]))))
+
+;; 自分は赤
+(defn sums-page [ret]
+  (page
+   [:h2 "Typing: Daily Points"]
+   [:p "直近の n 日タイピング平常点ポイント。"]
+   (into [:ol]
+         (for [r ret]
+           [:li (:sum r)
+            " "
+            [:a {:href (str "/record/" (:login r))}
+             (:login r)]]))))
