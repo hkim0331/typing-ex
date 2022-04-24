@@ -96,13 +96,12 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
   (fn [req]
-    (let [_ (timbre/debug req)
-          n (or (get-in req [:route-params :n]) (:params req))
+    (let [n (or (get-in req [:route-params :n]) (:params req))
           days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db)]
-      (timbre/debug "n" n)
+      ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
