@@ -19,7 +19,9 @@
 - 平均じゃなく、sum でもいいんじゃ？
 - スピード豊かでなく、ゆっくり確実に出すか？プログラムは平凡に。
 
-## 1.4.3-SNAPSHOT
+## 1.4.3
+### Added
+- 最近 n 日のスコアの合計を /sum/n で。
 ### Changed
 - (text-field {:style "text-align:right"})
 
