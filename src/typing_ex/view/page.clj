@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.0")
+(def ^:private version "1.4.1")
 
 (defn page [& contents]
   [::response/ok
@@ -58,27 +58,35 @@
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Scores (last " days " days)"]
-   [:p
-    [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
-    " "
-    [:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
-    " "
-    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+   [:div.row
+    [:div.d-inline
+     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+     " "
+     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
+     " "
+     [:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
+     " "
+     [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+     " "]
 
-    [:span {:class "mmm"} " "]
-    [:a {:href "http://qa.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "QA"]
-    " "
-    [:a {:href "http://mt.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "MT"]
-    " "
-    [:a {:href "http://l22.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "L22"]]
+    [:div.d-inline
+     " "
+     (form-to [:get "/recent"]
+              (text-field {:size 3} "n"))]
+
+    [:div.d-inline
+     [:span {:class "mmm"} " "]
+     [:a {:href "http://qa.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "QA"]
+     " "
+     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "MT"]
+     " "
+     [:a {:href "http://l22.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "L22"]]]
 
    [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
    (into [:ol

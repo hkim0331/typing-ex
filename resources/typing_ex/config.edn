@@ -12,8 +12,9 @@
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
-    [:get "/scores"]       ^:auth [:typing-ex.handler.core/scores-no-arg]
-    [:get "/scores/" days] ^:auth [:typing-ex.handler.core/scores ^int days]
+    [:get "/scores"]   ^:auth [:typing-ex.handler.core/scores-no-arg]
+    [:get "/scores/" n] ^:auth [:typing-ex.handler.core/scores n]
+    [:get "/recent"]   ^:auth [:typing-ex.handler.core/recent]
 
     [:post "/score"]     ^:auth [:typing-ex.handler.core/score-post]
 
@@ -41,6 +42,7 @@
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/scores        {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/recent        {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/scores-no-arg {:db #ig/ref :duct.database/sql}
 
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}

@@ -94,23 +94,22 @@
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
-
-
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
-  (fn [{[_ days] :ataraxy/result :as req}]
-    (let [login (get-login req)
+  (fn [req]
+    (let [_ (timbre/debug req)
+          n (or (get-in req [:route-params :n]) (:params req))
+          days (Integer/parseInt n)
+          login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db)]
-      (timbre/debug "days" days)
-      ;;(timbre/debug "filter" (filter #(= (:login %) "hkimura") days))
+      (timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
-;; 200 日間のデータを「全てのデータ」としてよい。授業は半年だ。
-#_(defmethod ig/init-key :typing-ex.handler.core/scores-all [_ {:keys [db]}]
-    (fn [req]
-      (let [login (get-login req)
-            ret (results/find-max-pt db 200)]
-        (view/scores-page ret login 200 {}))))
+(defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
+  (fn [req]
+    ;;(timbre/debug "get-in req [:params :n]" (get-in req [:params :n]))
+    (let [days  (get-in req [:params :n])]
+      (redirect (str "/scores/" days)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
