@@ -16,6 +16,8 @@
 - 周回ごとに ready, set, go! を表示。
 - last 10 averages list
 - do not treat as one exercise if the count of exercises is less than 10.
+- 平均じゃなく、sum でもいいんじゃ？
+- スピード豊かでなく、ゆっくり確実に出すか？プログラムは平凡に。
 
 ## 1.4.3-SNAPSHOT
 ### Changed

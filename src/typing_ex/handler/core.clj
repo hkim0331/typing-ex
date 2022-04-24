@@ -86,6 +86,20 @@
   </body>
 </html>")]))
 
+;; under construction
+(defn- sum [coll]
+  (let [pts (->> coll
+                 val
+                 (map #(:pt %))
+                 (reduce +))]
+   [(key coll) pts]))
+
+(defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
+  (fn [req]
+    (let [n (get-in req [:route-params :n])
+          ret (results/sum db n)]
+      (view/sums-page ret))))
+
 ;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]

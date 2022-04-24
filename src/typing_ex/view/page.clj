@@ -57,7 +57,7 @@
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
-   [:h2 "Typing: Last " days " days scores"]
+   [:h2 "Typing: Last " days " days Maxes"]
    [:p
     [:div.row
      [:div.d-inline
@@ -65,10 +65,10 @@
       " "
       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
       " "
-      #_[:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
+      [:a {:href "/sum/3" :class "btn btn-danger btn-sm"} "last 3"]
       " "
-      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
-      " last "]
+      #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+      " max "]
      [:div.d-inline
       (form-to [:get "/recent"]
                (text-field {:size 2
@@ -102,6 +102,7 @@
     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
+
 
 ;; not good
 (defn- ss [s]
@@ -141,3 +142,15 @@
    (into [:ol]
          (for [r ret]
            [:li (ss (:timestamp r)) " " (:login r)]))))
+
+;; 自分は赤
+(defn sums-page [ret]
+  (page
+   [:h2 "Typing: Daily Points"]
+   [:p "直近の n 日タイピング平常点ポイント。"]
+   (into [:ol]
+         (for [r ret]
+           [:li (:sum r)
+            " "
+            [:a {:href (str "/record/" (:login r))}
+             (:login r)]]))))
