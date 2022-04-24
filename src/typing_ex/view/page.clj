@@ -57,37 +57,34 @@
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
-   [:h2 "Typing: Scores (last " days " days)"]
-   [:div.row
-    [:div.d-inline
-     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-     " "
-     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
-     " "
-     [:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
-     " "
-     [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
-     " "]
-
-    [:div.d-inline
-     " "
-     (form-to [:get "/recent"]
-              (text-field {:size 3} "n"))]
-
-    [:div.d-inline
-     [:span {:class "mmm"} " "]
-     [:a {:href "http://qa.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "QA"]
-     " "
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "MT"]
-     " "
-     [:a {:href "http://l22.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "L22"]]]
-
+   [:h2 "Typing: Last " days " days scores"]
+   [:p
+    [:div.row
+     [:div.d-inline
+      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
+      " "
+      #_[:a {:href "/trials" :class "btn btn-danger btn-sm"} "last40"]
+      " "
+      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+      " list "]
+     [:div.d-inline
+      (form-to [:get "/recent"]
+               (text-field {:size 3 :value "7"} "n"))]
+     [:div.d-inline
+      " days, "
+      [:a {:href "http://qa.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "QA"]
+      " "
+      [:a {:href "http://mt.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "MT"]
+      " "
+      [:a {:href "http://l22.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "L22"]]]]
    [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
