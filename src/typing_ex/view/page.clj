@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.4")
+(def ^:private version "1.4.5")
 
 (defn page [& contents]
   [::response/ok
@@ -70,16 +70,16 @@
                           :style "text-align:right"} "n"))]
     [:div.d-inline
      " days, "
-     [:a {:href "http://qa.melt.kyutech.ac.jp/"}
-         :class "btn btn-info btn-sm"
+     [:a {:href "http://qa.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
       "QA"]
      " "
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"}
-        :class "btn btn-info btn-sm"
+     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
       "MT"]
      " "
-     [:a {:href "http://l22.melt.kyutech.ac.jp/"}
-         :class "btn btn-info btn-sm"
+     [:a {:href "http://l22.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
       "L22"]
      " "
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
