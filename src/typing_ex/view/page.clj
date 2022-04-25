@@ -61,7 +61,6 @@
     " "
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "
-    #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
     " max "]
    [:div.d-inline
     (form-to [:get "/recent"]
@@ -70,6 +69,8 @@
                           :style "text-align:right"} "n"))]
    [:div.d-inline
     " days, "
+    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+    " "
     [:a {:href "http://qa.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
      "QA"]
