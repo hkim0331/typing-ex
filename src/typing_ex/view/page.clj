@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.3")
+(def ^:private version "1.5.1")
 
 (defn page [& contents]
   [::response/ok
@@ -54,40 +54,43 @@
        (filter #(= (:login %) login))
        count))
 
+(defn- headline []
+  [:div.row
+   [:div.d-inline
+    [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+    " "
+    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+    " "
+    " max "]
+   [:div.d-inline
+    (form-to [:get "/recent"]
+             (text-field {:size 2
+                          :value "7"
+                          :style "text-align:right"} "n"))]
+   [:div.d-inline
+    " days, "
+    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+    " "
+    [:a {:href "http://qa.melt.kyutech.ac.jp/"
+         :class "btn btn-info btn-sm"}
+     "QA"]
+    " "
+    [:a {:href "http://mt.melt.kyutech.ac.jp/"
+         :class "btn btn-info btn-sm"}
+     "MT"]
+    " "
+    [:a {:href "http://l22.melt.kyutech.ac.jp/"
+         :class "btn btn-info btn-sm"}
+     "L22"]
+    " "
+    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
+
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
-   [:p
-    [:div.row
-     [:div.d-inline
-      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-      " "
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
-      " "
-      [:a {:href "/sum/3" :class "btn btn-danger btn-sm"} "last 3"]
-      " "
-      #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
-      " max "]
-     [:div.d-inline
-      (form-to [:get "/recent"]
-               (text-field {:size 2
-                            :value "7"
-                            :style "text-align:right"} "n"))]
-     [:div.d-inline
-      " days, "
-      [:a {:href "http://qa.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "QA"]
-      " "
-      [:a {:href "http://mt.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "MT"]
-      " "
-      [:a {:href "http://l22.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "L22"]]]]
-   [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
+   (headline)
+   [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -98,11 +101,7 @@
                            (= login user) "yes"
                            :else "other")}
               login]])])
-   [:p
-    [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
-
+   [:div (headline)]))
 
 ;; not good
 (defn- ss [s]
@@ -144,13 +143,21 @@
            [:li (ss (:timestamp r)) " " (:login r)]))))
 
 ;; 自分は赤
-(defn sums-page [ret]
+(defn sums-page [ret user]
   (page
    [:h2 "Typing: Daily Points"]
-   [:p "直近の n 日タイピング平常点ポイント。"]
+   (headline)
+   [:p "本日昨日タイピングポイント。最高点リストは max 枠内でエンター。<br>
+        情報リテラシー以外の科目も大切にしよう。"]
    (into [:ol]
          (for [r ret]
-           [:li (:sum r)
-            " "
-            [:a {:href (str "/record/" (:login r))}
-             (:login r)]]))))
+           (let [login (:login r)]
+             [:li (:sum r)
+              " "
+              [:a {:href (str "/record/" login)
+                   :class (cond
+                            (= user login) "yes"
+                            :else "other")}
+               login]])))
+   (headline)))
+

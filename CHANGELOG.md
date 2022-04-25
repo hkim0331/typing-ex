@@ -14,12 +14,27 @@
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
-- last 10 averages list
 - do not treat as one exercise if the count of exercises is less than 10.
-- 平均じゃなく、sum でもいいんじゃ？
-- スピード豊かでなく、ゆっくり確実に出すか？プログラムは平凡に。
 
-## 1.4.3
+
+## 1.5.1 - 2022-04-25
+### Changed
+- resume todays button(red)
+
+## 1.5.0 - 2022-04-25
+コード整理
+
+## 1.4.6 - 2022-04-25
+### Fixed
+- page.clj インデントがずれて、{ } がずれた。fixed.
+- sum/1 と /daily のユーザが2倍違うぞ？ 24時間以内と、日付が同じと、どっちがいい？
+  本日＋昨日のタイピングポイントを表示する。
+
+## 1.4.4 - 2022-04-25
+### Added, code polish up
+- page/headline
+
+## 1.4.3 - 2022-04-24
 ### Added
 - 最近 n 日のスコアの合計を /sum/n で。
 ### Changed

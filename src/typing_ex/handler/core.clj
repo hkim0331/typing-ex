@@ -13,14 +13,14 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
-
-;; FIXME: データベースに持っていこ。
+;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "login888"}]
     (get admins s)))
 
 (defn get-login
-  "request ヘッダの id 情報を文字列で返す。エラーの場合は nil."
+  "request ヘッダの id 情報を文字列で返す。
+   id がない場合は例外でつかまえた後 nil を返す。"
   [req]
   (try
     (name (get-in req [:session :identity]))
@@ -33,21 +33,22 @@
 
 (defn auth? [db login password]
   (let [ret (users/find-user-by-login db login)]
-    (timbre/debug "auth?" login password)
+    (timbre/debug "auth?" login)
     (and (some? ret)
-         ;;(= (:password ret) password)
          (hashers/check password (:password ret)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
-    (timbre/debug "/login-post" login password)
     (if (and (seq login) (auth? db login password))
       (do
-        (timbre/debug "login success")
-        (-> (redirect "/scores")
+        (timbre/debug "login success" login)
+        (-> (redirect "/sum/1")
             (assoc-in [:session :identity] (keyword login))))
-      (-> (redirect "/login")
-          (assoc :flash "login failure")))))
+      (do
+        (timbre/debug "login failure" login)
+        (-> (redirect "/login")
+            (dissoc :session)
+            (assoc :flash "login failure"))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -87,18 +88,18 @@
 </html>")]))
 
 ;; under construction
-(defn- sum [coll]
-  (let [pts (->> coll
-                 val
-                 (map #(:pt %))
-                 (reduce +))]
-   [(key coll) pts]))
+#_(defn- sum [coll]
+    (let [pts (->> coll
+                   val
+                   (map #(:pt %))
+                   (reduce +))]
+     [(key coll) pts]))
 
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
-  (fn [req]
-    (let [n (get-in req [:route-params :n])
-          ret (results/sum db n)]
-      (view/sums-page ret))))
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [ret (results/sum db n)
+          user (get-login req)]
+      (view/sums-page ret user))))
 
 ;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
@@ -109,9 +110,8 @@
       [::response/ok (str rcv)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
-  (fn [req]
-    (let [n (or (get-in req [:route-params :n]) (:params req))
-          days (Integer/parseInt n)
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db)]

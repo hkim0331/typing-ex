@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.3")
+(def ^:private version "1.5.1")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -97,7 +97,7 @@
 
 ;; FIXME: function name
 (defn show-sorry [n]
-  (take n (repeat "🥺"))) ;;🙅💧💦💔❌🦠🥶🥺
+  (take n (repeat "🦠"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
   (when-not @first-key
