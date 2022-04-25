@@ -23,7 +23,7 @@
     [:get "/todays/" login] [:typing-ex.handler.core/todays login]
 
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
-    [:get "/daily"] ^:auth [:typing-ex.handler.core/todays-act]}
+    [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth
                 :cors #ig/ref :typing-ex.middleware/cors

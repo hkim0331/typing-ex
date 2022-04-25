@@ -13,7 +13,6 @@
    [taoensso.timbre :as timbre]
    [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
-
 ;; FIXME: データベースに持っていこ。
 (defn admin? [s]
   (let [admins #{"hkimura" "ayako" "login888"}]
@@ -95,9 +94,8 @@
    [(key coll) pts]))
 
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
-  (fn [req]
-    (let [n (get-in req [:route-params :n])
-          ret (results/sum db n)]
+  (fn [{[_ n] :ataraxy/result}]
+    (let [ret (results/sum db n)]
       (view/sums-page ret))))
 
 ;; POST works!
@@ -109,9 +107,8 @@
       [::response/ok (str rcv)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores [_ {:keys [db]}]
-  (fn [req]
-    (let [n (or (get-in req [:route-params :n]) (:params req))
-          days (Integer/parseInt n)
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db)]

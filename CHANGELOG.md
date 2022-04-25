@@ -16,7 +16,12 @@
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
 
-## 1.4.5-
+
+## 1.4.6 - 2022-04-25
+### Fixed
+- page.clj インデントがずれて、{ } がずれた。fixed.
+- sum/1 と /daily のユーザが2倍違うぞ？ 24時間以内と、日付が同じと、どっちがいい？
+  本日＋昨日のタイピングポイントを表示する。
 
 ## 1.4.4 - 2022-04-25
 ### Added, code polish up

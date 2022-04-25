@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.4.5")
+(def ^:private version "1.4.6")
 
 (defn page [& contents]
   [::response/ok
@@ -145,7 +145,7 @@
 (defn sums-page [ret]
   (page
    [:h2 "Typing: Daily Points"]
-   [:p "本日タイピングポイント。上位の人、他の科目にも力注げよ。"]
+   [:p "本日昨日タイピングポイント。日付で集計。情報リテラシー以外の科目も大切に。"]
    (into [:ol]
          (for [r ret]
            [:li (:sum r)
