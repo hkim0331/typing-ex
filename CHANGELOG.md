@@ -16,6 +16,8 @@
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
 
+## 1.5.0 - 2022-04-25
+コード整理
 
 ## 1.4.6 - 2022-04-25
 ### Fixed
