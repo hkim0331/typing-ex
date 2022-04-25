@@ -16,7 +16,11 @@
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
 
-## 1.4.3
+## 1.4.4 - 2022-04-25
+### Added, code polish up
+- page/headline
+
+## 1.4.3 - 2022-04-24
 ### Added
 - 最近 n 日のスコアの合計を /sum/n で。
 ### Changed
