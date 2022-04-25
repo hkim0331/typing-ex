@@ -69,7 +69,7 @@
                           :style "text-align:right"} "n"))]
    [:div.d-inline
     " days, "
-    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
     " "
     [:a {:href "http://qa.melt.kyutech.ac.jp/"
          :class "btn btn-info btn-sm"}
