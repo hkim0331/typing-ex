@@ -83,6 +83,7 @@
       "L22"]
      " "
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
+
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
