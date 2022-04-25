@@ -97,7 +97,7 @@
 
 ;; FIXME: function name
 (defn show-sorry [n]
-  (take n (repeat "🥺"))) ;;🙅💧💦💔❌🦠🥶🥺
+  (take n (repeat "🦠"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
   (when-not @first-key
