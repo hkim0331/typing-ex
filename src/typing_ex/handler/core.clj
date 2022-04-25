@@ -43,7 +43,7 @@
     (if (and (seq login) (auth? db login password))
       (do
         (timbre/debug "login success")
-        (-> (redirect "/scores")
+        (-> (redirect "/sum/1")
             (assoc-in [:session :identity] (keyword login))))
       (-> (redirect "/login")
           (assoc :flash "login failure")))))
@@ -86,17 +86,18 @@
 </html>")]))
 
 ;; under construction
-(defn- sum [coll]
-  (let [pts (->> coll
-                 val
-                 (map #(:pt %))
-                 (reduce +))]
-   [(key coll) pts]))
+#_(defn- sum [coll]
+    (let [pts (->> coll
+                   val
+                   (map #(:pt %))
+                   (reduce +))]
+     [(key coll) pts]))
 
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
-  (fn [{[_ n] :ataraxy/result}]
-    (let [ret (results/sum db n)]
-      (view/sums-page ret))))
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [ret (results/sum db n)
+          user (get-login req)]
+      (view/sums-page ret user))))
 
 ;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
