@@ -12,9 +12,12 @@
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
     [:get "/drill"] [:typing-ex.handler.core/drill]
 
-    [:get  "/scores"]    ^:auth [:typing-ex.handler.core/scores]
-    [:get "/scores-all"] ^:auth [:typing-ex.handler.core/scores-all]
-    [:post "/score"]     ^:auth [:typing-ex.handler.core/score-post]
+    [:get "/scores"]    ^:auth [:typing-ex.handler.core/scores-no-arg]
+    [:get "/scores/" n] ^:auth [:typing-ex.handler.core/scores n]
+    [:get "/recent"]    ^:auth [:typing-ex.handler.core/recent]
+    [:get "/sum/" n]    ^:auth [:typing-ex.handler.core/sum ^int n]
+
+    [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
     [:get "/todays/" login] [:typing-ex.handler.core/todays login]
@@ -38,8 +41,12 @@
   :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores-all  {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/scores        {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/recent        {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/scores-no-arg {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/sum           {:db #ig/ref :duct.database/sql}
+
   ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays      {:db #ig/ref :duct.database/sql}

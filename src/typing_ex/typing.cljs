@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.3.10")
+(def ^:private version "1.4.4")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -81,10 +81,11 @@
                            {:pt (pt @app-state)
                             :__anti-forgery-token token}}))]
         (reset-app-state!)
-        (js/alert (login-pt-message (read-string (:body response)))))))
+        (js/alert (login-pt-message (read-string (:body response))))
+        (.focus (.getElementById js/document "drill")))))
 
 (defn count-down []
-  (when @first-key
+  (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
     (send-score)))
@@ -95,8 +96,8 @@
 (defonce updater (js/setInterval count-down 1000))
 
 ;; FIXME: function name
-(defn by-dots [n]
-  (take n (repeat "🥶"))) ;;🙅💧💦💔❌🦠🥶🥺
+(defn show-sorry [n]
+  (take n (repeat "🥺"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
   (when-not @first-key
@@ -105,7 +106,7 @@
     (swap! app-state update :errors inc)))
 
 (defn error-component []
-  [:p "　" (by-dots (:errors @app-state))])
+  [:p "　" (show-sorry (:errors @app-state))])
 
 (defn ex-page []
   [:div
@@ -143,7 +144,8 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (rdom/render [ex-page] (js/document.getElementById "app")))
+  (rdom/render [ex-page] (js/document.getElementById "app"))
+  (.focus (.getElementById js/document "drill")))
 
 (defn ^:export init []
   (reset-app-state!)

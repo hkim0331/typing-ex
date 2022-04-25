@@ -13,6 +13,39 @@
 - 日本語例文。
 - clojure.jata-time もしくは clj-time での comparator?
   sort-by で使えるもの。
+- 周回ごとに ready, set, go! を表示。
+- do not treat as one exercise if the count of exercises is less than 10.
+
+## 1.4.4 - 2022-04-25
+### Added, code polish up
+- page/headline
+
+## 1.4.3 - 2022-04-24
+### Added
+- 最近 n 日のスコアの合計を /sum/n で。
+### Changed
+- (text-field {:style "text-align:right"})
+
+## 1.4.2 - 2022-04-24
+### Removed
+- /scores のヘッダから last40 を削除。QA に 1.4.2 のアナウンス。
+
+## 1.4.1 - 2022-04-24
+### Added
+- /recent URL をいじらずに、フォームから n-days を入力。
+  綺麗じゃないコード。get /recent を追加した。
+
+## 1.4.0 - 2022-04-23
+- /scores-200 をやめ、/scores/:days を作った。
+
+## 1.3.12 - 2022-04-22
+### Added
+- テキストエリア id="drill" にカーソルを入れる。
+
+## 1.3.11 - 2022-04-21
+### Changed
+- first-key をやめる。これは元の動作でもある。
+  カウンターがスタートする前に例文をゆっくりコピーする手がある。
 
 ## 1.3.10 - 2022-04-21
 ### Added

@@ -8,6 +8,7 @@
 
 (defprotocol Results
   (insert-pt [db rcv])
+  (sum [db n])
   (find-max-pt [db n])
   (fetch-records [db login])
   (todays-score [db login])
@@ -17,8 +18,20 @@
 
 (extend-protocol Results
   duct.database.sql.Boundary
+
   (insert-pt [db login-pt]
     (sql/insert! (ds-opt db) :results login-pt))
+
+  (sum [db n]
+    (let [tmp "select login, sum(pt)
+               from results
+               where timestamp > CURRENT_TIMESTAMP - interval 'XX days'
+               group by login
+               order by sum(pt) desc"
+          sql (str/replace tmp #"XX" n)
+          ret (sql/query (ds-opt db) [sql])]
+      ;;(timbre/debug "ret" ret)
+      ret))
 
   (find-max-pt [db n]
     (let [tmp "select login, max(pt) from
