@@ -54,18 +54,12 @@
        (filter #(= (:login %) login))
        count))
 
-(defn scores-page [max-pt ex-days user days]
-  ;;(timbre/debug ex-days)
-  (page
-   [:h2 "Typing: Last " days " days Maxes"]
-   [:p
-    [:div.row
+(defn- headline []
+ [:div.row
      [:div.d-inline
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]
-      " "
-      [:a {:href "/sum/3" :class "btn btn-danger btn-sm"} "last 3"]
+      [:a {:href "/sum/3" :class "btn btn-primary btn-sm"} "D.P."]
       " "
       #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
       " max "]
@@ -86,7 +80,14 @@
       " "
       [:a {:href "http://l22.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
-       "L22"]]]]
+       "L22"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
+(defn scores-page [max-pt ex-days user days]
+  ;;(timbre/debug ex-days)
+  (page
+   [:h2 "Typing: Last " days " days Maxes"]
+   [:p (headline)]
    [:p "直近 " days " 日間のスコア順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
@@ -98,10 +99,7 @@
                            (= login user) "yes"
                            :else "other")}
               login]])])
-   [:p
-    [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]))
+   [:div (headline)]))   
 
 
 ;; not good
