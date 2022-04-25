@@ -23,14 +23,14 @@
     (sql/insert! (ds-opt db) :results login-pt))
 
   (sum [db n]
-    (let [tmp "select login, sum(pt)
-               from results
-               where timestamp > CURRENT_TIMESTAMP - interval 'XX days'
-               group by login
-               order by sum(pt) desc"
-          sql (str/replace tmp #"XX" n)
+    (let [sql (format
+               "select login, sum(pt)
+                from results
+                where timestamp::DATE >=  CURRENT_DATE - %d
+                group by login
+                order by sum(pt) desc" n)
+          ;;_ (timbre/debug "sql" sql)
           ret (sql/query (ds-opt db) [sql])]
-      ;;(timbre/debug "ret" ret)
       ret))
 
   (find-max-pt [db n]
