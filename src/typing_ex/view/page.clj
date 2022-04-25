@@ -55,34 +55,34 @@
        count))
 
 (defn- headline []
- [:div.row
-     [:div.d-inline
-      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-      " "
-      [:a {:href "/sum/3" :class "btn btn-primary btn-sm"} "D.P."]
-      " "
-      #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
-      " max "]
-     [:div.d-inline
-      (form-to [:get "/recent"]
-               (text-field {:size 2
-                            :value "7"
-                            :style "text-align:right"} "n"))]
-     [:div.d-inline
-      " days, "
-      [:a {:href "http://qa.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "QA"]
-      " "
-      [:a {:href "http://mt.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "MT"]
-      " "
-      [:a {:href "http://l22.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "L22"]
-      " "
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
+  [:div.row
+    [:div.d-inline
+     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+     " "
+     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+     " "
+     #_[:a {:href "/daily" :class "btn btn-danger btn-sm"} "todays"]
+     " max "]
+    [:div.d-inline
+     (form-to [:get "/recent"]
+             (text-field {:size 2
+                          :value "7"
+                          :style "text-align:right"} "n"))]
+    [:div.d-inline
+     " days, "
+     [:a {:href "http://qa.melt.kyutech.ac.jp/"}
+         :class "btn btn-info btn-sm"
+      "QA"]
+     " "
+     [:a {:href "http://mt.melt.kyutech.ac.jp/"}
+        :class "btn btn-info btn-sm"
+      "MT"]
+     " "
+     [:a {:href "http://l22.melt.kyutech.ac.jp/"}
+         :class "btn btn-info btn-sm"
+      "L22"]
+     " "
+     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
@@ -99,8 +99,7 @@
                            (= login user) "yes"
                            :else "other")}
               login]])])
-   [:div (headline)]))   
-
+   [:div (headline)]))
 
 ;; not good
 (defn- ss [s]
@@ -145,7 +144,7 @@
 (defn sums-page [ret]
   (page
    [:h2 "Typing: Daily Points"]
-   [:p "直近の n 日タイピング平常点ポイント。上位の人、他の科目もな。"]
+   [:p "本日タイピングポイント。上位の人、他の科目にも力注げよ。"]
    (into [:ol]
          (for [r ret]
            [:li (:sum r)
