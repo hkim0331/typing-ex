@@ -16,6 +16,11 @@
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
 
+
+## 1.5.1 - 2022-04-25
+### Changed
+- resume todays button(red)
+
 ## 1.5.0 - 2022-04-25
 コード整理
 
