@@ -55,42 +55,44 @@
        count))
 
 (defn- headline []
-  [:div.row
-   [:div.d-inline
-    [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-    " "
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-    " "
-    " max "]
-   [:div.d-inline
-    (form-to [:get "/recent"]
-             (text-field {:size 2
-                          :value "7"
-                          :style "text-align:right"} "n"))]
-   [:div.d-inline
-    " days, "
-    [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
-    " "
-    [:a {:href "http://qa.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "QA"]
-    " "
-    [:a {:href "http://mt.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "MT"]
-    " "
-    [:a {:href "http://l22.melt.kyutech.ac.jp/"
-         :class "btn btn-info btn-sm"}
-     "L22"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]])
+  [:div {:style "margin-left:1rem;"}
+   [:div.row
+    [:div.d-inline
+     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+     " "
+     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+     " "
+     " max "]
+    [:div.d-inline
+     (form-to [:get "/recent"]
+              (text-field {:size 2
+                           :value "7"
+                           :style "text-align:right"} "n"))]
+    [:div.d-inline
+     " days, "
+     [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
+     " "
+     [:a {:href "http://qa.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "QA"]
+     " "
+     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "MT"]
+     " "
+     [:a {:href "http://l22.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "L22"]
+     " "
+     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
 
 (defn scores-page [max-pt ex-days user days]
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
-   [:div {:style "margin-left:1rem;"} (headline)]
-   [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。"]
+   (headline)
+   [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。<br>
+情報リテラシー以外の科目も大切にしよう。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -101,7 +103,7 @@
                            (= login user) "yes"
                            :else "other")}
               login]])])
-   [:div {:style "margin-left:1rem;"} (headline)]))
+   (headline)))
 
 ;; not good
 (defn- ss [s]
