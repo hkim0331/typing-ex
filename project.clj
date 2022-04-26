@@ -1,4 +1,4 @@
-(defproject typing-ex "1.5.1"
+(defproject typing-ex "1.5.2"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -6,7 +6,7 @@
                  [buddy/buddy-hashers "1.8.158"]
                  [cheshire/cheshire "5.10.2"]
                  [com.github.seancorfield/next.jdbc "1.2.772"]
-                 [com.taoensso/timbre "5.1.2"]
+                 [com.taoensso/timbre "5.2.1"]
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
