@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.2")
+(def ^:private version "1.5.3")
 
 (defn page [& contents]
   [::response/ok
@@ -142,7 +142,9 @@
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
-           [:li (ss (:timestamp r)) " " (:login r)]))))
+           [:li (ss (:timestamp r))
+                " "
+                [:a {:href (str "/record/" (:login r))} (:login r)]]))))
 
 ;; 自分は赤
 (defn sums-page [ret user]
