@@ -11,24 +11,30 @@
 - 各行ごとに集計。
 - タイプ終わりを自動判断する。
 - 日本語例文。
-- clojure.jata-time もしくは clj-time での comparator?
+- clojure.java-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
+- [Go!] が左に 1em くらいはみ出ている。
 
+
+## 1.5.2-SNAPSHOT
+- [com.taoensso.timbre "5.2.1"] で abs の warning が止まった。
+  #'io.aviso.exception/update-keys の warning が止まったのは謎。
+  まだ #'medley.core/abs が残っている。
 
 ## 1.5.1 - 2022-04-25
 ### Changed
 - resume todays button(red)
 
 ## 1.5.0 - 2022-04-25
-コード整理
+リスタートコード整理。
 
 ## 1.4.6 - 2022-04-25
 ### Fixed
 - page.clj インデントがずれて、{ } がずれた。fixed.
 - sum/1 と /daily のユーザが2倍違うぞ？ 24時間以内と、日付が同じと、どっちがいい？
-  本日＋昨日のタイピングポイントを表示する。
+  => 本日＋昨日のタイピングポイントを表示する。
 
 ## 1.4.4 - 2022-04-25
 ### Added, code polish up
@@ -302,7 +308,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 ## 0.9.16
 - 一般ユーザでもhkimura のスコア（グラフ）が見える。
 
-## 0.9.14 - 2=
+## 0.9.14
 - /users に auth.
 
 ## 0.9.12 - 2021-06-17

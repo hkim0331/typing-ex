@@ -7,7 +7,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.1")
+(def ^:private version "1.5.2-SNAPSHOT")
 
 (defn page [& contents]
   [::response/ok
@@ -89,7 +89,7 @@
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
-   (headline)
+   [:p (headline)]
    [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
@@ -101,7 +101,7 @@
                            (= login user) "yes"
                            :else "other")}
               login]])])
-   [:div (headline)]))
+   [:div {:style "margin-left:1rem;"} (headline)]))
 
 ;; not good
 (defn- ss [s]
