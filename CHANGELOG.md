@@ -15,13 +15,14 @@
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
-- [Go!] が左に 1em くらいはみ出ている。
 
 
 ## 1.5.2-SNAPSHOT
+### Fixed
 - [com.taoensso.timbre "5.2.1"] で abs の warning が止まった。
   #'io.aviso.exception/update-keys の warning が止まったのは謎。
   まだ #'medley.core/abs が残っている。
+- [Go!] が左に 1em くらいはみ出ているのを margin-left:1rem で無理やり。
 
 ## 1.5.1 - 2022-04-25
 ### Changed
@@ -33,8 +34,9 @@
 ## 1.4.6 - 2022-04-25
 ### Fixed
 - page.clj インデントがずれて、{ } がずれた。fixed.
-- sum/1 と /daily のユーザが2倍違うぞ？ 24時間以内と、日付が同じと、どっちがいい？
-  => 本日＋昨日のタイピングポイントを表示する。
+- sum/1 と /daily のユーザが2倍違う。24時間以内と日付が同じとどっち？
+  => 本日＋昨日のタイピングポイントを表示する。さすれば、日付が代わっても
+     練習しているユーザは表示が0 点にならない。
 
 ## 1.4.4 - 2022-04-25
 ### Added, code polish up

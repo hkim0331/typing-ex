@@ -89,7 +89,7 @@
   ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
-   [:p (headline)]
+   [:div {:style "margin-left:1rem;"} (headline)]
    [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
