@@ -18,12 +18,14 @@
 - 「授業中は練習なしよ」モード
 
 
-## 1.5.2-SNAPSHOT
+## 1.5.2 - 2022-04-26
 ### Fixed
 - [com.taoensso.timbre "5.2.1"] で abs の warning が止まった。
   #'io.aviso.exception/update-keys の warning が止まったのは謎。
   まだ #'medley.core/abs が残っている。
 - [Go!] が左にはみ出ているのを margin-left:1rem で無理やり修正。
+### Changed
+- page description
 
 ## 1.5.1 - 2022-04-25
 ### Changed
