@@ -15,6 +15,7 @@
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
 - do not treat as one exercise if the count of exercises is less than 10.
+- 「授業中は練習なしよ」モード
 
 
 ## 1.5.2-SNAPSHOT
@@ -22,7 +23,7 @@
 - [com.taoensso.timbre "5.2.1"] で abs の warning が止まった。
   #'io.aviso.exception/update-keys の warning が止まったのは謎。
   まだ #'medley.core/abs が残っている。
-- [Go!] が左に 1em くらいはみ出ているのを margin-left:1rem で無理やり。
+- [Go!] が左にはみ出ているのを margin-left:1rem で無理やり修正。
 
 ## 1.5.1 - 2022-04-25
 ### Changed

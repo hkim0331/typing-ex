@@ -91,7 +91,7 @@
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline)
-   [:p "直近 " days " 日間の最高点順リスト。カッコは通算練習日数。<br>
+   [:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
 情報リテラシー以外の科目も大切にしよう。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
@@ -149,8 +149,8 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "本日昨日タイピングポイント。最高点リストは max 枠内でエンター。<br>
-        情報リテラシー以外の科目も大切にしよう。"]
+   [:p "タイピング平常点。昨日と今日のポイントの和です。<br>
+最高得点リストは max 枠内でエンター。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
