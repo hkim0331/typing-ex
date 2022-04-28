@@ -152,7 +152,7 @@
    [:h2 "Typing: Daily Points"]
    (headline)
    [:p "タイピング平常点。昨日と今日のポイントの和です。<br>
-最高得点リストは max 枠内でエンター。"]
+最高得点ランキングは max 枠内でエンター。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
