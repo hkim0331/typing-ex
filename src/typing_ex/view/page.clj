@@ -61,15 +61,16 @@
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      " "
      [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-     " "
-     " max "]
+     " "]
     [:div.d-inline
      (form-to [:get "/recent"]
               (text-field {:size 2
                            :value "7"
-                           :style "text-align:right"} "n"))]
+                           :style "text-align:right"} "n")
+              " days "
+              (submit-button {:class "btn btn-primary btn-sm"} "max"))]
+    "&nbsp;"
     [:div.d-inline
-     " days, "
      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
      " "
      [:a {:href "http://qa.melt.kyutech.ac.jp/"
