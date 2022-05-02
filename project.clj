@@ -5,6 +5,7 @@
   :dependencies [[buddy/buddy-auth "3.0.323"]
                  [buddy/buddy-hashers "1.8.158"]
                  [cheshire/cheshire "5.10.2"]
+                 [clojure.java-time "0.3.3"]
                  [com.github.seancorfield/next.jdbc "1.2.772"]
                  [com.taoensso/timbre "5.2.1"]
                  [duct/core "0.8.0"]

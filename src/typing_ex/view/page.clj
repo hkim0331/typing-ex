@@ -3,6 +3,7 @@
    [ataraxy.response :as response]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button label]]
+   [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
@@ -112,11 +113,16 @@
 (defn- ss [s]
   (subs (str s) 0 16))
 
+(defn today? [ts]
+  (= (java-time/local-date)
+     (java-time/local-date ts)))
+
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
 (defn svg-self-records [login ret]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
+        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
+        todays (filter today? ret)]
     (page
      [:h2 "Typing: " login " records"]
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
@@ -125,7 +131,7 @@
      [:ul
       [:li "Max " (apply max (map :pt positives))]
       [:li "Average (last 10) " avg]
-      [:li "Exercises " (count positives)]
+      [:li "Exercises " (count todays) "/" (count positives)]
       [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
