@@ -22,7 +22,7 @@
   今はboundary/results.clj に書いている。
 
 ## 1.5.6 - 2022-05-02
-- todays/total
+- display todays/total tp counts.
 
 ## 1.5.5 - 2022-05-02
 ### Changed
