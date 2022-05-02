@@ -122,7 +122,7 @@
 (defn svg-self-records [login ret]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
-        todays (filter today? ret)]
+        todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
@@ -131,7 +131,7 @@
      [:ul
       [:li "Max " (apply max (map :pt positives))]
       [:li "Average (last 10) " avg]
-      [:li "Exercises " (count todays) "/" (count positives)]
+      [:li "Exercises (today/total) " (count todays) "/" (count positives)]
       [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 

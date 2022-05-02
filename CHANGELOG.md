@@ -18,6 +18,11 @@
 - 「授業中は練習なしよ」モード
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
+- (next.jdbc.date-time/read-as-local) の場所。
+  今はboundary/results.clj に書いている。
+
+## 1.5.6 - 2022-05-02
+- todays/total
 
 ## 1.5.5 - 2022-05-02
 ### Changed
