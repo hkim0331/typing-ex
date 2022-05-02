@@ -60,15 +60,17 @@
     [:div.d-inline
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      " "
-     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-     " "]
+     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+    "&nbsp;"
     [:div.d-inline
      (form-to [:get "/recent"]
+              (submit-button {:class "btn btn-primary btn-sm"}
+                             "max")
               (text-field {:size 2
                            :value "7"
-                           :style "text-align:right"} "n")
-              " days "
-              (submit-button {:class "btn btn-primary btn-sm"} "max"))]
+                           :style "text-align:right"}
+                          "n")
+              " days")]
     "&nbsp;"
     [:div.d-inline
      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
@@ -117,7 +119,7 @@
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日、10 分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
      [:div (plot 300 150 positives)]
      [:br]
      [:ul
@@ -152,17 +154,16 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "タイピング平常点。昨日と今日のポイントの和です。<br>
-最高得点ランキングは max 枠内でエンター。"]
+   [:p "タイピング平常点は昨日と今日のポイントの和。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
              [:li (:sum r)
               " "
               [:a {:href (str "/record/" login)
-                   :class (cond
-                            (= user login) "yes"
-                            :else "other")}
+                   :class (if (= user login)
+                              "yes"
+                              "other")}
                login]])))
    (headline)))
 

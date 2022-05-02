@@ -126,8 +126,8 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
-    (let [DAYS 7]
-      (redirect (format "/scores/%d" DAYS)))))
+    (let [days 7]
+      (redirect (format "/scores/%d" days)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
@@ -161,9 +161,9 @@
       [::response/forbidden
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
 
-(defn- probe [in]
-  (timbre/debug "probe" in)
-  in)
+;;(defn- probe [in]
+;;   (timbre/debug "probe" in)
+;;   in))
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
