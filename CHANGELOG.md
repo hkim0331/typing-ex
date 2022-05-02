@@ -17,6 +17,21 @@
 - do not treat as one exercise if the count of exercises is less than 10.
 - 「授業中は練習なしよ」モード
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
+- インタラクティブフィードバック、単語ごとにでも。できるかなあ？
+- (next.jdbc.date-time/read-as-local) の場所。
+  今はboundary/results.clj に書いている。
+
+## 1.5.6 - 2022-05-02
+- display todays/total tp counts.
+
+## 1.5.5 - 2022-05-02
+### Changed
+- n days [max] リターン打つのが面倒だ。ボタンに。
+
+## 1.5.4 - 2022-04-28
+- typing からの戻りを /scores から /sum/1 に変更した。
+- 1.5.2 で消えたはずの warning が再び。
+  #'medley.core/abs, #'io.aviso.exception/update-keys, #'taoensso.encore/abs
 
 ## 1.5.3 - 2022-04-26
 - users からも /record/login をリンク

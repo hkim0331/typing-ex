@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.3")
+(def ^:private version "1.5.6")
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -97,11 +97,11 @@
 
 ;; FIXME: function name
 (defn show-sorry [n]
-  (take n (repeat "🦠"))) ;;🙅💧💦💔❌🦠🥶🥺
+  (take n (repeat "🙅"))) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn check-key [key]
-  (when-not @first-key
-    (swap! first-key not))
+  ;; (when-not @first-key
+  ;;   (swap! first-key not))
   (when (= key "Backspace")
     (swap! app-state update :errors inc)))
 
@@ -137,7 +137,7 @@
     [plot 300 150 @todays]]
    ;;
    [:p
-    [:a {:href "/scores" :class "btn btn-primary btn-sm"} "scores"]
+    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
