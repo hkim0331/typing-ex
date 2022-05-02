@@ -3,11 +3,12 @@
    [ataraxy.response :as response]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button label]]
+   [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.4")
+(def ^:private version "1.5.5")
 
 (defn page [& contents]
   [::response/ok
@@ -60,16 +61,19 @@
     [:div.d-inline
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      " "
-     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-     " "
-     " max "]
+     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+    "&nbsp;"
     [:div.d-inline
      (form-to [:get "/recent"]
+              (submit-button {:class "btn btn-primary btn-sm"}
+                             "max")
               (text-field {:size 2
                            :value "7"
-                           :style "text-align:right"} "n"))]
+                           :style "text-align:right"}
+                          "n")
+              " days")]
+    "&nbsp;"
     [:div.d-inline
-     " days, "
      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
      " "
      [:a {:href "http://qa.melt.kyutech.ac.jp/"
@@ -109,20 +113,25 @@
 (defn- ss [s]
   (subs (str s) 0 16))
 
+(defn today? [ts]
+  (= (java-time/local-date)
+     (java-time/local-date ts)))
+
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
 (defn svg-self-records [login ret]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
+        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
+        todays (filter today? ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日、10 分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
      [:div (plot 300 150 positives)]
      [:br]
      [:ul
       [:li "Max " (apply max (map :pt positives))]
       [:li "Average (last 10) " avg]
-      [:li "Exercises " (count positives)]
+      [:li "Exercises " (count todays) "/" (count positives)]
       [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -151,17 +160,16 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "タイピング平常点。昨日と今日のポイントの和です。<br>
-最高得点ランキングは max 枠内でエンター。"]
+   [:p "タイピング平常点は昨日と今日のポイントの和。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
              [:li (:sum r)
               " "
               [:a {:href (str "/record/" login)
-                   :class (cond
-                            (= user login) "yes"
-                            :else "other")}
+                   :class (if (= user login)
+                              "yes"
+                              "other")}
                login]])))
    (headline)))
 

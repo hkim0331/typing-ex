@@ -19,6 +19,10 @@
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
 
+## 1.5.5 - 2022-05-02
+### Changed
+- n days [max] リターン打つのが面倒だ。ボタンに。
+
 ## 1.5.4 - 2022-04-28
 - typing からの戻りを /scores から /sum/1 に変更した。
 - 1.5.2 で消えたはずの warning が再び。
