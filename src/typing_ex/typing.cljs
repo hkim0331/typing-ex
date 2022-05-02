@@ -70,7 +70,7 @@
     (if (< todays-max @todays-count)
       (do
         (reset! todays-count 0)
-        (str s1 "\n" s2 "\n" "いったん休憩入れようか？"))
+        (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
       (str s1 "\n" s2))))
 
 (defn send-score []
