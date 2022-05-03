@@ -5,7 +5,7 @@
 * shadow-cljs
 * yarn
 * postgresql
-* docker, docker-compose
+* (docker, docker-compose)
 
 ## Unreleased
 - 各行ごとに集計。
@@ -20,13 +20,20 @@
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
 - (next.jdbc.date-time/read-as-local) の場所。
   今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
-- bar-graph ではなく、scatter-gram ではどうか？
+- 自分データを csv でダウンロードできるように。
+
+
+## 1.5.10 - 2022-05-03
+### Changed
+- 過去グラフを bar-graph から scatter-gram に変更。本日グラフは bar graph のまま。
 
 ## 1.5.9 - 2022-05-03
+### Added
 - 60 点に青線
 - 30 点に緑線
 
 ## 1.5.8 - 2022-05-03
+### Added
 - D.P. に exercise days を表示する。
 
 ## 1.5.7 - 2022-05-03
