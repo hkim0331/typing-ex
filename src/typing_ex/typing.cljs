@@ -10,11 +10,12 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.6")
+(def ^:private version "1.5.7")
+(def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
-                          :seconds 60
+                          :seconds timeout
                           :errors 0}))
 
 (defonce first-key (atom false))
@@ -30,12 +31,13 @@
             {s :body} (<! (http/get (str "/todays/" (get-login))))]
         (swap! app-state assoc :text (:body response)
                :answer ""
-               :seconds 60
+               :seconds timeout
                :errors 0)
         ;;(.log js/console "text" s)
         (reset! first-key false)
         (reset! todays (->> (read-string s)
-                            (map #(assoc % :pt (max 0 (:pt %)))))))))
+                            (map #(assoc % :pt (max 0 (:pt %))))))
+        (.focus (.getElementById js/document "drill")))))
 
 ;;; pt will not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -70,7 +72,7 @@
     (if (< todays-max @todays-count)
       (do
         (reset! todays-count 0)
-        (str s1 "\n" s2 "\n" "いったん休憩入れようか？"))
+        (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
       (str s1 "\n" s2))))
 
 (defn send-score []
@@ -80,15 +82,16 @@
                           {:form-params
                            {:pt (pt @app-state)
                             :__anti-forgery-token token}}))]
-        (reset-app-state!)
-        (js/alert (login-pt-message (read-string (:body response))))
-        (.focus (.getElementById js/document "drill")))))
+        (js/alert (login-pt-message (read-string (:body response)))))))
 
 (defn count-down []
   (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
-    (send-score)))
+    (if (zero? (count (:answer @app-state)))
+      (js/alert "タイプ忘れた？")
+      (send-score))
+    (reset-app-state!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down.
@@ -130,7 +133,8 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click send-score}] " 🔚全部打ち終わってクリックするとボーナス"]
+             :on-click #(do (send-score) (reset-app-state!))}]
+    " 🔚全部打ち終わってクリックするとボーナス"]
    [:p
     "Your todays:"
     [:br]

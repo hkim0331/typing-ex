@@ -13,7 +13,12 @@ fi
 ${SED} -E -i "s/^\(defproject (.+) .+/(defproject \1 \"$1\"/" project.clj
 
 # clj
-${SED} -E -i "s/^\(def \^:private version .+/(def ^:private version \"$1\")/" src/typing_ex/view/page.clj
+${SED} -E -i \
+    -e "s/^\(def \^:private version .+/(def ^:private version \"$1\")/" \
+    src/typing_ex/view/page.clj
 
 # cljs
-${SED} -E -i "s/^\(def \^:private version .+/(def ^:private version \"$1\")/" src/typing_ex/typing.cljs
+${SED} -E -i \
+    -e "s/^\(def \^:private version .+/(def ^:private version \"$1\")/" \
+    -e "s/^\(def \^:private timeout .+/(def ^:private timeout 60)/" \
+    src/typing_ex/typing.cljs
