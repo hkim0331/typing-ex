@@ -7,7 +7,7 @@
    [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot]]))
+   [typing-ex.plot :refer [plot scatter]]))
 
 (def ^:private version "1.5.9")
 
@@ -138,7 +138,7 @@
     (page
      [:h2 "Typing: " login " records"]
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
-     [:div (plot 300 150 positives)]
+     [:div (scatter 300 150 positives)]
      [:br]
      [:ul
       [:li "Max " (apply max (map :pt positives))]
