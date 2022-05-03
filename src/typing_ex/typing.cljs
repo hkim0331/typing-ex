@@ -10,8 +10,8 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.6")
-(def ^:private timeout 6)
+(def ^:private version "1.5.7")
+(def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
