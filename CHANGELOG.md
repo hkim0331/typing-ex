@@ -14,12 +14,14 @@
 - clojure.java-time もしくは clj-time での comparator?
   sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。
-- do not treat as one exercise if the count of exercises is less than 10.
+- do not treat as one if the count of exercises is less than 10.
 - 「授業中は練習なしよ」モード
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
 - (next.jdbc.date-time/read-as-local) の場所。
   今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
+- 60 点に青線
+
 
 ## 1.5.8 - 2022-05-03
 - D.P. に exercise days を表示する。

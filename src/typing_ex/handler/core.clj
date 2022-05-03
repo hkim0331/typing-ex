@@ -6,7 +6,6 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
-   ;; FIXME: refer
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
