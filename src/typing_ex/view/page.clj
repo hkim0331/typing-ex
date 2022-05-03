@@ -9,7 +9,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.8")
+(def ^:private version "1.5.9")
 
 (defn page [& contents]
   [::response/ok
@@ -164,7 +164,7 @@
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
-           [:li (ss (:timestamp r))
+           [:li (ss (java-time/local-date-time (:timestamp r)))
                 " "
                 [:a {:href (str "/record/" (:login r))} (:login r)]]))))
 
