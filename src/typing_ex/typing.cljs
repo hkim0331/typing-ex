@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.7")
+(def ^:private version "1.5.8")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -27,15 +27,15 @@
       (.-value)))
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill")))
-            {s :body} (<! (http/get (str "/todays/" (get-login))))]
-        (swap! app-state assoc :text (:body response)
+  (go (let [drill (<! (http/get (str "/drill")))
+            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
+        (swap! app-state assoc :text (:body drill)
                :answer ""
                :seconds timeout
                :errors 0)
         ;;(.log js/console "text" s)
         (reset! first-key false)
-        (reset! todays (->> (read-string s)
+        (reset! todays (->> (read-string scores)
                             (map #(assoc % :pt (max 0 (:pt %))))))
         (.focus (.getElementById js/document "drill")))))
 
@@ -75,22 +75,24 @@
         (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
       (str s1 "\n" s2))))
 
-(defn send-score []
-  (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
-            response (<! (http/post
-                          "/score"
-                          {:form-params
-                           {:pt (pt @app-state)
-                            :__anti-forgery-token token}}))]
-        (js/alert (login-pt-message (read-string (:body response)))))))
+(defn send-score! []
+  (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
+                      .-value)
+            resp (<! (http/post
+                      "/score"
+                      {:form-params
+                       {:pt (pt @app-state)
+                        :__anti-forgery-token token}}))]
+        (js/alert (login-pt-message (read-string (:body resp)))))))
 
 (defn count-down []
   (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
+    ;; 1.5.7
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
-      (send-score))
+      (send-score!))
     (reset-app-state!)))
 
 ;; FIXME: when moving below block to top of this code,
@@ -133,7 +135,7 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-score) (reset-app-state!))}]
+             :on-click #(do (send-score!) (reset-app-state!))}]
     " 🔚全部打ち終わってクリックするとボーナス"]
    [:p
     "Your todays:"

@@ -19,9 +19,12 @@
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
 - (next.jdbc.date-time/read-as-local) の場所。
-  今はboundary/results.clj に書いている。
+  今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
 
-## 1.5.7-SNAPSHOT
+## 1.5.8 - 2022-05-03
+- D.P. に exercise days を表示する。
+
+## 1.5.7 - 2022-05-03
 ### Changed
 - typing.cljs send-score から reset-app-state! を分離した。
 - デバッグ用に (def timeout 6).

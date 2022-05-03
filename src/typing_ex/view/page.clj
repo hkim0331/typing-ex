@@ -1,4 +1,5 @@
 (ns typing-ex.view.page
+  (:refer-clojure :exclude [abs])
   (:require
    [ataraxy.response :as response]
    [hiccup.page :refer [html5]]
@@ -8,7 +9,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.7")
+(def ^:private version "1.5.8")
 
 (defn page [& contents]
   [::response/ok
@@ -117,8 +118,19 @@
   (= (java-time/local-date)
      (java-time/local-date ts)))
 
+(defn- select-count-distinct
+  "select count(distinct(timestamp::DATE)) from results
+  where login='hkimura'; を clojure で。"
+  [ret]
+  (count (->> ret
+              (map :timestamp)
+              (map java-time/local-date)
+              (map str)
+              (group-by identity))))
+
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
+;; 1.5.8 Exercise days
 (defn svg-self-records [login ret]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
@@ -131,6 +143,7 @@
      [:ul
       [:li "Max " (apply max (map :pt positives))]
       [:li "Average (last 10) " avg]
+      [:li "Exercise days " (select-count-distinct ret)]
       [:li "Exercises (today/total) " (count todays) "/" (count positives)]
       [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
