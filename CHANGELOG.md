@@ -21,6 +21,12 @@
 - (next.jdbc.date-time/read-as-local) の場所。
   今はboundary/results.clj に書いている。
 
+## 1.5.7-SNAPSHOT
+### Changed
+- typing.cljs send-score から reset-app-state! を分離した。
+- デバッグ用に (def timeout 6). don't forget to reset in production.
+
+
 ## 1.5.6 - 2022-05-02
 - display todays/total tp counts.
 
