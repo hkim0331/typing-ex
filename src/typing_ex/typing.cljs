@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.5.7")
+(def ^:private version "1.5.8-SNAPSHOT")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -27,15 +27,15 @@
       (.-value)))
 
 (defn reset-app-state! []
-  (go (let [response (<! (http/get (str "/drill")))
-            {s :body} (<! (http/get (str "/todays/" (get-login))))]
-        (swap! app-state assoc :text (:body response)
+  (go (let [drill (<! (http/get (str "/drill")))
+            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
+        (swap! app-state assoc :text (:body drill)
                :answer ""
                :seconds timeout
                :errors 0)
         ;;(.log js/console "text" s)
         (reset! first-key false)
-        (reset! todays (->> (read-string s)
+        (reset! todays (->> (read-string scores)
                             (map #(assoc % :pt (max 0 (:pt %))))))
         (.focus (.getElementById js/document "drill")))))
 
@@ -88,6 +88,7 @@
   (when true ;; @first-key
     (swap! app-state update :seconds dec))
   (when (zero? (:seconds @app-state))
+    ;; 1.5.7
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score))
