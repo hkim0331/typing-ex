@@ -21,7 +21,8 @@
 - (next.jdbc.date-time/read-as-local) の場所。
   今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
 
-## 1.5.8-SNAPSHOT
+## 1.5.8 - 2022-05-03
+- D.P. に exercise days を表示する。
 
 ## 1.5.7 - 2022-05-03
 ### Changed

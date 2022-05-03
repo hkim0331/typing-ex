@@ -75,14 +75,15 @@
         (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
       (str s1 "\n" s2))))
 
-(defn send-score []
-  (go (let [token (.-value (js/document.getElementById "__anti-forgery-token"))
-            response (<! (http/post
-                          "/score"
-                          {:form-params
-                           {:pt (pt @app-state)
-                            :__anti-forgery-token token}}))]
-        (js/alert (login-pt-message (read-string (:body response)))))))
+(defn send-score! []
+  (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
+                      .-value)
+            resp (<! (http/post
+                      "/score"
+                      {:form-params
+                       {:pt (pt @app-state)
+                        :__anti-forgery-token token}}))]
+        (js/alert (login-pt-message (read-string (:body resp)))))))
 
 (defn count-down []
   (when true ;; @first-key
@@ -91,7 +92,7 @@
     ;; 1.5.7
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
-      (send-score))
+      (send-score!))
     (reset-app-state!)))
 
 ;; FIXME: when moving below block to top of this code,
@@ -134,7 +135,7 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-score) (reset-app-state!))}]
+             :on-click #(do (send-score!) (reset-app-state!))}]
     " 🔚全部打ち終わってクリックするとボーナス"]
    [:p
     "Your todays:"
