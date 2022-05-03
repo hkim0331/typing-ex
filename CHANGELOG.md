@@ -20,7 +20,7 @@
 - インタラクティブフィードバック、単語ごとにでも。できるかなあ？
 - (next.jdbc.date-time/read-as-local) の場所。
   今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
-
+- bar-graph ではなく、scatter-gram ではどうか？
 
 ## 1.5.9 - 2022-05-03
 - 60 点に青線
