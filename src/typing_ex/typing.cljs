@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [plot scatter]]))
 
 (def ^:private version "1.5.10")
-(def ^:private timeout 60)
+(def ^:private timeout 6)
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -27,9 +27,11 @@
       (.-value)))
 
 (defn reset-app-state! []
-  (go (let [drill (<! (http/get (str "/drill")))
+  (go (let [{drill :body}  (<! (http/get (str "/drill")))
             {scores :body} (<! (http/get (str "/todays/" (get-login))))]
-        (swap! app-state assoc :text (:body drill)
+        (swap! app-state
+               assoc
+               :text drill
                :answer ""
                :seconds timeout
                :errors 0)
