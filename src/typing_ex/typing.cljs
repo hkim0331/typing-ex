@@ -10,8 +10,8 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot scatter]]))
 
-(def ^:private version "1.5.10")
-(def ^:private timeout 6)
+(def ^:private version "1.6.0-SNAPSHOT-2")
+(def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
@@ -20,7 +20,7 @@
                           :words []
                           :words-max 0
                           :pos 0
-                          :word ""}))
+                          :results []}))
 
 (defonce first-key (atom false))
 
@@ -43,7 +43,7 @@
                :words words
                :words-max (count words)
                :pos 0
-               :word "")
+               :results [])
         ;;(.log js/console "text" s)
         (reset! first-key false)
         (reset! todays (->> (read-string scores)
@@ -115,21 +115,33 @@
 (defn show-sorry [n]
   (take n (repeat "🙅"))) ;;🙅💧💦💔❌🦠🥶🥺
 
+(defn check-word []
+  (let [target (get (@app-state :words) (@app-state :pos))
+        typed  (last (str/split (@app-state :answer) #"\s+"))]
+    (.log js/console target typed)
+    (swap! app-state update :results
+           #(conj % (if (= target typed) "🟢" "🔴")))
+    (swap! app-state update :pos inc)))
+
 (defn check-key [key]
-  ;; (when-not @first-key
-  ;;   (swap! first-key not))
-  (when (= key "Backspace")
-    (swap! app-state update :errors inc)))
+  (case key
+    " " (check-word)
+    "Enter" (check-word)
+    "Backspace" (swap! app-state update :errors inc)
+    nil))
 
 (defn error-component []
-  [:p "　" (show-sorry (:errors @app-state))])
+  [:div (show-sorry (:errors @app-state))])
+
+(defn results-component []
+  [:div (apply str (@app-state :results))])
 
 (defn ex-page []
   [:div
    [:h2 "Typing: Challenge"]
    [:p
     {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個でよい。"]
+    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -140,6 +152,7 @@
                                   :answer
                                   (-> % .-target .-value))}]
    [error-component]
+   [results-component]
    [:p
     [:input {:type  "button"
              :id    "seconds"
