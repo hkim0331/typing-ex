@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot scatter]]))
 
-(def ^:private version "1.6.0-SNAPSHOT-2")
+(def ^:private version "1.6.0-SNAPSHOT")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -121,7 +121,10 @@
     (.log js/console target typed)
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
-    (swap! app-state update :pos inc)))
+    (swap! app-state update :pos inc)
+    (when (<= (@app-state :words-max) (@app-state :pos))
+      (send-score!)
+      (reset-app-state!))))
 
 (defn check-key [key]
   (case key
