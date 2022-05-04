@@ -16,7 +16,11 @@
 (defonce app-state (atom {:text "wait a little"
                           :answer ""
                           :seconds timeout
-                          :errors 0}))
+                          :errors 0
+                          :words []
+                          :words-max 0
+                          :pos 0
+                          :word ""}))
 
 (defonce first-key (atom false))
 
@@ -28,13 +32,18 @@
 
 (defn reset-app-state! []
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
+            words (str/split drill #"\s+")
             {scores :body} (<! (http/get (str "/todays/" (get-login))))]
         (swap! app-state
                assoc
                :text drill
                :answer ""
                :seconds timeout
-               :errors 0)
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :word "")
         ;;(.log js/console "text" s)
         (reset! first-key false)
         (reset! todays (->> (read-string scores)
