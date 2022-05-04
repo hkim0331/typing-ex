@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot scatter]]))
 
-(def ^:private version "1.6.1")
+(def ^:private version "1.6.2")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -163,7 +163,7 @@
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
              :on-click #(do (send-score!) (reset-app-state!))}]
-    " 🔚全部打ち終わってクリックするとボーナス"]
+    " 🔚クリックしなくても全部打った後にスペースかエンターでボーナス"]
    [:p
     "Your todays:"
     [:br]
