@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot scatter]]))
 
-(def ^:private version "1.6.0-SNAPSHOT-2")
+(def ^:private version "1.6.0-SNAPSHOT")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
