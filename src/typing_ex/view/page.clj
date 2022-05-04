@@ -6,7 +6,7 @@
    [hiccup.form :refer [form-to text-field password-field submit-button label]]
    [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [taoensso.timbre :as timbre]
+   #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot scatter]]))
 
 (def ^:private version "1.6.2")
@@ -51,48 +51,50 @@
      "成績に影響しない欠席ひとつに神経質になるより、"
      "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
+;; right place, here?
 (defn- count-ex-days [days login]
   (->> days
        (filter #(= (:login %) login))
        count))
 
-(defn- headline []
+(defn- headline
+  "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
+  []
   [:div {:style "margin-left:1rem;"}
-   [:div.row
-    [:div.d-inline
-     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-     " "
-     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
-    "&nbsp;"
-    [:div.d-inline
-     (form-to [:get "/recent"]
-              (submit-button {:class "btn btn-primary btn-sm"}
-                             "max")
-              (text-field {:size 2
-                           :value "7"
-                           :style "text-align:right"}
-                          "n")
-              " days")]
-    "&nbsp;"
-    [:div.d-inline
-     [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
-     " "
-     [:a {:href "http://qa.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "QA"]
-     " "
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "MT"]
-     " "
-     [:a {:href "http://l22.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "L22"]
-     " "
-     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
+    [:div.row
+     [:div.d-inline
+      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+      " "
+      [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+     "&nbsp;"
+     [:div.d-inline
+      (form-to [:get "/recent"]
+               (submit-button {:class "btn btn-primary btn-sm"}
+                              "max")
+               (text-field {:size 2
+                            :value "7"
+                            :style "text-align:right"}
+                           "n")
+               " days")]
+     "&nbsp;"
+     [:div.d-inline
+      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
+      " "
+      [:a {:href "http://qa.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "QA"]
+      " "
+      [:a {:href "http://mt.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "MT"]
+      " "
+      [:a {:href "http://l22.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "L22"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
 
 (defn scores-page [max-pt ex-days user days]
-  ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline)
@@ -104,14 +106,14 @@
              max
              (format "(%d) " (count-ex-days ex-days login))
              [:a {:href (str "/record/" login)
-                  :class (cond
-                           (= login user) "yes"
-                           :else "other")}
+                  :class (if (= login user) "yes" "other")}
               login]])])
    (headline)))
 
 ;; not good
-(defn- ss [s]
+(defn- ss
+  "shorten string"
+  [s]
   (subs (str s) 0 16))
 
 (defn today? [ts]
@@ -158,15 +160,14 @@
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
 (defn todays-act-page [ret]
-  ;;(timbre/debug ret)
   (page
    [:h2 "Typing: todays"]
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
-                " "
-                [:a {:href (str "/record/" (:login r))} (:login r)]]))))
+            " "
+            [:a {:href (str "/record/" (:login r))} (:login r)]]))))
 
 ;; 自分は赤
 (defn sums-page [ret user]
@@ -180,9 +181,7 @@
              [:li (:sum r)
               " "
               [:a {:href (str "/record/" login)
-                   :class (if (= user login)
-                              "yes"
-                              "other")}
+                   :class (if (= user login) "yes" "other")}
                login]])))
    (headline)))
 
