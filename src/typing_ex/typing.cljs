@@ -121,7 +121,10 @@
     (.log js/console target typed)
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
-    (swap! app-state update :pos inc)))
+    (swap! app-state update :pos inc)
+    (when (<= (@app-state :words-max) (@app-state :pos))
+      (send-score!)
+      (reset-app-state!))))
 
 (defn check-key [key]
   (case key
