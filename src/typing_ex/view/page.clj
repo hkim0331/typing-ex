@@ -39,9 +39,9 @@
    (form-to
     [:post "/login"]
     (anti-forgery-field)
-    (text-field {:placeholder "アカウント"} "login")
+    (text-field     {:placeholder "アカウント"} "login")
     (password-field {:placeholder "パスワード"} "password")
-    (submit-button "login"))
+    (submit-button  "login"))
    [:br]
    [:ul
     [:li "ログイン後、スコア一覧に飛ぶ。"
@@ -68,14 +68,15 @@
       [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
      "&nbsp;"
      [:div.d-inline
-      (form-to [:get "/recent"]
-               (submit-button {:class "btn btn-primary btn-sm"}
-                              "max")
-               (text-field {:size 2
-                            :value "7"
-                            :style "text-align:right"}
-                           "n")
-               " days")]
+      (form-to
+       [:get "/recent"]
+       (submit-button {:class "btn btn-primary btn-sm"}
+                      "max")
+       (text-field {:size 2
+                    :value "7"
+                    :style "text-align:right"}
+                   "n")
+       "days")]
      "&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
