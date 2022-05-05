@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot scatter]]))
 
-(def ^:private version "1.6.2")
+(def ^:private version "1.6.3-SNAPSHOT")
 
 (defn page [& contents]
   [::response/ok
