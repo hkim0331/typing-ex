@@ -20,10 +20,15 @@
   今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
+- log がうるさい。
 
 
 ## 1.6.3-SNAPSHOT
 - 時々、「今日の練習グラフ」がアップデートされない。`get` の順番で改善できるか？
+- next.jdbc 1.2.780
+- lein-duct 0.12.3
+- postgresql 42.3.5
+- devtools 1.0.6
 
 ## 1.6.1 - 2022-05-04
 ### Added

@@ -6,7 +6,7 @@
                  [buddy/buddy-hashers "1.8.158"]
                  [cheshire/cheshire "5.10.2"]
                  [clojure.java-time "0.3.3"]
-                 [com.github.seancorfield/next.jdbc "1.2.772"]
+                 [com.github.seancorfield/next.jdbc "1.2.780"]
                  [com.taoensso/timbre "5.2.1"]
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
@@ -16,10 +16,10 @@
                  [environ "1.2.0"]
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.11.1"]
-                 [org.postgresql/postgresql "42.3.3"]
+                 [org.postgresql/postgresql "42.3.5"]
                  ;; no use cors now
                  [ring-cors "0.1.13"]]
-  :plugins [[duct/lein-duct "0.12.2"]]
+  :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
   :prep-tasks     ["javac" "compile" ["run" ":duct/compiler"]]
