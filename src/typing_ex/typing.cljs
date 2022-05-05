@@ -30,10 +30,13 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
+;; order of `get` is important?
 (defn reset-app-state! []
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
             words (str/split drill #"\s+")
             {scores :body} (<! (http/get (str "/todays/" (get-login))))]
+        (reset! todays (->> (read-string scores)
+                            (map #(assoc % :pt (max 0 (:pt %))))))
         (swap! app-state
                assoc
                :text drill
@@ -44,13 +47,9 @@
                :words-max (count words)
                :pos 0
                :results [])
-        ;;(.log js/console "text" s)
-        (reset! first-key false)
-        (reset! todays (->> (read-string scores)
-                            (map #(assoc % :pt (max 0 (:pt %))))))
         (.focus (.getElementById js/document "drill")))))
 
-;;; pt will not be nagative.
+;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
