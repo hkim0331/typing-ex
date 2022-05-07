@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.6.3")
+(def ^:private version "1.6.4")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -21,8 +21,6 @@
                           :words-max 0
                           :pos 0
                           :results []}))
-
-;;(defonce first-key (atom false))
 
 (defonce todays (atom {}))
 
@@ -35,18 +33,18 @@
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
             {scores :body} (<! (http/get (str "/todays/" (get-login))))
             words (str/split drill #"\s+")]
-       (swap! app-state
-              assoc
-              :text drill
-              :answer ""
-              :seconds timeout
-              :errors 0
-              :words words
-              :words-max (count words)
-              :pos 0
-              :results [])
-       (reset! todays (->> (read-string scores)))
-       (.focus (.getElementById js/document "drill")))))
+        (swap! app-state
+               assoc
+               :text drill
+               :answer ""
+               :seconds timeout
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :results [])
+        (reset! todays (->> (read-string scores)))
+        (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -95,10 +93,8 @@
         (js/alert (login-pt-message (read-string (:body resp)))))))
 
 (defn count-down []
-  (when true ;; @first-key
-    (swap! app-state update :seconds dec))
+  (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    ;; 1.5.7
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score!))
