@@ -86,14 +86,6 @@
   </body>
 </html>")]))
 
-;; under construction
-#_(defn- sum [coll]
-    (let [pts (->> coll
-                   val
-                   (map #(:pt %))
-                   (reduce +))]
-     [(key coll) pts]))
-
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [ret (results/sum db n)

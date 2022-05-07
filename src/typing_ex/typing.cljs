@@ -8,9 +8,9 @@
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]
-   [typing-ex.plot :refer [plot scatter]]))
+   [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.6.2")
+(def ^:private version "1.6.3")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -22,7 +22,7 @@
                           :pos 0
                           :results []}))
 
-(defonce first-key (atom false))
+;;(defonce first-key (atom false))
 
 (defonce todays (atom {}))
 
@@ -30,27 +30,25 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
+;; order of `get` is important?
 (defn reset-app-state! []
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")
-            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
-        (swap! app-state
-               assoc
-               :text drill
-               :answer ""
-               :seconds timeout
-               :errors 0
-               :words words
-               :words-max (count words)
-               :pos 0
-               :results [])
-        ;;(.log js/console "text" s)
-        (reset! first-key false)
-        (reset! todays (->> (read-string scores)
-                            (map #(assoc % :pt (max 0 (:pt %))))))
-        (.focus (.getElementById js/document "drill")))))
+            {scores :body} (<! (http/get (str "/todays/" (get-login))))
+            words (str/split drill #"\s+")]
+       (swap! app-state
+              assoc
+              :text drill
+              :answer ""
+              :seconds timeout
+              :errors 0
+              :words words
+              :words-max (count words)
+              :pos 0
+              :results [])
+       (reset! todays (->> (read-string scores)))
+       (.focus (.getElementById js/document "drill")))))
 
-;;; pt will not be nagative.
+;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
@@ -68,7 +66,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defonce todays-count (atom 0))
+(defonce todays-trials (atom 0))
 (def ^:private todays-max 10)
 
 (defn login-pt-message [{:keys [pt login]}]
@@ -79,10 +77,10 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (swap! todays-count inc)
-    (if (< todays-max @todays-count)
+    (swap! todays-trials inc)
+    (if (< todays-max @todays-trials)
       (do
-        (reset! todays-count 0)
+        (reset! todays-trials 0)
         (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
       (str s1 "\n" s2))))
 
