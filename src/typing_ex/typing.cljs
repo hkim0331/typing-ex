@@ -101,7 +101,7 @@
     (reset-app-state!)))
 
 ;; FIXME: when moving below block to top of this code,
-;;        becomes not counting down.
+;;        becomes not counting down even if declared.
 ;;(declare count-down)
 (defonce updater (js/setInterval count-down 1000))
 
@@ -128,10 +128,10 @@
     nil))
 
 (defn error-component []
-  [:div (show-sorry (:errors @app-state))])
+  [:div.drill (show-sorry (:errors @app-state))])
 
 (defn results-component []
-  [:div (apply str (@app-state :results))])
+  [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
   [:div
