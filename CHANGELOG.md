@@ -29,6 +29,7 @@
 - lein-duct 0.12.3
 - postgresql 42.3.5
 - devtools 1.0.6
+- plot.cljs DRY!
 
 ## 1.6.1 - 2022-05-04
 ### Added

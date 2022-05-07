@@ -3,11 +3,11 @@
   (:require
    [ataraxy.response :as response]
    [hiccup.page :refer [html5]]
-   [hiccup.form :refer [form-to text-field password-field submit-button label]]
+   [hiccup.form :refer [form-to text-field password-field submit-button]]
    [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    #_[taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot scatter]]))
+   [typing-ex.plot :refer [scatter]]))
 
 (def ^:private version "1.6.3-SNAPSHOT")
 
