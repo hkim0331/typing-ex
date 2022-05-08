@@ -57,7 +57,7 @@
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    (js/console.log "goods bads all error score: " goods bads all err score)
+    ;;(js/console.log "goods bads all error score: " goods bads all err score)
     (timbre/info (get-login) goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)

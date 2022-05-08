@@ -23,12 +23,14 @@
 - log がうるさい。
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
-  ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
+
 
 ## 1.6.5-SNAPSHOT
 - reagent/reagent-dom 18.0.0
 - package.json 中の "version": を bump-version.sh でケアする。
 - 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
+- react 17 に戻した。
+  ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
 
 ## 1.6.4 - 2022-05-07
 - app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
