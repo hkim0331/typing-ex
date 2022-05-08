@@ -8,6 +8,7 @@
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]
+   [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
 (def ^:private version "1.6.4")
@@ -57,6 +58,7 @@
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (js/console.log "goods bads all error score: " goods bads all err score)
+    (timbre/info (get-login) goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)
       (+ score err))))
