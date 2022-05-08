@@ -25,6 +25,9 @@
 - 移動平均を乗せる
 - 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
 
+## 1.6.5-SNAPSHOT
+- reagent/reagent-dom 18.0.0
+- package.json 中の "version": を bump-version.sh でケアする。
 
 ## 1.6.4 - 2022-05-07
 - app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？

@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.6.4")
+(def ^:private version "1.6.5-SNAPSHOT")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
