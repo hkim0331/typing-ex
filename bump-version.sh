@@ -10,7 +10,7 @@ if [ -x "${HOMEBREW_PREFIX}/bin/gsed" ]; then
 fi
 
 # package.json
-${SED} -E -i "s/\"version\": .+$/\"version\": \"$1\"/" package.json
+${SED} -E -i "s/\"version\": .+$/\"version\": \"$1\",/" package.json
 
 # project
 ${SED} -E -i "s/^\(defproject (.+) .+/(defproject \1 \"$1\"/" project.clj
