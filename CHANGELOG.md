@@ -31,6 +31,9 @@
 - 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
 - react 17 に戻した。
   ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
+- build.sh
+  export TAOENSSO_TIMBRE_NS_PATTERN_EDN='{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
+
 
 ## 1.6.4 - 2022-05-07
 - app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
