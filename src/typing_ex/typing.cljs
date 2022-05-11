@@ -8,9 +8,10 @@
    [clojure.string :as str]
    [reagent.core :refer [atom]]
    [reagent.dom :as rdom]
+   [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.6.4")
+(def ^:private version "1.6.5")
 (def ^:private timeout 60)
 
 (defonce app-state (atom {:text "wait a little"
@@ -28,11 +29,15 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; order of `get` is important?
+;; 1.6.6
+(defn reset-todays! []
+  (go (let [{scores :body} (<! (http/get (str "/todays/" (get-login))))]
+        (reset! todays (read-string scores)))))
+
 (defn reset-app-state! []
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
-            {scores :body} (<! (http/get (str "/todays/" (get-login))))
             words (str/split drill #"\s+")]
+        (reset-todays!)
         (swap! app-state
                assoc
                :text drill
@@ -43,7 +48,6 @@
                :words-max (count words)
                :pos 0
                :results [])
-        (reset! todays (->> (read-string scores)))
         (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
@@ -56,7 +60,8 @@
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    (js/console.log "goods bads all error score: " goods bads all err score)
+    ;;(js/console.log "goods bads all error score: " goods bads all err score)
+    (timbre/info (get-login) goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)
       (+ score err))))
@@ -101,7 +106,7 @@
     (reset-app-state!)))
 
 ;; FIXME: when moving below block to top of this code,
-;;        becomes not counting down.
+;;        becomes not counting down even if declared.
 ;;(declare count-down)
 (defonce updater (js/setInterval count-down 1000))
 
@@ -128,10 +133,10 @@
     nil))
 
 (defn error-component []
-  [:div (show-sorry (:errors @app-state))])
+  [:div.drill (show-sorry (:errors @app-state))])
 
 (defn results-component []
-  [:div (apply str (@app-state :results))])
+  [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
   [:div

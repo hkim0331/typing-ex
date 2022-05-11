@@ -8,18 +8,20 @@
       [:line {:x1 0 :y1 (- h 70) :x2 w :y2 (- h 70) :stroke "blue"}]
       [:line {:x1 0 :y1 (- h 40) :x2 w :y2 (- h 40) :stroke "green"}]])
 
+;; plot は適当な名前ではない。bar-chart?
 (defn plot [w h data]
-  (let [n (count data)
+  (let [n  (count data)
         dx (/ w (count data))]
     (into
      (frame w h)
      (for [[x y] (map list (range n) (map :pt data))]
+       ;; scatter と以下が異なるだけ。DRY!
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
          :fill "green"}]))))
 
 (defn scatter [w h data]
-  (let [n (count data)
+  (let [n  (count data)
         dx (/ w (count data))]
     (into
      (frame w h)

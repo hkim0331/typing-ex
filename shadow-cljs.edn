@@ -4,7 +4,8 @@
 
  :dependencies [[binaryage/devtools "1.0.6"] ;; was 1.0.5
                 [cljs-http "0.1.46"]
-                [reagent "1.1.1"]] ;; was 1.0.0
+                [reagent "1.1.1"];; was 1.0.0
+                [com.taoensso/timbre "5.2.1"]]
 
  ;; set an nrepl port for connection to a REPL.
  :nrepl        {:port 8777}

@@ -6,19 +6,19 @@ pre#example {
     padding-left: 5px;
     font-family: monospace;
     font-size: 12pt;
-    user-select:none;
-    -webkit-user-select:none;
+    user-select: none;
+    -webkit-user-select: none;
     -ms-user-select: none;
-    -moz-user-select:none;
-    -khtml-user-select:none;
-    -webkit-user-drag:none;
-    -khtml-user-drag:none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
 }
 
 textarea#drill {
     font-family: monospace;
     font-size: 12pt;
-    width:  660px;
+    width: 660px;
     height: 120px;
 }
 
@@ -29,12 +29,11 @@ span#counter {
     width: 1em;
 }
 
-.red { color: red; }
-
-.yes { background-color: red; color: white;}
-.hkimura { background: blue; color: white;}
-
 span.mmm { margin-left: 2em;}
 
+.drill { width: 660px;}
+.red { color: red;}
+.yes { background-color: red; color: white;}
+.hkimura { background: blue; color: white;}
 .btn#counter { font-family: monospace;}
 
