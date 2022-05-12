@@ -25,6 +25,14 @@
 - 移動平均を乗せる
 
 
+## 1.7.1-SNAPSHOT
+- go ブロックは呼んだ順に実行されるとは限らない。
+- reset! を swap! に戻す。
+- defonce を１つに。除く setInterval.
+
+## 1.7.0 - 2022-05-12
+code polish up. not improved.
+
 ## 1.6.5 - 2022-05-11
 - reagent/reagent-dom 18.0.0
 - package.json 中の "version": を bump-version.sh でケアする。

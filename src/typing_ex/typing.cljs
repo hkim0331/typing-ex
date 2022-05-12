@@ -6,38 +6,38 @@
    [cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
-   [reagent.core :refer [atom]]
+   [reagent.core :as r]
    [reagent.dom :as rdom]
    [taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot]]))
+   [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.6.5")
+(def ^:private version "1.7.1")
+
 (def ^:private timeout 60)
+(def ^:private todays-max 10)
 
-(defonce app-state (atom {:text "wait a little"
-                          :answer ""
-                          :seconds timeout
-                          :errors 0
-                          :words []
-                          :words-max 0
-                          :pos 0
-                          :results []}))
-
-(defonce todays (atom {}))
+(defonce todays-trials (r/atom 0))
+(defonce app-state
+  (r/atom  {:text ""
+            :answer ""
+            :seconds timeout
+            :errors 0
+            :words ""
+            :words-max 0
+            :pos 0
+            :results []
+            :todays {}
+            :todays-trials 0}))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; 1.6.6
-(defn reset-todays! []
-  (go (let [{scores :body} (<! (http/get (str "/todays/" (get-login))))]
-        (reset! todays (read-string scores)))))
-
-(defn reset-app-state! []
-  (go (let [{drill :body}  (<! (http/get (str "/drill")))
+(defn reset-app! []
+  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
+            scores (read-string body)
+            {drill :body}  (<! (http/get (str "/drill")))
             words (str/split drill #"\s+")]
-        (reset-todays!)
         (swap! app-state
                assoc
                :text drill
@@ -47,7 +47,8 @@
                :words words
                :words-max (count words)
                :pos 0
-               :results [])
+               :results []
+               :todays scores)
         (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
@@ -69,10 +70,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defonce todays-trials (atom 0))
-(def ^:private todays-max 10)
-
-(defn login-pt-message [{:keys [pt login]}]
+(defn your-score [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -80,50 +78,44 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (swap! todays-trials inc)
-    (if (< todays-max @todays-trials)
-      (do
-        (reset! todays-trials 0)
-        (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
-      (str s1 "\n" s2))))
+    (js/alert s1 "\n" s2)))
 
 (defn send-score! []
   (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
                       .-value)
-            resp (<! (http/post
-                      "/score"
-                      {:form-params
-                       {:pt (pt @app-state)
-                        :__anti-forgery-token token}}))]
-        (js/alert (login-pt-message (read-string (:body resp)))))))
+            {body :body} (<! (http/post
+                              "/score"
+                              {:form-params
+                               {:pt (pt @app-state)
+                                :__anti-forgery-token token}}))]
+        (your-score (read-string body))
+        (swap! app-state update :todays-trials inc)
+        (when (zero? (mod (:todays-trials @app-state) todays-max))
+          (js/alert "いったん休憩入れよう 🍵")))))
 
-(defn count-down []
+(defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score!))
-    (reset-app-state!)))
+    (reset-app!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
-;;(declare count-down)
-(defonce updater (js/setInterval count-down 1000))
-
-;; FIXME: function name
-(defn show-sorry [n]
-  (take n (repeat "🙅"))) ;;🙅💧💦💔❌🦠🥶🥺
+;;(declare countdown)
+(defonce updater (js/setInterval countdown 1000))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
         typed  (last (str/split (@app-state :answer) #"\s+"))]
-    (.log js/console target typed)
+    ;;(.log js/console target typed)
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-score!)
-      (reset-app-state!))))
+      (reset-app!))))
 
 (defn check-key [key]
   (case key
@@ -132,8 +124,10 @@
     "Backspace" (swap! app-state update :errors inc)
     nil))
 
+;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  [:div.drill (show-sorry (:errors @app-state))])
+  ;;(.log js/console "errors" (:errors @app-state))
+  [:div.drill (repeat (:errors @app-state) "💔")])
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
@@ -141,9 +135,7 @@
 (defn ex-page []
   [:div
    [:h2 "Typing: Challenge"]
-   [:p
-    {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -155,32 +147,28 @@
                                   (-> % .-target .-value))}]
    [error-component]
    [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (send-score!) (reset-app-state!))}]
-    " 🔚クリックしなくても全部打った後にスペースかエンターでボーナス"]
-   [:p
-    "Your todays:"
-    [:br]
-    [plot 300 150 @todays]]
-   ;;
-   [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+   [:p [:input {:type  "button"
+                :id    "seconds"
+                :class "btn btn-success btn-sm"
+                :style {:font-family "monospace"}
+                :value (:seconds @app-state)
+                :on-click #(do (send-score!) (reset-app!))}]
+    " 🔚 全部打った後にスペースかエンターでボーナス"]
+   [:p "Your todays:" [:br]]
+   [bar-chart 300 150 (:todays @app-state)]
+   [:p [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
    [:div "hkimura, " version]])
 
 (defn start []
+  (reset-app!)
+  (timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
 (defn ^:export init []
-  (reset-app-state!)
   ;; init is called ONCE when the page loads
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
