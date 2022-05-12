@@ -115,7 +115,8 @@
 
 ;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  [:div.drill (take (:errors @app-state) (repeat "💔"))])
+  (.log js/console "errors" (:errors @app-state))
+  [:div.drill (repeat (:errors @app-state) "💔")])
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
@@ -158,11 +159,11 @@
    [:div "hkimura, " version]])
 
 (defn start []
+  (reset-app-state!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
 (defn ^:export init []
-  (reset-app-state!)
   ;; init is called ONCE when the page loads
   ;; this is called in the index.html and must be exported
   ;; so it is available even in :advanced release builds
