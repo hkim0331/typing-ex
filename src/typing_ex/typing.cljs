@@ -33,11 +33,13 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
+;; FIXME rewrite!
 (defn reset-app! []
   (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
             scores (read-string body)
             {drill :body}  (<! (http/get (str "/drill")))
             words (str/split drill #"\s+")]
+        ;;(.log js/console "app-state will update")
         (swap! app-state
                assoc
                :text drill
@@ -49,6 +51,7 @@
                :pos 0
                :results []
                :todays scores)
+        ;;(js/alert "app-state updated")
         (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
@@ -124,10 +127,9 @@
     "Backspace" (swap! app-state update :errors inc)
     nil))
 
-;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
   ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "💔")])
+  [:div.drill (repeat (:errors @app-state) "💔")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
@@ -147,16 +149,22 @@
                                   (-> % .-target .-value))}]
    [error-component]
    [results-component]
-   [:p [:input {:type  "button"
-                :id    "seconds"
-                :class "btn btn-success btn-sm"
-                :style {:font-family "monospace"}
-                :value (:seconds @app-state)
-                :on-click #(do (send-score!) (reset-app!))}]
+   [:p
+    [:input {:type  "button"
+             :id    "seconds"
+             :class "btn btn-success btn-sm"
+             :style {:font-family "monospace"}
+             :value (:seconds @app-state)
+             :on-click #(do (send-score!)
+                            (reset-app!))}]
     " 🔚 全部打った後にスペースかエンターでボーナス"]
-   [:p "Your todays:" [:br]]
-   [bar-chart 300 150 (:todays @app-state)]
-   [:p [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+   [:p
+    "Your todays:"
+    [:br]
+    ;; FIXME app-state が更新される前にレンダリングされている。
+    [bar-chart 300 150 (:todays @app-state)]]
+   [:p
+    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
@@ -164,7 +172,7 @@
 
 (defn start []
   (reset-app!)
-  (timbre/debug "start todays:" (:todays @app-state))
+  ;;(timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
