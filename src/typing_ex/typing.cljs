@@ -95,7 +95,7 @@
 
 (defn countdown []
   (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
+  (when (neg? (:seconds @app-state))
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score!))
