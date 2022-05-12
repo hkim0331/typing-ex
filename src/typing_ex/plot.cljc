@@ -1,4 +1,5 @@
-(ns typing-ex.plot)
+(ns typing-ex.plot
+ (:require [taoensso.timbre :as timbre]))
 
 (defn- frame [w h]
  [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
@@ -9,9 +10,10 @@
       [:line {:x1 0 :y1 (- h 40) :x2 w :y2 (- h 40) :stroke "green"}]])
 
 ;; plot は適当な名前ではない。bar-chart?
-(defn plot [w h data]
+(defn bar-chart [w h data]
   (let [n  (count data)
         dx (/ w (count data))]
+    (timbre/info "bar-chart" (take-last 3 data))
     (into
      (frame w h)
      (for [[x y] (map list (range n) (map :pt data))]
