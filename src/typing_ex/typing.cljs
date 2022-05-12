@@ -9,7 +9,7 @@
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot]]))
+   [typing-ex.plot :refer [bar-chart]]))
 
 (def ^:private version "1.7.0")
 
@@ -24,10 +24,10 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
-(defn reset-app-state! []
-  (go (let [{drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")
-            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
+(defn reset-app! []
+  (go (let [{scores :body} (<! (http/get (str "/todays/" (get-login))))
+            {drill :body}  (<! (http/get (str "/drill")))
+            words (str/split drill #"\s+")]
         (reset! todays (read-string scores))
         (reset! app-state
                 {:text drill
@@ -88,7 +88,7 @@
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score!))
-    (reset-app-state!)))
+    (reset-app!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
@@ -98,13 +98,13 @@
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
         typed  (last (str/split (@app-state :answer) #"\s+"))]
-    (.log js/console target typed)
+    ;;(.log js/console target typed)
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-score!)
-      (reset-app-state!))))
+      (reset-app!))))
 
 (defn check-key [key]
   (case key
@@ -115,7 +115,7 @@
 
 ;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  (.log js/console "errors" (:errors @app-state))
+  ;;(.log js/console "errors" (:errors @app-state))
   [:div.drill (repeat (:errors @app-state) "💔")])
 
 (defn results-component []
@@ -124,9 +124,7 @@
 (defn ex-page []
   [:div
    [:h2 "Typing: Challenge"]
-   [:p
-    {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -138,28 +136,25 @@
                                   (-> % .-target .-value))}]
    [error-component]
    [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (send-score!) (reset-app-state!))}]
-    " 🔚クリックしなくても全部打った後にスペースかエンターでボーナス"]
-   [:p
-    "Your todays:"
-    [:br]
-    [plot 300 150 @todays]]
-   ;;
-   [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+   [:p [:input {:type  "button"
+                :id    "seconds"
+                :class "btn btn-success btn-sm"
+                :style {:font-family "monospace"}
+                :value (:seconds @app-state)
+                :on-click #(do (send-score!) (reset-app!))}]
+    " 🔚 全部打った後にスペースかエンターでボーナス"]
+   [:p "Your todays:" [:br]]
+   ;;(timbre/debug "bar-chart" @todays)
+   [bar-chart 300 150 @todays]
+   [:p [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+       " "
+       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
    [:div "hkimura, " version]])
 
 (defn start []
-  (reset-app-state!)
+  (reset-app!)
+  (timbre/debug "start todays:" @todays)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
