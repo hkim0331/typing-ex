@@ -6,48 +6,38 @@
    [cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
-   [reagent.core :refer [atom]]
+   [reagent.core :as r]
    [reagent.dom :as rdom]
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.6.5")
-(def ^:private timeout 60)
+(def ^:private version "1.7.0-SNAPSHOT")
 
-(defonce app-state (atom {:text "wait a little"
-                          :answer ""
-                          :seconds timeout
-                          :errors 0
-                          :words []
-                          :words-max 0
-                          :pos 0
-                          :results []}))
+(def ^:private timeout 20)
+(def ^:private todays-max 10)
 
-(defonce todays (atom {}))
+(defonce todays-trials (r/atom 0))
+(defonce app-state (r/atom {}))
+(defonce todays (r/atom {}))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; 1.6.6
-(defn reset-todays! []
-  (go (let [{scores :body} (<! (http/get (str "/todays/" (get-login))))]
-        (reset! todays (read-string scores)))))
-
 (defn reset-app-state! []
   (go (let [{drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")]
-        (reset-todays!)
-        (swap! app-state
-               assoc
-               :text drill
-               :answer ""
-               :seconds timeout
-               :errors 0
-               :words words
-               :words-max (count words)
-               :pos 0
-               :results [])
+            words (str/split drill #"\s+")
+            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
+        (reset! todays (read-string scores))
+        (reset! app-state
+                {:text drill
+                 :answer ""
+                 :seconds timeout
+                 :errors 0
+                 :words words
+                 :words-max (count words)
+                 :pos 0
+                 :results []})
         (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
@@ -69,10 +59,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defonce todays-trials (atom 0))
-(def ^:private todays-max 10)
-
-(defn login-pt-message [{:keys [pt login]}]
+(defn intermission-message [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -80,24 +67,22 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (swap! todays-trials inc)
-    (if (< todays-max @todays-trials)
-      (do
-        (reset! todays-trials 0)
-        (str s1 "\n" s2 "\n" "いったん休憩入れよう 🍵"))
-      (str s1 "\n" s2))))
+    (js/alert s1 "\n" s2)))
 
 (defn send-score! []
   (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
                       .-value)
-            resp (<! (http/post
-                      "/score"
-                      {:form-params
-                       {:pt (pt @app-state)
-                        :__anti-forgery-token token}}))]
-        (js/alert (login-pt-message (read-string (:body resp)))))))
+            {body :body} (<! (http/post
+                              "/score"
+                              {:form-params
+                               {:pt (pt @app-state)
+                                :__anti-forgery-token token}}))]
+        (intermission-message (read-string body))
+        (swap! todays-trials inc)
+        (when (zero? (mod @todays-trials todays-max))
+          (js/alert "いったん休憩入れよう 🍵")))))
 
-(defn count-down []
+(defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
     (if (zero? (count (:answer @app-state)))
@@ -107,12 +92,8 @@
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
-;;(declare count-down)
-(defonce updater (js/setInterval count-down 1000))
-
-;; FIXME: function name
-(defn show-sorry [n]
-  (take n (repeat "🙅"))) ;;🙅💧💦💔❌🦠🥶🥺
+;;(declare countdown)
+(defonce updater (js/setInterval countdown 1000))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
@@ -132,8 +113,9 @@
     "Backspace" (swap! app-state update :errors inc)
     nil))
 
+;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  [:div.drill (show-sorry (:errors @app-state))])
+  [:div.drill (take (:errors @app-state) (repeat "💔"))])
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
