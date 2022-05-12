@@ -2,9 +2,12 @@
   (:require
    [clojure.string :as str]
    [duct.database.sql]
+   [next.jdbc.date-time]
    [next.jdbc.sql :as sql]
-   [taoensso.timbre :as timbre]
+   #_[taoensso.timbre :as timbre]
    [typing-ex.boundary.utils :refer [ds-opt]]))
+
+(next.jdbc.date-time/read-as-local)
 
 (defprotocol Results
   (insert-pt [db rcv])
@@ -29,7 +32,6 @@
                 where timestamp::DATE >=  CURRENT_DATE - %d
                 group by login
                 order by sum(pt) desc" n)
-          ;;_ (timbre/debug "sql" sql)
           ret (sql/query (ds-opt db) [sql])]
       ret))
 

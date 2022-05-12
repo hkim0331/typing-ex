@@ -1,6 +1,6 @@
 # typing-ex
 
-情報リテラシー 2021 授業用タイプ練習アプリ。
+情報リテラシー 2022 授業用タイプ練習アプリ。
 
 Duct(ataraxy, postgres, buddy-auth) でバックエンドを書き、
 ClojureScript でフロントを書く練習。
@@ -39,7 +39,7 @@ public を duct の resouces 以下に移動した。
 
 ## License
 
-Copyright © 2021 hkimura
+Copyright © 2021-2022 hkimura
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

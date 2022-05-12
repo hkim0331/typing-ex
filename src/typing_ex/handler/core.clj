@@ -6,7 +6,6 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
-   ;; FIXME: refer
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
@@ -87,14 +86,6 @@
   </body>
 </html>")]))
 
-;; under construction
-#_(defn- sum [coll]
-    (let [pts (->> coll
-                   val
-                   (map #(:pt %))
-                   (reduce +))]
-     [(key coll) pts]))
-
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [ret (results/sum db n)
@@ -126,8 +117,8 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
-    (let [DAYS 7]
-      (redirect (format "/scores/%d" DAYS)))))
+    (let [days 7]
+      (redirect (format "/scores/%d" days)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
@@ -161,9 +152,9 @@
       [::response/forbidden
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
 
-(defn- probe [in]
-  (timbre/debug "probe" in)
-  in)
+;;(defn- probe [in]
+;;   (timbre/debug "probe" in)
+;;   in))
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]

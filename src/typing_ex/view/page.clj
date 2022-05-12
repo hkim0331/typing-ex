@@ -1,13 +1,15 @@
 (ns typing-ex.view.page
+  (:refer-clojure :exclude [abs])
   (:require
    [ataraxy.response :as response]
    [hiccup.page :refer [html5]]
-   [hiccup.form :refer [form-to text-field password-field submit-button label]]
+   [hiccup.form :refer [form-to text-field password-field submit-button]]
+   [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot]]))
+   #_[taoensso.timbre :as timbre]
+   [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.5.5")
+(def ^:private version "1.7.0")
 
 (defn page [& contents]
   [::response/ok
@@ -37,9 +39,9 @@
    (form-to
     [:post "/login"]
     (anti-forgery-field)
-    (text-field {:placeholder "アカウント"} "login")
+    (text-field     {:placeholder "アカウント"} "login")
     (password-field {:placeholder "パスワード"} "password")
-    (submit-button "login"))
+    (submit-button  "login"))
    [:br]
    [:ul
     [:li "ログイン後、スコア一覧に飛ぶ。"
@@ -49,46 +51,51 @@
      "成績に影響しない欠席ひとつに神経質になるより、"
      "しっかりタイピング平常点稼いだ方が建設的。"]]))
 
+;; right place, here?
 (defn- count-ex-days [days login]
   (->> days
        (filter #(= (:login %) login))
        count))
 
-(defn- headline []
+(defn- headline
+  "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
+  []
   [:div {:style "margin-left:1rem;"}
-   [:div.row
-    [:div.d-inline
-     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-     " "
-     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-     " "]
-    [:div.d-inline
-     (form-to [:get "/recent"]
-              (text-field {:size 2
-                           :value "7"
-                           :style "text-align:right"} "n")
-              " days "
-              (submit-button {:class "btn btn-primary btn-sm"} "max"))]
-    "&nbsp;"
-    [:div.d-inline
-     [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
-     " "
-     [:a {:href "http://qa.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "QA"]
-     " "
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "MT"]
-     " "
-     [:a {:href "http://l22.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "L22"]
-     " "
-     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
+    [:div.row
+     [:div.d-inline
+      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+      " "
+      [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+     "&nbsp;"
+     [:div.d-inline
+      (form-to
+       [:get "/recent"]
+       (submit-button {:class "btn btn-primary btn-sm"}
+                      "max")
+       (text-field {:size 2
+                    :value "7"
+                    :style "text-align:right"}
+                   "n")
+       "days")]
+     "&nbsp;"
+     [:div.d-inline
+      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
+      " "
+      [:a {:href "http://qa.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "QA"]
+      " "
+      [:a {:href "http://mt.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "MT"]
+      " "
+      [:a {:href "http://l22.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "L22"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
 
 (defn scores-page [max-pt ex-days user days]
-  ;;(timbre/debug ex-days)
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline)
@@ -100,30 +107,47 @@
              max
              (format "(%d) " (count-ex-days ex-days login))
              [:a {:href (str "/record/" login)
-                  :class (cond
-                           (= login user) "yes"
-                           :else "other")}
+                  :class (if (= login user) "yes" "other")}
               login]])])
    (headline)))
 
 ;; not good
-(defn- ss [s]
+(defn- ss
+  "shorten string"
+  [s]
   (subs (str s) 0 16))
+
+(defn today? [ts]
+  (= (java-time/local-date)
+     (java-time/local-date ts)))
+
+(defn- select-count-distinct
+  "select count(distinct(timestamp::DATE)) from results
+  where login='hkimura'; を clojure で。"
+  [ret]
+  (count (->> ret
+              (map :timestamp)
+              (map java-time/local-date)
+              (map str)
+              (group-by identity))))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
+;; 1.5.8 Exercise days
 (defn svg-self-records [login ret]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)]
+        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
+        todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日、10 分、練習しよう。"]
-     [:div (plot 300 150 positives)]
+     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
+     [:div (scatter 300 150 positives)]
      [:br]
      [:ul
       [:li "Max " (apply max (map :pt positives))]
       [:li "Average (last 10) " avg]
-      [:li "Exercises " (count positives)]
+      [:li "Exercise days " (select-count-distinct ret)]
+      [:li "Exercises (today/total) " (count todays) "/" (count positives)]
       [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -137,32 +161,28 @@
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
 (defn todays-act-page [ret]
-  ;;(timbre/debug ret)
   (page
    [:h2 "Typing: todays"]
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
    (into [:ol]
          (for [r ret]
-           [:li (ss (:timestamp r))
-                " "
-                [:a {:href (str "/record/" (:login r))} (:login r)]]))))
+           [:li (ss (java-time/local-date-time (:timestamp r)))
+            " "
+            [:a {:href (str "/record/" (:login r))} (:login r)]]))))
 
 ;; 自分は赤
 (defn sums-page [ret user]
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "タイピング平常点。昨日と今日のポイントの和です。<br>
-最高得点ランキングは max 枠内でエンター。"]
+   [:p "タイピング平常点は昨日と今日のポイントの和。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
              [:li (:sum r)
               " "
               [:a {:href (str "/record/" login)
-                   :class (cond
-                            (= user login) "yes"
-                            :else "other")}
+                   :class (if (= user login) "yes" "other")}
                login]])))
    (headline)))
 

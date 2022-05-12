@@ -5,23 +5,78 @@
 * shadow-cljs
 * yarn
 * postgresql
-* docker, docker-compose
+* (docker, docker-compose)
 
 ## Unreleased
 - 各行ごとに集計。
-- タイプ終わりを自動判断する。
 - 日本語例文。
 - clojure.java-time もしくは clj-time での comparator?
   sort-by で使えるもの。
-- 周回ごとに ready, set, go! を表示。
-- do not treat as one exercise if the count of exercises is less than 10.
+- 周回ごとに ready, set, go! を表示。きっと邪魔だ。
+- do not treat as one if the count of exercises is less than 10.
 - 「授業中は練習なしよ」モード
 - WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
-- インタラクティブフィードバック、単語ごとにでも。できるかなあ？
+- (next.jdbc.date-time/read-as-local) の場所。
+  今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
+- 自分データを csv でダウンロードできるように。
+- D.P. up/down/even を表示できるか？
+- log がうるさい。
+- 回帰直線、回帰曲線を乗せる。
+- 移動平均を乗せる
+
+
+## 1.6.5 - 2022-05-11
+- reagent/reagent-dom 18.0.0
+- package.json 中の "version": を bump-version.sh でケアする。
+- 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
+- react 17 に戻した。
+  ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
+- build.sh
+  export TAOENSSO_TIMBRE_NS_PATTERN_EDN='{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
+- reset-todays! を独立させた
+
+## 1.6.4 - 2022-05-07
+- app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
+
+## 1.6.3 - 2022-05-07
+- 時々、「今日の練習グラフ」がアップデートされない。`get` の順番で改善できるか？
+- next.jdbc 1.2.780
+- lein-duct 0.12.3
+- postgresql 42.3.5
+- devtools 1.0.6
+- plot.cljs DRY!
+
+## 1.6.1 - 2022-05-04
+### Added
+- インタラクティブフィードバック、単語ごとに。
+  (if (= target typed) "🟢" "🔴")
+- タイプ終わりを自動判定。
+
+## 1.5.10 - 2022-05-03
+### Changed
+- 過去グラフを bar-graph から scatter-gram に変更。本日グラフは bar graph のまま。
+
+## 1.5.9 - 2022-05-03
+### Added
+- 60 点に青線
+- 30 点に緑線
+
+## 1.5.8 - 2022-05-03
+### Added
+- D.P. に exercise days を表示する。
+
+## 1.5.7 - 2022-05-03
+### Changed
+- typing.cljs send-score から reset-app-state! を分離した。
+- デバッグ用に (def timeout 6).
+- bump-version 時に (def timeout 60) に書き換える。
+
+## 1.5.6 - 2022-05-02
+- display todays/total tp counts.
 
 ## 1.5.5 - 2022-05-02
 ### Changed
-- n days [max] リターンを打つのが面倒なのでボタンに戻す。
+- n days [max] リターン打つのが面倒だ。ボタンに。
 
 ## 1.5.4 - 2022-04-28
 - typing からの戻りを /scores から /sum/1 に変更した。
