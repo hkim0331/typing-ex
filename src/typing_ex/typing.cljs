@@ -11,9 +11,9 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.7.0")
+(def ^:private version "1.7.1")
 
-(def ^:private timeout 6)
+(def ^:private timeout 60)
 (def ^:private todays-max 10)
 
 (defonce todays-trials (r/atom 0))
