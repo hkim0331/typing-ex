@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.7.2")
+(def ^:private version "1.7.3")
 
 (def ^:private timeout 60)
 (def ^:private todays-max 10)
@@ -95,7 +95,7 @@
 
 (defn countdown []
   (swap! app-state update :seconds dec)
-  (when (neg? (:seconds @app-state))
+  (when (zero? (:seconds @app-state))
     (if (zero? (count (:answer @app-state)))
       (js/alert "タイプ忘れた？")
       (send-score!))
