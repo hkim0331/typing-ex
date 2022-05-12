@@ -11,13 +11,12 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.7.3")
+(defonce ^:private version "1.7.3")
 
-(def ^:private timeout 60)
-(def ^:private todays-max 10)
+(defonce ^:private timeout 60)
+(defonce ^:private todays-max 10)
 
-(defonce todays-trials (r/atom 0))
-(defonce app-state
+(defonce ^:private app-state
   (r/atom  {:text ""
             :answer ""
             :seconds timeout
@@ -29,6 +28,10 @@
             :todays {}
             :todays-trials 0}))
 
+;; no effect, here.
+;; (declare countdown)
+;; (defonce updater (js/setInterval countdown 1000))
+
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
@@ -39,7 +42,6 @@
             scores (read-string body)
             {drill :body}  (<! (http/get (str "/drill")))
             words (str/split drill #"\s+")]
-        ;;(.log js/console "app-state will update")
         (swap! app-state
                assoc
                :text drill
@@ -50,9 +52,9 @@
                :words-max (count words)
                :pos 0
                :results []
-               :todays scores)
-        ;;(js/alert "app-state updated")
-        (.focus (.getElementById js/document "drill")))))
+               :todays scores
+          ;;(js/alert "app-state updated")
+               (.focus (.getElementById js/document "drill"))))))
 
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -103,7 +105,6 @@
       (js/alert "タイプ忘れた？")
       (send-score!))
     (reset-app!)))
-
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
 ;;(declare countdown)

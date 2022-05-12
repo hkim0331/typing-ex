@@ -9,8 +9,8 @@
 
     [:get "/logout"]  [:typing-ex.handler.core/logout]
 
-    [:get "/"] ^:auth [:typing-ex.handler.core/typing]
-    [:get "/drill"] [:typing-ex.handler.core/drill]
+    [:get "/"]      ^:auth [:typing-ex.handler.core/typing]
+    [:get "/drill"] ^:auth [:typing-ex.handler.core/drill]
 
     [:get "/scores"]    ^:auth [:typing-ex.handler.core/scores-no-arg]
     [:get "/scores/" n] ^:auth [:typing-ex.handler.core/scores n]
@@ -20,7 +20,7 @@
     [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
 
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
-    [:get "/todays/" login] [:typing-ex.handler.core/todays login]
+    [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
 
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]}
