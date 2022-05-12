@@ -11,9 +11,9 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [plot]]))
 
-(def ^:private version "1.7.0-SNAPSHOT")
+(def ^:private version "1.7.0")
 
-(def ^:private timeout 20)
+(def ^:private timeout 60)
 (def ^:private todays-max 10)
 
 (defonce todays-trials (r/atom 0))
