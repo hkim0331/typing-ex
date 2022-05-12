@@ -26,6 +26,7 @@
 
 
 ## 1.7.1-SNAPSHOT
+go ブロックは呼んだ順に実行されるとは限らない。
 
 ## 1.7.0 - 2022-05-12
 code polish up. not improved.
