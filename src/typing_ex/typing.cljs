@@ -13,31 +13,42 @@
 
 (def ^:private version "1.7.0")
 
-(def ^:private timeout 60)
+(def ^:private timeout 6)
 (def ^:private todays-max 10)
 
 (defonce todays-trials (r/atom 0))
-(defonce app-state (r/atom {}))
-(defonce todays (r/atom {}))
+(defonce app-state
+  (r/atom  {:text ""
+            :answer ""
+            :seconds timeout
+            :errors 0
+            :words ""
+            :words-max 0
+            :pos 0
+            :results []
+            :todays {}
+            :todays-trials 0}))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
 (defn reset-app! []
-  (go (let [{scores :body} (<! (http/get (str "/todays/" (get-login))))
+  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
+            scores (read-string body)
             {drill :body}  (<! (http/get (str "/drill")))
             words (str/split drill #"\s+")]
-        (reset! todays (read-string scores))
-        (reset! app-state
-                {:text drill
-                 :answer ""
-                 :seconds timeout
-                 :errors 0
-                 :words words
-                 :words-max (count words)
-                 :pos 0
-                 :results []})
+        (swap! app-state
+               assoc
+               :text drill
+               :answer ""
+               :seconds timeout
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :results []
+               :todays scores)
         (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
@@ -59,7 +70,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn intermission-message [{:keys [pt login]}]
+(defn your-score [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -77,9 +88,9 @@
                               {:form-params
                                {:pt (pt @app-state)
                                 :__anti-forgery-token token}}))]
-        (intermission-message (read-string body))
-        (swap! todays-trials inc)
-        (when (zero? (mod @todays-trials todays-max))
+        (your-score (read-string body))
+        (swap! app-state update :todays-trials inc)
+        (when (zero? (mod (:todays-trials @app-state) todays-max))
           (js/alert "いったん休憩入れよう 🍵")))))
 
 (defn countdown []
@@ -144,17 +155,16 @@
                 :on-click #(do (send-score!) (reset-app!))}]
     " 🔚 全部打った後にスペースかエンターでボーナス"]
    [:p "Your todays:" [:br]]
-   ;;(timbre/debug "bar-chart" @todays)
-   [bar-chart 300 150 @todays]
+   [bar-chart 300 150 (:todays @app-state)]
    [:p [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-       " "
-       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+    " "
+    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
    [:div "hkimura, " version]])
 
 (defn start []
   (reset-app!)
-  (timbre/debug "start todays:" @todays)
+  (timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
