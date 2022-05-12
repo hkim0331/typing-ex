@@ -13,21 +13,21 @@
 
 (def ^:private version "1.7.0")
 
-(def ^:private timeout 60)
+(def ^:private timeout 6)
 (def ^:private todays-max 10)
 
 (defonce todays-trials (r/atom 0))
 (defonce app-state
- (r/atom  {:text ""
-           :answer ""
-           :seconds timeout
-           :errors 0
-           :words ""
-           :words-max 0
-           :pos 0
-           :results []
-           :todays {}}))
-;;(defonce todays (r/atom {}))
+  (r/atom  {:text ""
+            :answer ""
+            :seconds timeout
+            :errors 0
+            :words ""
+            :words-max 0
+            :pos 0
+            :results []
+            :todays {}
+            :todays-trials 0}))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -70,7 +70,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn alert-score [{:keys [pt login]}]
+(defn your-score [{:keys [pt login]}]
   (let [s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -88,9 +88,9 @@
                               {:form-params
                                {:pt (pt @app-state)
                                 :__anti-forgery-token token}}))]
-        (alert-score (read-string body))
-        (swap! todays-trials inc)
-        (when (zero? (mod @todays-trials todays-max))
+        (your-score (read-string body))
+        (swap! app-state update :todays-trials inc)
+        (when (zero? (mod (:todays-trials @app-state) todays-max))
           (js/alert "いったん休憩入れよう 🍵")))))
 
 (defn countdown []
