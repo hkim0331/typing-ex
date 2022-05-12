@@ -115,7 +115,7 @@
 
 ;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  (.log js/console "errors" (:errors @app-state))
+  ;;(.log js/console "errors" (:errors @app-state))
   [:div.drill (repeat (:errors @app-state) "💔")])
 
 (defn results-component []
@@ -124,9 +124,7 @@
 (defn ex-page []
   [:div
    [:h2 "Typing: Challenge"]
-   [:p
-    {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -138,23 +136,18 @@
                                   (-> % .-target .-value))}]
    [error-component]
    [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (send-score!) (reset-app-state!))}]
-    " 🔚クリックしなくても全部打った後にスペースかエンターでボーナス"]
-   [:p
-    "Your todays:"
-    [:br]
-    [plot 300 150 @todays]]
-   ;;
-   [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+   [:p [:input {:type  "button"
+                :id    "seconds"
+                :class "btn btn-success btn-sm"
+                :style {:font-family "monospace"}
+                :value (:seconds @app-state)
+                :on-click #(do (send-score!) (reset-app-state!))}]
+    " 🔚 全部打った後にスペースかエンターでボーナス"]
+   [:p "Your todays:" [:br]]
+   [plot 300 150 @todays]
+   [:p [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+       " "
+       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
    [:div "hkimura, " version]])
 
