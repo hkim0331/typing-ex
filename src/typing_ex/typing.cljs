@@ -28,10 +28,6 @@
             :todays {}
             :todays-trials 0}))
 
-;; no effect, here.
-;; (declare countdown)
-;; (defonce updater (js/setInterval countdown 1000))
-
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
@@ -65,7 +61,7 @@
              "練習あるのみ。")]
     (js/alert s1 "\n" s2)
     (when (zero? (mod (:todays-trials @app-state) todays-max))
-      (js/alert "いったん休憩入れよう 🍵"))))
+      (js/alert "いったん休憩入れよう 🍵"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -76,14 +72,14 @@
               {:pt (pt @app-state)
                :__anti-forgery-token (csrf-token)}}))
 
-(defn type-zero? []
- (zero? (count (:answer @app-state))))
-
 (defn send-fetch-reset! []
-  (let [pt (pt @app-state)]
-    (go (let [_ (if (type-zero?)
+  (let [types (count (:answer @app-state))
+        pt (pt @app-state)]
+    (go (let [_ (if (zero? types)
                   (js/alert "タイプ、忘れた？")
-                  (<! (post-pt)))
+                  (do
+                    (your-score pt)
+                    (<! (post-pt))))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               {drill :body}  (<! (http/get (str "/drill")))
@@ -100,8 +96,7 @@
                  :results []
                  :todays scores)
           (.focus (.getElementById js/document "drill"))
-          (swap! app-state update :todays-trials inc)))
-    (your-score pt)))
+          (swap! app-state update :todays-trials inc)))))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
@@ -164,9 +159,8 @@
              :on-click #(do (send-fetch-reset!))}]
     " 🔚 全部打った後にスペースかエンターでボーナス"]
    [:p
-    "Your todays:"
+    "todays:"
     [:br]
-    ;; FIXME app-state が更新される前にレンダリングされている。
     [bar-chart 300 150 (:todays @app-state)]]
    [:p
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
