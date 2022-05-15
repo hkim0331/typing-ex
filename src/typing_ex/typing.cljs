@@ -36,25 +36,6 @@
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; FIXME rewrite!
-(defn reset-app! []
-  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
-            scores (read-string body)
-            {drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")]
-        (swap! app-state
-               assoc
-               :text drill
-               :answer ""
-               :seconds timeout
-               :errors 0
-               :words words
-               :words-max (count words)
-               :pos 0
-               :results []
-               :todays scores)
-        (.focus (.getElementById js/document "drill")))))
-
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -82,17 +63,27 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (js/alert s1 "\n" s2)))
+    (js/alert s1 "\n" s2)
+    (when (zero? (mod (:todays-trials @app-state) todays-max))
+      (js/alert "いったん休憩入れよう 🍵"))))
+
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
+
+(defn post-pt []
+  (http/post "/score"
+             {:form-params
+              {:pt (pt @app-state)
+               :__anti-forgery-token (csrf-token)}}))
+
+(defn type-zero? []
+ (zero? (count (:answer @app-state))))
 
 (defn send-fetch-reset! []
-
   (let [pt (pt @app-state)]
-    (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
-                        .-value)
-              _ (<! (http/post "/score"
-                               {:form-params
-                                {:pt pt
-                                 :__anti-forgery-token token}}))
+    (go (let [_ (if (type-zero?)
+                  (js/alert "タイプ、忘れた？")
+                  (<! (post-pt)))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               {drill :body}  (<! (http/get (str "/drill")))
@@ -110,9 +101,7 @@
                  :todays scores)
           (.focus (.getElementById js/document "drill"))
           (swap! app-state update :todays-trials inc)))
-    (your-score pt)
-    (when (zero? (mod (:todays-trials @app-state) todays-max))
-      (js/alert "いったん休憩入れよう 🍵"))))
+    (your-score pt)))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
@@ -187,7 +176,7 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (reset-app!)
+  (send-fetch-reset!)
   ;;(timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
