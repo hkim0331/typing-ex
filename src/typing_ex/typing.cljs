@@ -28,32 +28,9 @@
             :todays {}
             :todays-trials 0}))
 
-;; no effect, here.
-;; (declare countdown)
-;; (defonce updater (js/setInterval countdown 1000))
-
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
-
-;; FIXME rewrite!
-(defn reset-app! []
-  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
-            scores (read-string body)
-            {drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")]
-        (swap! app-state
-               assoc
-               :text drill
-               :answer ""
-               :seconds timeout
-               :errors 0
-               :words words
-               :words-max (count words)
-               :pos 0
-               :results []
-               :todays scores)
-        (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -73,36 +50,58 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn your-score [{:keys [pt login]}]
-  (let [s1 (str login " さんのスコアは " pt " 点です。")
+(defn your-score [pt]
+  (let [login (get-login)
+        s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (js/alert s1 "\n" s2)))
+    (js/alert s1 "\n" s2)
+    (when (zero? (mod (:todays-trials @app-state) todays-max))
+      (js/alert "いったん休憩入れよう 🍵"))));;🐥☕️
 
-(defn send-score! []
-  (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
-                      .-value)
-            {body :body} (<! (http/post
-                              "/score"
-                              {:form-params
-                               {:pt (pt @app-state)
-                                :__anti-forgery-token token}}))]
-        (your-score (read-string body))
-        (swap! app-state update :todays-trials inc)
-        (when (zero? (mod (:todays-trials @app-state) todays-max))
-          (js/alert "いったん休憩入れよう 🍵")))))
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
+
+(defn post-pt []
+  (http/post "/score"
+             {:form-params
+              {:pt (pt @app-state)
+               :__anti-forgery-token (csrf-token)}}))
+
+(defn send-fetch-reset! []
+  (let [types (count (:answer @app-state))
+        pt (pt @app-state)]
+    (go (let [_ (if (zero? types)
+                  (js/alert "タイプ、忘れた？")
+                  (do
+                    (your-score pt)
+                    (<! (post-pt))))
+              {body :body} (<! (http/get (str "/todays/" (get-login))))
+              scores (read-string body)
+              {drill :body}  (<! (http/get (str "/drill")))
+              words (str/split drill #"\s+")]
+          (swap! app-state
+                 assoc
+                 :text drill
+                 :answer ""
+                 :seconds timeout
+                 :errors 0
+                 :words words
+                 :words-max (count words)
+                 :pos 0
+                 :results []
+                 :todays scores)
+          (.focus (.getElementById js/document "drill"))
+          (swap! app-state update :todays-trials inc)))))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    (if (zero? (count (:answer @app-state)))
-      (js/alert "タイプ忘れた？")
-      (send-score!))
-    (reset-app!)))
+    (send-fetch-reset!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
@@ -117,8 +116,7 @@
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
-      (send-score!)
-      (reset-app!))))
+      (send-fetch-reset!))))
 
 (defn check-key [key]
   (case key
@@ -158,13 +156,11 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-score!)
-                            (reset-app!))}]
+             :on-click #(do (send-fetch-reset!))}]
     " 🔚 全部打った後にスペースかエンターでボーナス"]
    [:p
-    "Your todays:"
+    "todays:"
     [:br]
-    ;; FIXME app-state が更新される前にレンダリングされている。
     [bar-chart 300 150 (:todays @app-state)]]
    [:p
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
@@ -174,7 +170,7 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (reset-app!)
+  (send-fetch-reset!)
   ;;(timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
