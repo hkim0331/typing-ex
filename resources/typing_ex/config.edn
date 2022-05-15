@@ -26,12 +26,13 @@
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth
-                :cors #ig/ref :typing-ex.middleware/cors
-                :probe #ig/ref :typing-ex.middleware/probe}}
+;;                :cors #ig/ref :typing-ex.middleware/cors
+;;                :probe #ig/ref :typing-ex.middleware/probe
+                }}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
-  :typing-ex.middleware/probe {:db #ig/ref :duct.database/sql}
-  :typing-ex.middleware/cors  {:db #ig/ref :duct.database/sql}
+;;  :typing-ex.middleware/probe {:db #ig/ref :duct.database/sql}
+;;  :typing-ex.middleware/cors  {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}

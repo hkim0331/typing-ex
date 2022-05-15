@@ -52,9 +52,8 @@
                :words-max (count words)
                :pos 0
                :results []
-               :todays scores
-          ;;(js/alert "app-state updated")
-               (.focus (.getElementById js/document "drill"))))))
+               :todays scores)
+        (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -66,7 +65,6 @@
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    ;;(js/console.log "goods bads all error score: " goods bads all err score)
     (timbre/info (get-login) goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)
@@ -105,6 +103,7 @@
       (js/alert "タイプ忘れた？")
       (send-score!))
     (reset-app!)))
+
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
 ;;(declare countdown)
@@ -136,9 +135,12 @@
   [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
+  ;;(timbre/info "drill" (subs (:drill @app-state) 0 20))
+  ;;(timbre/info "todays" (:todays @app-state))
   [:div
    [:h2 "Typing: Challenge"]
-   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"}
+    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
