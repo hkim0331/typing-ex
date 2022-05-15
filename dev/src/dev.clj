@@ -1,5 +1,5 @@
 (ns dev
-  (:refer-clojure :exclude [test])
+  (:refer-clojure :exclude [test abs])
   (:require
    [clojure.java.jdbc :as jdbc]
    [clojure.repl :refer :all]

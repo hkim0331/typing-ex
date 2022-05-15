@@ -1,4 +1,5 @@
 (ns typing-ex.handler.core
+  (:refer-clojure :exclude [abs])
   (:require
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
