@@ -7,7 +7,7 @@
    [buddy.auth.backends.session :refer [session-backend]]
    [buddy.auth.middleware :refer [wrap-authorization wrap-authentication]]
    [integrant.core :as ig]
-   [ring.middleware.cors :refer [wrap-cors]]
+   ;;[ring.middleware.cors :refer [wrap-cors]]
    #_[ring.middleware.params :refer [wrap-params]]
    [taoensso.timbre :as timbre]))
 
@@ -27,11 +27,11 @@
         (wrap-authorization  auth-backend)
         (wrap-authentication auth-backend))))
 
-(defmethod ig/init-key :typing-ex.middleware/cors [_ _]
-  (fn [handler]
-    (-> handler
-        (wrap-cors :access-control-allow-origin [#".*"]
-                   :access-control-allow-methods #{:get :post :delete}))))
+;; (defmethod ig/init-key :typing-ex.middleware/cors [_ _]
+;;   (fn [handler]
+;;     (-> handler
+;;         (wrap-cors :access-control-allow-origin [#".*"]
+;;                    :access-control-allow-methods #{:get :post :delete}))))
 
 (defn probe [handler keys]
   (fn [req]

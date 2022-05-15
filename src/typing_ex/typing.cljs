@@ -73,8 +73,9 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn your-score [{:keys [pt login]}]
-  (let [s1 (str login " さんのスコアは " pt " 点です。")
+(defn your-score [pt]
+  (let [login (get-login)
+        s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
@@ -83,26 +84,40 @@
              "練習あるのみ。")]
     (js/alert s1 "\n" s2)))
 
-(defn send-score! []
-  (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
-                      .-value)
-            {body :body} (<! (http/post
-                              "/score"
-                              {:form-params
-                               {:pt (pt @app-state)
-                                :__anti-forgery-token token}}))]
-        (your-score (read-string body))
-        (swap! app-state update :todays-trials inc)
-        (when (zero? (mod (:todays-trials @app-state) todays-max))
-          (js/alert "いったん休憩入れよう 🍵")))))
+(defn send-fetch-reset! []
+
+  (let [pt (pt @app-state)]
+    (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
+                        .-value)
+              _ (<! (http/post "/score"
+                               {:form-params
+                                {:pt pt
+                                 :__anti-forgery-token token}}))
+              {body :body} (<! (http/get (str "/todays/" (get-login))))
+              scores (read-string body)
+              {drill :body}  (<! (http/get (str "/drill")))
+              words (str/split drill #"\s+")]
+          (swap! app-state
+                 assoc
+                 :text drill
+                 :answer ""
+                 :seconds timeout
+                 :errors 0
+                 :words words
+                 :words-max (count words)
+                 :pos 0
+                 :results []
+                 :todays scores)
+          (.focus (.getElementById js/document "drill"))
+          (swap! app-state update :todays-trials inc)))
+    (your-score pt)
+    (when (zero? (mod (:todays-trials @app-state) todays-max))
+      (js/alert "いったん休憩入れよう 🍵"))))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    (if (zero? (count (:answer @app-state)))
-      (js/alert "タイプ忘れた？")
-      (send-score!))
-    (reset-app!)))
+    (send-fetch-reset!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
@@ -117,8 +132,7 @@
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
-      (send-score!)
-      (reset-app!))))
+      (send-fetch-reset!))))
 
 (defn check-key [key]
   (case key
@@ -158,8 +172,7 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-score!)
-                            (reset-app!))}]
+             :on-click #(do (send-fetch-reset!))}]
     " 🔚 全部打った後にスペースかエンターでボーナス"]
    [:p
     "Your todays:"
