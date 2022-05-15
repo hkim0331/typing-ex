@@ -1,5 +1,5 @@
 (ns typing-ex.plot
-  (:require [taoensso.timbre :as timbre]))
+  #_(:require [taoensso.timbre :as timbre]))
 
 (defn- frame [w h]
   [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
@@ -12,7 +12,7 @@
 (defn bar-chart [w h data]
   (let [n  (count data)
         dx (/ w (count data))]
-    (timbre/info "bar-chart" (take-last 3 data))
+    ;;(timbre/info "bar-chart" (take-last 3 data))
     (into
      (frame w h)
      (for [[x y] (map list (range n) (map :pt data))]

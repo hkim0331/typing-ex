@@ -11,10 +11,9 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(defonce ^:private version "1.7.3")
-
-(defonce ^:private timeout 60)
-(defonce ^:private todays-max 10)
+(def ^:private version "1.7.4")
+(def ^:private timeout 60)
+(def ^:private todays-max 10)
 
 (defonce ^:private app-state
   (r/atom  {:text ""
@@ -61,7 +60,7 @@
              "練習あるのみ。")]
     (js/alert s1 "\n" s2)
     (when (zero? (mod (:todays-trials @app-state) todays-max))
-      (js/alert "いったん休憩入れよう 🍵"))));;🐥☕️
+      (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -171,7 +170,6 @@
 
 (defn start []
   (send-fetch-reset!)
-  ;;(timbre/debug "start todays:" (:todays @app-state))
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 

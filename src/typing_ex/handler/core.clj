@@ -142,20 +142,12 @@
     (let [results (results/todays-score db login)]
       [::response/ok (str results)])))
 
-;;(defmethod ig/init-key :typing-ex.handler.core/ban-index [_ _]
-;;  (fn [_]
-;;    [::response/forbidden "access not allowed"]))
-
 (defmethod ig/init-key :typing-ex.handler.core/trials [_ {:keys [db]}]
   (fn [req]
     (if (admin? (get-login req))
       (view/active-users-page (results/active-users db 40))
       [::response/forbidden
        "<h1>Admin Only</h1><p>Only admin can view this page. Sorry.</p>"])))
-
-;;(defn- probe [in]
-;;   (timbre/debug "probe" in)
-;;   in))
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
