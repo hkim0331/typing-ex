@@ -1,4 +1,4 @@
-(defproject typing-ex "1.7.0"
+(defproject typing-ex "1.8.0"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -18,7 +18,9 @@
                  [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.3.5"]
                  ;; no use cors now
-                 [ring-cors "0.1.13"]]
+                 ;;[ring-cors "0.1.13"]
+                 [medley/medley "1.4.0"]
+                 ]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
@@ -35,5 +37,5 @@
                   :dependencies   [[integrant/repl "0.3.2"]
                                    [hawk "0.2.11"]
                                    [eftest "0.5.9"]
-                                   [fipp "0.6.25"]
+                                   [fipp "0.6.26"]
                                    [kerodon "0.9.1"]]}})

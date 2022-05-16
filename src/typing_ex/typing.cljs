@@ -9,36 +9,27 @@
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [taoensso.timbre :as timbre]
-   [typing-ex.plot :refer [plot]]))
+   [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.7.0")
-
+(def ^:private version "1.8.0")
 (def ^:private timeout 60)
-(def ^:private todays-max 10)
+(def ^:private todays-limit 10)
 
-(defonce todays-trials (r/atom 0))
-(defonce app-state (r/atom {}))
-(defonce todays (r/atom {}))
+(defonce ^:private app-state
+  (r/atom  {:text "App is starting..."
+            :answer ""
+            :seconds timeout
+            :errors 0
+            :words ""
+            :words-max 0
+            :pos 0
+            :results []
+            :todays {}
+            :todays-trials 0}))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
-
-(defn reset-app-state! []
-  (go (let [{drill :body}  (<! (http/get (str "/drill")))
-            words (str/split drill #"\s+")
-            {scores :body} (<! (http/get (str "/todays/" (get-login))))]
-        (reset! todays (read-string scores))
-        (reset! app-state
-                {:text drill
-                 :answer ""
-                 :seconds timeout
-                 :errors 0
-                 :words words
-                 :words-max (count words)
-                 :pos 0
-                 :results []})
-        (.focus (.getElementById js/document "drill")))))
 
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -50,7 +41,6 @@
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    ;;(js/console.log "goods bads all error score: " goods bads all err score)
     (timbre/info (get-login) goods bads all err score)
     (if (= all (+ goods bads))
       (+ score err seconds)
@@ -59,36 +49,64 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn intermission-message [{:keys [pt login]}]
-  (let [s1 (str login " さんのスコアは " pt " 点です。")
+(defn your-score [pt]
+  (let [login (get-login)
+        s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
              90 "がんばった。もう少しで 100 点だね。"
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (js/alert s1 "\n" s2)))
 
-(defn send-score! []
-  (go (let [token (-> (js/document.getElementById "__anti-forgery-token")
-                      .-value)
-            {body :body} (<! (http/post
-                              "/score"
-                              {:form-params
-                               {:pt (pt @app-state)
-                                :__anti-forgery-token token}}))]
-        (intermission-message (read-string body))
-        (swap! todays-trials inc)
-        (when (zero? (mod @todays-trials todays-max))
-          (js/alert "いったん休憩入れよう 🍵")))))
+    (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
+      (js/alert (str  (:text  @app-state)
+                      "\n\n"
+                      (:answer @app-state))))
+   
+    (when (zero? (mod (:todays-trials @app-state) todays-limit))
+      (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
+
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
+
+(defn post-pt []
+  (http/post "/score"
+             {:form-params
+              {:pt (pt @app-state)
+               :__anti-forgery-token (csrf-token)}}))
+;; やや敗北。
+;; go の戻りを待つ、あるいは検知できないか？
+(defn send-fetch-reset! []
+  (let [types (count (:answer @app-state))
+        pt (pt @app-state)]
+    (go (let [_ (if (zero? types)
+                  (js/alert "タイプ、忘れた？")
+                  (do
+                    (your-score pt)
+                    (<! (post-pt))))
+              {body :body} (<! (http/get (str "/todays/" (get-login))))
+              scores (read-string body)
+              {drill :body}  (<! (http/get (str "/drill")))
+              words (str/split drill #"\s+")]
+          (swap! app-state
+                 assoc
+                 :text drill
+                 :answer ""
+                 :seconds timeout
+                 :errors 0
+                 :words words
+                 :words-max (count words)
+                 :pos 0
+                 :results []
+                 :todays scores)
+          (.focus (.getElementById js/document "drill"))
+          (swap! app-state update :todays-trials inc)))))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    (if (zero? (count (:answer @app-state)))
-      (js/alert "タイプ忘れた？")
-      (send-score!))
-    (reset-app-state!)))
+    (send-fetch-reset!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
@@ -98,13 +116,12 @@
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
         typed  (last (str/split (@app-state :answer) #"\s+"))]
-    (.log js/console target typed)
+    ;;(.log js/console target typed)
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
-      (send-score!)
-      (reset-app-state!))))
+      (send-fetch-reset!))))
 
 (defn check-key [key]
   (case key
@@ -113,20 +130,19 @@
     "Backspace" (swap! app-state update :errors inc)
     nil))
 
-;;🙅💧💦💔❌🦠🥶🥺
 (defn error-component []
-  (.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "💔")])
+  ;;(.log js/console "errors" (:errors @app-state))
+  [:div.drill (repeat (:errors @app-state) "💔")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
+  ;;(timbre/info "drill" (subs (:drill @app-state) 0 20))
+  ;;(timbre/info "todays" (:todays @app-state))
   [:div
    [:h2 "Typing: Challenge"]
-   [:p
-    {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -144,13 +160,12 @@
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-score!) (reset-app-state!))}]
-    " 🔚クリックしなくても全部打った後にスペースかエンターでボーナス"]
+             :on-click #(do (send-fetch-reset!))}]
+    " 🔚 全部打った後にスペースかエンターでボーナス"]
    [:p
-    "Your todays:"
+    "todays:"
     [:br]
-    [plot 300 150 @todays]]
-   ;;
+    [bar-chart 300 150 (:todays @app-state)]]
    [:p
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "
@@ -159,7 +174,7 @@
    [:div "hkimura, " version]])
 
 (defn start []
-  (reset-app-state!)
+  (send-fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 

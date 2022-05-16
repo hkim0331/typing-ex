@@ -24,6 +24,30 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.8.0 - 2022-05-16
+- confirm cancel でタイプデータの表示（をしてから練習に復帰）。
+
+## 1.7.4 - 2022-05-15
+- 正しく bar-chart
+
+## 1.7.3 - 2022-05-12
+### Hotfix
+- go で並列性が入った時、直感と違う動きをしてバグった時の修正が難しい。
+  re-frame できるようになったら改善するか？
+  それとも cljs-http を clj-ajax に取り替えてみるか？
+
+## 1.7.2
+### Enbug
+- timeout 6 sec
+- counter does not stop at 0
+
+## 1.7.1-SNAPSHOT
+- go ブロックは呼んだ順に実行されるとは限らない。
+- reset! を swap! に戻す。
+- defonce を１つに。除く setInterval.
+
+## 1.7.0 - 2022-05-12
+code polish up. not improved.
 
 ## 1.6.5 - 2022-05-11
 - reagent/reagent-dom 18.0.0
