@@ -58,7 +58,12 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (js/alert s1 "\n" s2)
+
+    (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
+      (js/alert (str  (:text  @app-state)
+                      "\n\n"
+                      (:answer @app-state))))
+   
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
       (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
