@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.8.0")
+(def ^:private version "1.8.1")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -62,8 +62,10 @@
     (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
       (js/alert (str  (:text  @app-state)
                       "\n\n"
-                      (:answer @app-state))))
-   
+                      (:answer @app-state)
+                      "\n\n"
+                      (apply str (:results @app-state)))))
+
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
       (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
