@@ -13,10 +13,10 @@
 
 (def ^:private version "1.7.4")
 (def ^:private timeout 60)
-(def ^:private todays-max 10)
+(def ^:private todays-limit 10)
 
 (defonce ^:private app-state
-  (r/atom  {:text ""
+  (r/atom  {:text "App is starting..."
             :answer ""
             :seconds timeout
             :errors 0
@@ -59,7 +59,7 @@
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
     (js/alert s1 "\n" s2)
-    (when (zero? (mod (:todays-trials @app-state) todays-max))
+    (when (zero? (mod (:todays-trials @app-state) todays-limit))
       (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
 (defn csrf-token []
@@ -70,7 +70,8 @@
              {:form-params
               {:pt (pt @app-state)
                :__anti-forgery-token (csrf-token)}}))
-
+;; やや敗北。
+;; go の戻りを待つ、あるいは検知できないか？
 (defn send-fetch-reset! []
   (let [types (count (:answer @app-state))
         pt (pt @app-state)]
@@ -136,8 +137,7 @@
   ;;(timbre/info "todays" (:todays @app-state))
   [:div
    [:h2 "Typing: Challenge"]
-   [:p {:class "red"}
-    "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
