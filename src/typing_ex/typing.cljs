@@ -77,6 +77,7 @@
              {:form-params
               {:pt (pt @app-state)
                :__anti-forgery-token (csrf-token)}}))
+
 ;; やや敗北。
 ;; go の戻りを待つ、あるいは検知できないか？
 (defn send-fetch-reset! []
