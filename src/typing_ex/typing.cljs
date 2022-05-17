@@ -58,14 +58,13 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-
     (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
       (js/alert (str  (:text  @app-state)
                       "\n\n"
                       (:answer @app-state)
                       "\n\n"
                       (apply str (:results @app-state)))))
-
+    (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
       (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
@@ -103,8 +102,8 @@
                  :pos 0
                  :results []
                  :todays scores)
-          (.focus (.getElementById js/document "drill"))
-          (swap! app-state update :todays-trials inc)))))
+          (.focus (.getElementById js/document "drill"))))))
+          
 
 (defn countdown []
   (swap! app-state update :seconds dec)
