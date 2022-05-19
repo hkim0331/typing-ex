@@ -72,10 +72,10 @@
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
-(defn post-pt []
+(defn send-score! [pt]
   (http/post "/score"
              {:form-params
-              {:pt (pt @app-state)
+              {:pt pt
                :__anti-forgery-token (csrf-token)}}))
 
 ;; やや敗北。
@@ -87,7 +87,7 @@
                   (js/alert "タイプ、忘れた？")
                   (do
                     (your-score pt)
-                    (<! (post-pt))))
+                    (<! (send-score! (pt @app-state)))))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               {drill :body}  (<! (http/get (str "/drill")))
@@ -103,8 +103,8 @@
                  :pos 0
                  :results []
                  :todays scores)
-          (.focus (.getElementById js/document "drill"))
-          (swap! app-state update :todays-trials inc)))))
+          (swap! app-state update :todays-trials inc)
+          (.focus (.getElementById js/document "drill"))))))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
