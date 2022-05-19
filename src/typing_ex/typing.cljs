@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.8.1")
+(def ^:private version "1.8.2")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -49,7 +49,7 @@
 (defn pt [args]
   (max 0 (pt-raw args)))
 
-(defn your-score [pt]
+(defn show-score [pt]
   (let [login (get-login)
         s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
@@ -58,14 +58,13 @@
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-
     (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
       (js/alert (str  (:text  @app-state)
                       "\n\n"
                       (:answer @app-state)
                       "\n\n"
                       (apply str (:results @app-state)))))
-
+    (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
       (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
 
@@ -78,16 +77,17 @@
               {:pt pt
                :__anti-forgery-token (csrf-token)}}))
 
-;; やや敗北。
-;; go の戻りを待つ、あるいは検知できないか？
+;; (go (<!)) は非同期に実行される。
+;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
+;; app-state がアップデートされた後のレンダリングが保証されない。
 (defn send-fetch-reset! []
-  (let [types (count (:answer @app-state))
-        pt (pt @app-state)]
-    (go (let [_ (if (zero? types)
-                  (js/alert "タイプ、忘れた？")
+  (let [pt (pt @app-state)]
+    (go (let [_ (if (zero? (count (:answer @app-state)))
+                  (when-not (empty? (:words @app-state))
+                    (js/alert "タイプ、忘れた？"))
                   (do
-                    (your-score pt)
-                    (<! (send-score! (pt @app-state)))))
+                    (show-score pt)
+                    (<! (send-score! pt))))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               {drill :body}  (<! (http/get (str "/drill")))
@@ -103,7 +103,6 @@
                  :pos 0
                  :results []
                  :todays scores)
-          (swap! app-state update :todays-trials inc)
           (.focus (.getElementById js/document "drill"))))))
 
 (defn countdown []
