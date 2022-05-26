@@ -79,7 +79,12 @@
        "days")]
      "&nbsp;"
      [:div.d-inline
-      [:a {:href "/daily" :class "btn btn-danger btn-sm"} "Users"]
+      [:a {:href "/daily" :class "btn btn-danger btn-sm"}
+       "Users"]
+      " "
+      [:a {:href "http://rp.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "RP"]
       " "
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}

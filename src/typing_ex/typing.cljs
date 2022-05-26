@@ -13,7 +13,7 @@
 
 (def ^:private version "1.8.2")
 (def ^:private timeout 60)
-(def ^:private todays-limit 10)
+(def ^:private todays-limit 4)
 
 (defonce ^:private app-state
   (r/atom  {:text "App is starting..."
@@ -66,10 +66,10 @@
                       (apply str (:results @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
-      (js/alert "いったん休憩入れよう🐥"))));;🐥☕️
+      (js/alert "レポート進んでいるか🐥"))));;🐥☕️
 
 (defn csrf-token []
-  (.-value (.getElementById js/document "__anti-forgery-token")))
+   (.-value (.getElementById js/document "__anti-forgery-token")))
 
 (defn send-score! [pt]
   (http/post "/score"
