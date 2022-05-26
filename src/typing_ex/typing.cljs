@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.8.2")
+(def ^:private version "1.8.4")
 (def ^:private timeout 60)
 (def ^:private todays-limit 4)
 
