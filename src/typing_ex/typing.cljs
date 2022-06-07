@@ -116,7 +116,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                                (<! (http/get (str "/drill")))
                                (do
                                 (swap! mt-counter inc)
-                                {:body (get mt (mod mt-counter 3))}))
+                                {:body (get mt (mod @mt-counter 3))}))
               words (str/split drill #"\s+")]
           (swap! app-state
                  assoc
