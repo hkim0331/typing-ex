@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.8.4")
+(def ^:private version "1.9.0-SNAPSHOT")
 (def ^:private timeout 60)
 (def ^:private todays-limit 4)
 
@@ -26,6 +26,23 @@
             :results []
             :todays {}
             :todays-trials 0}))
+
+;; midterm exam
+(def mt
+  ["An aviator whose plane is forced down in the Sahara Desert
+encounters a little prince from a small planet who relates
+his adventures in seeking the secret of what is important
+in life."
+   "Once when I was six years old I saw a beautiful picture in
+a book about the primeval forest called 'True Stories'.
+It showed a boa constrictor swallowing an animal.
+Here is a copy of the drawing."
+   "I showed my masterpiece to the grown-ups and asked them if
+my drawing frightened them. They answered: 'Why should
+anyone be frightened by a hat?' My drawing did not represent
+a hat. It was supposed to be a boa constrictor digesting elephant.
+"])
+(defonce mt-counter (atom 0))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -69,7 +86,7 @@
       (js/alert "レポート進んでいるか🐥"))));;🐥☕️
 
 (defn csrf-token []
-   (.-value (.getElementById js/document "__anti-forgery-token")))
+  (.-value (.getElementById js/document "__anti-forgery-token")))
 
 (defn send-score! [pt]
   (http/post "/score"
@@ -90,7 +107,17 @@
                     (<! (send-score! pt))))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
-              {drill :body}  (<! (http/get (str "/drill")))
+              ;;; midterm exam
+              {ex? :body} (<! (http/get "/mt"))
+              {drill :body}  (if (:b (read-string ex?))
+                               (do
+                                 (.log js/console "ex mode")
+                                 ;;(.log js/console (:b (read-string ex?)))
+                                 (swap! mt-counter inc)
+                                 {:body (get mt (mod @mt-counter 3))})
+                               (do
+                                 (.log js/console "normal mode")
+                                 (<! (http/get (str "/drill")))))
               words (str/split drill #"\s+")]
           (swap! app-state
                  assoc
