@@ -16,7 +16,11 @@
 (def ^:private todays-limit 10)
 
 ;; 中間試験
-(defonce ^:private exam-mode?   (atom true))
+;;(defonce ^:private exam-mode?   (atom true))
+(defn exam-mode? []
+ (go (let [ret (<! (http/get "/exam-mode"))]
+      ret)))
+
 (defonce ^:private exams-counter (atom 0))
 (defonce ^:private exams
   ["An aviator whose plane is forced down in the Sahara Desert
