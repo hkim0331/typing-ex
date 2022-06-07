@@ -43,10 +43,6 @@ anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
 (defonce mt-counter (atom 0))
-(defn mt? []
-  (go (let [ret (<! (http/get "/mt"))]
-        (.log js/console (str "mt-counter:" ret))
-        (:b ret))))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -112,11 +108,16 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               ;;; midterm exam
-              {drill :body}  (if-not (mt?)
-                               (<! (http/get (str "/drill")))
+              {ex? :body} (<! (http/get "/mt"))
+              {drill :body}  (if (:b (read-string ex?))
                                (do
-                                (swap! mt-counter inc)
-                                {:body (get mt (mod @mt-counter 3))}))
+                                 (.log js/console "ex mode")
+                                 ;;(.log js/console (:b (read-string ex?)))
+                                 (swap! mt-counter inc)
+                                 {:body (get mt (mod @mt-counter 3))})
+                               (do
+                                 (.log js/console "normal mode")
+                                 (<! (http/get (str "/drill")))))
               words (str/split drill #"\s+")]
           (swap! app-state
                  assoc

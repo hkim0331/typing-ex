@@ -26,7 +26,8 @@
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
 
     ;; midterm exam
-    [:get "/mt"] [:typing-ex.handler.core/mt]}
+    [:get "/mt"] [:typing-ex.handler.core/mt]
+    [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]}
 
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
@@ -60,7 +61,8 @@
   :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}}
+  :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

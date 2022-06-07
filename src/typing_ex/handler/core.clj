@@ -168,3 +168,8 @@
   (fn [req]
     (let [ret (status/mt db)]
       [::response/ok (str ret)])))
+
+(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (status/toggle-mt db)]
+      [::response/ok (str ret)])))
