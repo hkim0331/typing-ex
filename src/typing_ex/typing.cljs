@@ -27,6 +27,27 @@
             :todays {}
             :todays-trials 0}))
 
+;; midterm exam
+(def mt
+  ["An aviator whose plane is forced down in the Sahara Desert
+encounters a little prince from a small planet who relates
+his adventures in seeking the secret of what is important
+in life."
+
+   "Once when I was six years old I saw a beautiful picture in
+a book about the primeval forest called 'True Stories'.
+It showed a boa constrictor swallowing an animal.
+Here is a copy of the drawing."
+
+   "I showed my masterpiece to the grown-ups and asked them if
+my drawing frightened them. They answered: 'Why should
+anyone be frightened by a hat?' My drawing did not represent
+a hat. It was supposed to be a boa constrictor digesting elephant.
+"])
+(defonce mt-counter (atom 0))
+(defn mt? []
+ )
+
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
