@@ -25,9 +25,10 @@
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
 
-    ;; need auth
-    [:get  "/exam-mode"]        [:typing-ex.handler.core/exam-mode]
-    [:get  "/toggle-exam-mode"] [:typing-ex.handler.core/toggle-exam-mode]}
+    ;; midterm exam
+    [:get "/mt"] [:typing-ex.handler.core/mt]
+    [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]}
+
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 ;;                :cors #ig/ref :typing-ex.middleware/cors
@@ -60,8 +61,13 @@
   :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
 
+<<<<<<< HEAD
   :typing-ex.handler.core/exam-mode        {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/toggle-exam-mode {:db #ig/ref :duct.database/sql}}
+=======
+  :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}}
+>>>>>>> e160124d9f69ad1b365e365778818fe824c6742d
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

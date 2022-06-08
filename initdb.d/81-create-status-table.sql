@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS status;
+CREATE TABLE status (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(32) NOT NULL,
+  b BOOLEAN,
+  i int,
+  s VARCHAR(64),
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+INSERT INTO status
+(name, b)
+VALUES
+('mt', false);

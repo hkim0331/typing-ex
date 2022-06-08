@@ -7,7 +7,11 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
+   <<<<<<< HEAD
    [typing-ex.boundary.exam-mode :as exam-mode]
+   =======
+   [typing-ex.boundary.status  :as status]
+   >>>>>>> e160124d9f69ad1b365e365778818fe824c6742d
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
@@ -163,13 +167,13 @@
        "<h1>Admin Only</h1>
         <p>Only admin can view. Had better open to students?</p>"])))
 
-;; exam-mode
-(defmethod ig/init-key :typing-ex.handler.core/exam-mode [_ {:keys [db]}]
+;; midterm exam
+(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
   (fn [req]
-    (let [ret (exam-mode/exam-mode db)]
-      [::response/ok ret])))
+    (let [ret (status/mt db)]
+      [::response/ok (str ret)])))
 
-(defmethod ig/init-key :typing-ex.handler.core/toggle-exam-mode [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
   (fn [req]
-    (let [ret (exam-mode/toggle-exam-mode db)]
-      [::response/ok ret])))
+    (let [ret (status/toggle-mt db)]
+      [::response/ok (str ret)])))
