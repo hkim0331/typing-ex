@@ -61,13 +61,8 @@
   :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
 
-<<<<<<< HEAD
-  :typing-ex.handler.core/exam-mode        {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/toggle-exam-mode {:db #ig/ref :duct.database/sql}}
-=======
   :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}}
->>>>>>> e160124d9f69ad1b365e365778818fe824c6742d
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

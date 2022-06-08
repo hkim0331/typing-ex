@@ -7,11 +7,7 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
-   <<<<<<< HEAD
-   [typing-ex.boundary.exam-mode :as exam-mode]
-   =======
    [typing-ex.boundary.status  :as status]
-   >>>>>>> e160124d9f69ad1b365e365778818fe824c6742d
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
