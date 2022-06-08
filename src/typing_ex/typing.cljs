@@ -13,7 +13,32 @@
 
 (def ^:private version "1.8.4")
 (def ^:private timeout 60)
-(def ^:private todays-limit 4)
+(def ^:private todays-limit 10)
+
+;; 中間試験
+;;(defonce ^:private exam-mode?   (atom true))
+(defn exam-mode? []
+ (go (let [ret (<! (http/get "/exam-mode"))]
+       (.log js/console  (str "receive " ret))
+       (boolean (:exam ret)))))
+
+(defonce ^:private exams-counter (atom 0))
+(defonce ^:private exams
+  ["An aviator whose plane is forced down in the Sahara Desert
+encounters a little prince from a small planet who relates
+his adventures in seeking the secret of what is important
+in life."
+
+   "Once when I was six years old I saw a beautiful picture in
+a book about the primeval forest called 'True Stories'.
+It showed a boa constrictor swallowing an animal.
+Here is a copy of the drawing."
+
+   "I showed my masterpiece to the grown-ups and asked them if
+my drawing frightened them. They answered: 'Why should anyone be
+frightened by a hat?' My drawing did not represent a hat.
+It was supposed to be a boa constrictor digesting elephant."])
+
 
 (defonce ^:private app-state
   (r/atom  {:text "App is starting..."
@@ -66,10 +91,10 @@
                       (apply str (:results @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
-      (js/alert "レポート進んでいるか🐥"))));;🐥☕️
+      (js/alert "休憩入れよう🐥"))));;🐥☕️
 
 (defn csrf-token []
-   (.-value (.getElementById js/document "__anti-forgery-token")))
+  (.-value (.getElementById js/document "__anti-forgery-token")))
 
 (defn send-score! [pt]
   (http/post "/score"
@@ -90,7 +115,14 @@
                     (<! (send-score! pt))))
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
-              {drill :body}  (<! (http/get (str "/drill")))
+              ;;
+              ;; ここ。exam モードにできないか？
+              ;;
+              {drill :body}  (if (exam-mode?)
+                               (do
+                                 (swap! exams-counter inc)
+                                 {:body (get exams (mod @exams-counter 3))})
+                               (<! (http/get (str "/drill"))))
               words (str/split drill #"\s+")]
           (swap! app-state
                  assoc

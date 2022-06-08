@@ -7,6 +7,7 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.exam-mode :as exam-mode]
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
@@ -162,3 +163,13 @@
        "<h1>Admin Only</h1>
         <p>Only admin can view. Had better open to students?</p>"])))
 
+;; exam-mode
+(defmethod ig/init-key :typing-ex.handler.core/exam-mode [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (exam-mode/exam-mode db)]
+      [::response/ok ret])))
+
+(defmethod ig/init-key :typing-ex.handler.core/toggle-exam-mode [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (exam-mode/toggle-exam-mode db)]
+      [::response/ok ret])))

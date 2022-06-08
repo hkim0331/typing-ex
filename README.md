@@ -8,10 +8,6 @@ ClojureScript でフロントを書く練習。
     % lein new duct typing-ex +site +ataraxy +postgres
     % lein new shadow-cljs typing-ex :force +reagent
 
-## remove me
-　出ません、黄色が。
-
-
 ## backend(duct)
 
 buddy-auth でセッション認証し、
