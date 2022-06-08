@@ -7,6 +7,7 @@
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.status  :as status]
    [typing-ex.view.page :as view]
    [integrant.core :as ig]
    [ring.util.response :refer [redirect]]
@@ -162,3 +163,13 @@
        "<h1>Admin Only</h1>
         <p>Only admin can view. Had better open to students?</p>"])))
 
+;; midterm exam
+(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (status/mt db)]
+      [::response/ok (str ret)])))
+
+(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (status/toggle-mt db)]
+      [::response/ok (str ret)])))

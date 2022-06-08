@@ -13,15 +13,6 @@ pom.xml.asc
 /dev/resources/local.edn
 /dev/src/local.clj
 
-# hkimura added
-## commmon-lisp
-*.fasl
-*.dx32fsl
-*.dx64fsl
-*.lx32fsl
-*.lx64fsl
-*.x86f
-
 ## clojure
 !/initdb.d/*.sql
 /.calva
