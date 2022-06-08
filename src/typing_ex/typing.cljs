@@ -19,7 +19,8 @@
 ;;(defonce ^:private exam-mode?   (atom true))
 (defn exam-mode? []
  (go (let [ret (<! (http/get "/exam-mode"))]
-      ret)))
+       (.log js/console  (str "receive " ret))
+       (boolean (:exam ret)))))
 
 (defonce ^:private exams-counter (atom 0))
 (defonce ^:private exams
@@ -28,15 +29,15 @@ encounters a little prince from a small planet who relates
 his adventures in seeking the secret of what is important
 in life."
 
-   "Once When I was six years old I saw a beautiful picture in
+   "Once when I was six years old I saw a beautiful picture in
 a book about the primeval forest called 'True Stories'.
 It showed a boa constrictor swallowing an animal.
 Here is a copy of the drawing."
 
    "I showed my masterpiece to the grown-ups and asked them if
-my drawing frightened them. They answered: 'Why should]
-anyone be frightened by a hat?' My drawing did not represent
-a hat. It was supposed to be a boa constrictor digesting elephant."])
+my drawing frightened them. They answered: 'Why should anyone be
+frightened by a hat?' My drawing did not represent a hat.
+It was supposed to be a boa constrictor digesting elephant."])
 
 
 (defonce ^:private app-state
@@ -117,7 +118,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant."])
               ;;
               ;; ここ。exam モードにできないか？
               ;;
-              {drill :body}  (if exam-mode?
+              {drill :body}  (if (exam-mode?)
                                (do
                                  (swap! exams-counter inc)
                                  {:body (get exams (mod @exams-counter 3))})
