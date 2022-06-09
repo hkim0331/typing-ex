@@ -7,7 +7,7 @@
 
 (defprotocol Status
   (mt [db])
-  (toggle-mt [db]))
+  (toggle-mt! [db]))
 
 (extend-protocol Status
   duct.database.sql.Boundary
@@ -17,8 +17,9 @@
                 (ds-opt db)
                 ["select name, b from status where name = 'mt'"]))]
       ret))
-  (toggle-mt [db]
-   (let [ret (jdbc/execute!
-                (ds-opt db)
-                ["update status set b = not b where name='mt'"]
-                {:return-keys true})])))
+  (toggle-mt! [db]
+   (let [ret (jdbc/execute-one!
+              (ds-opt db)
+              ["update status set b = not b where name='mt'"]
+              {:return-keys true})]
+     ret)))

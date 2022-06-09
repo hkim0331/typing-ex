@@ -165,11 +165,12 @@
 
 ;; midterm exam
 (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
-  (fn [req]
+  (fn [_]
     (let [ret (status/mt db)]
       [::response/ok (str ret)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
-  (fn [req]
-    (let [ret (status/toggle-mt db)]
-      [::response/ok (str ret)])))
+  (fn [_]
+    (let [ret (status/toggle-mt! db)]
+      (timbre/debug "toggle-mt returns " ret)
+      [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
