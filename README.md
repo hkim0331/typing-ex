@@ -8,6 +8,14 @@ ClojureScript でフロントを書く練習。
     % lein new duct typing-ex +site +ataraxy +postgres
     % lein new shadow-cljs typing-ex :force +reagent
 
+
+## frontend(shadow-cljs)
+
+public を duct の resouces 以下に移動した。
+
+    % yarn
+    % yarn watch
+
 ## backend(duct)
 
 buddy-auth でセッション認証し、
@@ -18,15 +26,6 @@ cljs の typing フロントエンドを呼び出す。
     % lein repl
     > (dev)
     > (go)
-
-## frontend(shadow-cljs)
-
-public を duct の resouces 以下に移動した。
-
-### Run
-
-    % yarn
-    % yarn watch
 
 ### Clean
 
