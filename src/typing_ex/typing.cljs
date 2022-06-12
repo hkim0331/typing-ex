@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.9.2")
+(def ^:private version "1.9.3")
 (def ^:private timeout 60)
 (def ^:private todays-limit 4)
 
@@ -108,6 +108,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
               {body :body} (<! (http/get (str "/todays/" (get-login))))
               scores (read-string body)
               ;;; midterm exam
+              ;;; go の内側で go はいけない。
               {ex? :body} (<! (http/get "/mt"))
               {drill :body}  (if (:b (read-string ex?))
                                (do

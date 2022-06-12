@@ -1,4 +1,4 @@
-(defproject typing-ex "1.9.2"
+(defproject typing-ex "1.9.3"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -21,7 +21,6 @@
                  ;;[ring-cors "0.1.13"]
                  ;; no effect
                  ;; [medley/medley "1.4.0"]
-                 
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]

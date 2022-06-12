@@ -9,8 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.9.2")
-
+(def ^:private version "1.9.3")
 (defn page [& contents]
   [::response/ok
    (html5
@@ -45,7 +44,7 @@
    [:br]
    [:ul
     [:li "ログイン後、スコア一覧に飛ぶ。"
-     "スコア一覧上下二箇所の Go! のいずれかからチャレンジ開始。"]
+     "スコア一覧上下二箇所の Go のいずれかからチャレンジ開始。"]
     [:li "コンスタントに練習しないと成績は落ちる。"]
     [:li "やらない人の「できません」はいただけない。"
      "成績に影響しない欠席ひとつに神経質になるより、"
