@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.9.3")
+(def ^:private version "1.9.3.1")
 (def ^:private timeout 60)
 (def ^:private todays-limit 4)
 
@@ -83,7 +83,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                       (apply str (:results @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
-      (js/alert "レポート進んでいるか🐥"))));;🐥☕️
+      (js/alert "タイプの合間に授業資料読もう week-09"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
