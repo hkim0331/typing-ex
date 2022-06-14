@@ -83,7 +83,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                       (apply str (:results @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (zero? (mod (:todays-trials @app-state) todays-limit))
-      (js/alert "レポート進んでいるか🐥"))));;🐥☕️
+      (js/alert "非公式 week-09 見てるか？"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
