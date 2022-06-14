@@ -1,5 +1,6 @@
 #!/bin/sh
-echo 'have you "yarn release"?'
+#yarn release
+#lein uberjar
 if [ -z "$1" ]; then
 	echo usage: $0 target/file.jar
 	exit 1

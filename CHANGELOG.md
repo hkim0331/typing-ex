@@ -26,7 +26,8 @@
 
 ## 1.10.1 - 2022-06-14
 - read week-09
-- forget `yarn release`. should update the deploy script.
+- forget `yarn release`.
+  should update the deploy script.
 
 ## 1.9.1 - 2022-06-08
 - bump-version.sh updates js version number in `index.html`.
