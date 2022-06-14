@@ -24,6 +24,10 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.10.1 - 2022-06-14
+- read week-09
+- forget `yarn release`. should update the deploy script.
+
 ## 1.9.1 - 2022-06-08
 - bump-version.sh updates js version number in `index.html`.
 
