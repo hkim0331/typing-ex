@@ -1,10 +1,10 @@
 #!/bin/sh
-#yarn release
 #lein uberjar
 if [ -z "$1" ]; then
 	echo usage: $0 target/file.jar
 	exit 1
 fi
+yarn release
 BN=`basename $1`
 scp $1 app.melt:tp/ && \
 ssh app.melt "(cd tp && ln -sf ${BN} tp.jar)" && \
