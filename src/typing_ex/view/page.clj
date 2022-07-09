@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "0.10.2")
+(def ^:private version "0.10.3")
 (defn page [& contents]
   [::response/ok
    (html5
@@ -43,12 +43,8 @@
     (submit-button  "login"))
    [:br]
    [:ul
-    [:li "ログイン後、スコア一覧に飛ぶ。"
-     "スコア一覧上下二箇所の Go のいずれかからチャレンジ開始。"]
-    [:li "コンスタントに練習しないと成績は落ちる。"]
-    [:li "やらない人の「できません」はいただけない。"
-     "成績に影響しない欠席ひとつに神経質になるより、"
-     "しっかりタイピング平常点稼いだ方が建設的。"]]))
+    [:li "タイピングは楽だ。考えずに平常点稼げる。"]
+    [:li "Python 平常点は取れてるか？"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
