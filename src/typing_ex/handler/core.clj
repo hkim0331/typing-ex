@@ -130,13 +130,10 @@
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    (if (or true
-            (= login "hkimura")
-            (= login (get-login req))
-            (admin? (get-login req)))
-       (view/svg-self-records login (results/fetch-records db login))
-       [::response/forbidden
-         "<h2>Admin Only</h2><p>自分のと hkimura の記録が見れます。"])))
+    (view/svg-self-records login
+                           (results/fetch-records db login)
+                           (= (get-login req) login)
+                           (= (get-login req) "hkimura"))))
 
 ;; req から login をとるのはどうかな。
 (defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
