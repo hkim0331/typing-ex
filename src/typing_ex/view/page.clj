@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.11.0")
+(def ^:private version "1.11.1")
 (defn page [& contents]
   [::response/ok
    (html5
@@ -134,7 +134,7 @@
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
 ;; 1.5.8 Exercise days
-(defn svg-self-records [login ret]
+(defn svg-self-records [login ret me? admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
@@ -143,7 +143,7 @@
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
      [:div (scatter 300 150 positives)]
      [:br]
-     (when (= login "hkimura")
+     (when (or me? admin?)
        [:ul
         [:li "Max " (apply max (map :pt positives))]
         [:li "Average (last 10) " avg]
