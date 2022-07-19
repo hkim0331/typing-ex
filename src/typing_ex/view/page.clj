@@ -143,12 +143,13 @@
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
      [:div (scatter 300 150 positives)]
      [:br]
-     [:ul
-      [:li "Max " (apply max (map :pt positives))]
-      [:li "Average (last 10) " avg]
-      [:li "Exercise days " (select-count-distinct ret)]
-      [:li "Exercises (today/total) " (count todays) "/" (count positives)]
-      [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
+     (when (= login "hkimura")
+       [:ul
+        [:li "Max " (apply max (map :pt positives))]
+        [:li "Average (last 10) " avg]
+        [:li "Exercise days " (select-count-distinct ret)]
+        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
 (defn active-users-page [ret]
