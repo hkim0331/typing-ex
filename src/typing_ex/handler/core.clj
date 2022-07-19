@@ -153,16 +153,12 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
-    (if (admin? (get-login req))
-      (let [ret (->> (results/todays-act db)
-                     (partition-by :login)
-                     (map first)
-                     (sort-by :timestamp)
-                     reverse)]
-        (view/todays-act-page ret))
-      [::response/forbidden
-       "<h1>Admin Only</h1>
-        <p>Only admin can view. Had better open to students?</p>"])))
+   (let [ret (->> (results/todays-act db)
+                  (partition-by :login)
+                  (map first)
+                  (sort-by :timestamp)
+                  reverse)]
+     (view/todays-act-page ret))))
 
 ;; midterm exam
 (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
