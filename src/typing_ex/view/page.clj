@@ -43,8 +43,8 @@
     (submit-button  "login"))
    [:br]
    [:ul
-    [:li "タイピングは楽だ。考えずに平常点稼げる。"]
-    [:li "Python 平常点は取れてるか？"]]))
+    [:li "タイピングは楽だ。考えずに平常点稼げる。タイピング平常点だけね。"]
+    [:li "その他の平常点項目、QA とか、Python とかには、関係しない。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
