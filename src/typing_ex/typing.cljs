@@ -11,9 +11,10 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "0.10.3")
+(def ^:private version "1.11.1")
 (def ^:private timeout 60)
-(def ^:private todays-limit 4)
+
+(def ^:private todays-limit 10)
 
 (defonce ^:private app-state
   (r/atom  {:text "App is starting..."
@@ -82,8 +83,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                       "\n\n"
                       (apply str (:results @app-state)))))
     (swap! app-state update :todays-trials inc)
-    (when (= 1 (mod (:todays-trials @app-state) todays-limit))
-      (js/alert "🐍🐍🐍 Python tutorial やってるかい 🐍🐍🐍"))));;🐥☕️
+    (when (< todays-limit (:todays-trials @app-state))
+      (js/alert "python チュートリアルやってるか？"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))

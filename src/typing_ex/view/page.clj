@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "0.10.3")
+(def ^:private version "1.11.1")
 (defn page [& contents]
   [::response/ok
    (html5
@@ -43,12 +43,8 @@
     (submit-button  "login"))
    [:br]
    [:ul
-    [:li "ログイン後、スコア一覧に飛ぶ。"
-     "スコア一覧上下二箇所の Go のいずれかからチャレンジ開始。"]
-    [:li "コンスタントに練習しないと成績は落ちる。"]
-    [:li "やらない人の「できません」はいただけない。"
-     "成績に影響しない欠席ひとつに神経質になるより、"
-     "しっかりタイピング平常点稼いだ方が建設的。"]]))
+    [:li "タイピングは楽だ。考えずに平常点稼げる。タイピング平常点だけね。"]
+    [:li "その他の平常点項目、QA とか、Python とかには、関係しない。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -138,7 +134,7 @@
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
 ;; 1.5.8 Exercise days
-(defn svg-self-records [login ret]
+(defn svg-self-records [login ret me? admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
@@ -147,12 +143,13 @@
      [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
      [:div (scatter 300 150 positives)]
      [:br]
-     [:ul
-      [:li "Max " (apply max (map :pt positives))]
-      [:li "Average (last 10) " avg]
-      [:li "Exercise days " (select-count-distinct ret)]
-      [:li "Exercises (today/total) " (count todays) "/" (count positives)]
-      [:li "Last Exercise " (ss (str (:timestamp (last ret))))]]
+     (when (or me? admin?)
+       [:ul
+        [:li "Max " (apply max (map :pt positives))]
+        [:li "Average (last 10) " avg]
+        [:li "Exercise days " (select-count-distinct ret)]
+        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
 (defn active-users-page [ret]
