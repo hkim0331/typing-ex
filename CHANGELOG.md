@@ -24,6 +24,26 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.13.0-SNAPSHOT
+- add more examples(drills)
+- fix asnync get
+
+## 1.12.0 - 2022-07-22
+- dialog debug: typings.cljs/show-score に pt 渡しているところ変えないと、
+  ダイアログで pt をどう計算したかを表示できない。
+- atom points-debug を導入。2番目の alert ダイアログの最終行に、
+  (str @points-debug) "=>" pt) を入れた。
+- ハートブレークを赤丸に戻す。
+- deploy.sh で yarn, lein uberjar を呼ばない。
+
+## 1.11.1
+- グラフは見せるが、詳細は隠す。FK06
+- fixed: hkimura でログインしても詳細が見えない。
+- fixed: ユーザが自分の詳細は見える。
+
+## 1.11.0 - 2022-07-19
+- FK06 の意見を取り入れ、各ユーザの詳細は見せないが、グラフは見せる。
+
 ## 1.10.2 - 2022-06-15
 - 「Python tutorial、やってるか」のメッセージ
 
