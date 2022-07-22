@@ -28,10 +28,13 @@
 - add more examples(drills)
 - fix asnync get
 
-## 1.12.0-SNAPSHOT
-- dialog debug
-  typings.cljs/show-score に pt 渡しているところ変えないと、
+## 1.12.0 - 2022-07-22
+- dialog debug: typings.cljs/show-score に pt 渡しているところ変えないと、
   ダイアログで pt をどう計算したかを表示できない。
+- atom points-debug を導入。2番目の alert ダイアログの最終行に、
+  (str @points-debug) "=>" pt) を入れた。
+- ハートブレークを赤丸に戻す。
+- deploy.sh で yarn, lein uberjar を呼ばない。
 
 ## 1.11.1
 - グラフは見せるが、詳細は隠す。FK06
