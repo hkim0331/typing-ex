@@ -24,7 +24,14 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.13.0-SNAPSHOT
+- add more examples(drills)
+- fix asnync get
 
+## 1.12.0-SNAPSHOT
+- dialog debug
+  typings.cljs/show-score に pt 渡しているところ変えないと、
+  ダイアログで pt をどう計算したかを表示できない。
 
 ## 1.11.1
 - グラフは見せるが、詳細は隠す。FK06

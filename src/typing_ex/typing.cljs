@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.11.1")
+(def ^:private version "1.12.0")
 (def ^:private timeout 60)
 
 (def ^:private todays-limit 10)
@@ -49,6 +49,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   (-> (.getElementById js/document "login")
       (.-value)))
 
+;;; 1.12.x
+(def points-debug (atom {}))
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -60,6 +62,10 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         err   (* -1 errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (timbre/info (get-login) goods bads all err score)
+    ;; 1.12.x
+    (swap! points-debug
+           assoc
+           :all all :goods goods :bads bads :err err :bonus seconds)
     (if (= all (+ goods bads))
       (+ score err seconds)
       (+ score err))))
@@ -76,12 +82,14 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")]
-    (when-not (js/confirm (str  s1 "\n" s2 "\n(cancel でタイプのデータを表示)"))
-      (js/alert (str  (:text  @app-state)
-                      "\n\n"
-                      (:answer @app-state)
-                      "\n\n"
-                      (apply str (:results @app-state)))))
+    (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
+      (js/alert (str (:text  @app-state)
+                     "\n\n"
+                     (:answer @app-state)
+                     "\n\n"
+                     (apply str (:results @app-state))
+                     "\n\n"
+                     (str @points-debug) "=>" pt)))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "python チュートリアルやってるか？"))));;🐥☕️
@@ -163,7 +171,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defn error-component []
   ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "💔")]) ;;🙅💧💦💔❌🦠🥶🥺
+  [:div.drill (repeat (:errors @app-state) "🔴")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
