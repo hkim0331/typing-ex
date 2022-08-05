@@ -24,6 +24,9 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.13.0 - 2022-08-06
+- ペーストを (< goods 10) で判定する。
+
 ## 1.13.0-SNAPSHOT
 - add more examples(drills)
 - fix asnync get
