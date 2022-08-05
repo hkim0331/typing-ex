@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.12.0")
+(def ^:private version "1.13.0-SNAPSHOT")
 (def ^:private timeout 60)
 
 (def ^:private todays-limit 10)
@@ -59,16 +59,19 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        err   (* -1 errors errors)
+        err   (* errors errors)
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    (timbre/info (get-login) goods bads all err score)
     ;; 1.12.x
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :err err :bonus seconds)
-    (if (= all (+ goods bads))
-      (+ score err seconds)
-      (+ score err))))
+           :all all :goods goods :bads bads :bs err :bonus seconds)
+    (cond
+      (< goods 10) 0
+      (= all (+ goods bads)) (+ score seconds (- err))
+      :else (+ score (- err)))
+    #_(if (= all (+ goods bads))
+        (+ score (* -1 err) seconds)
+        (+ score (* -1 err)))))
 
 (defn pt [args]
   (max 0 (pt-raw args)))
@@ -171,7 +174,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defn error-component []
   ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "🔴")]) ;;🙅💧💦💔❌🦠🥶🥺
+  [:div.drill (repeat (:errors @app-state) "🟡")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
