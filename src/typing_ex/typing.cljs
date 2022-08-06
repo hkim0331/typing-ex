@@ -11,7 +11,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.13.0")
+(def ^:private version "1.13.2")
 (def ^:private timeout 60)
 
 (def ^:private todays-limit 10)
@@ -84,18 +84,22 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              90 "がんばった。もう少しで 100 点だね。"
              60 "だいぶ上手です。この調子でがんばれ。"
              30 "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")]
-    (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
-      (js/alert (str (:text  @app-state)
-                     "\n\n"
-                     (:answer @app-state)
-                     "\n\n"
-                     (apply str (:results @app-state))
-                     "\n\n"
-                     (str @points-debug) "=>" pt)))
+             "練習あるのみ。")
+        c (+ (get-in @app-state [:results :goods])
+             (get-in @app-state [:results :bads]))]
+    (if (empty? (:results @app-state))
+      (js/alert (str "doing nasty?"))
+      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
+        (js/alert (str (:text  @app-state)
+                       "\n\n"
+                       (:answer @app-state)
+                       "\n\n"
+                       (apply str (:results @app-state))
+                       "\n\n"
+                       (str @points-debug) "=>" pt))))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
-      (js/alert "python チュートリアルやってるか？"))));;🐥☕️
+      (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -109,41 +113,45 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;; (go (<!)) は非同期に実行される。
 ;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
 ;; app-state がアップデートされた後のレンダリングが保証されない。
-(defn send-fetch-reset! []
-  (let [pt (pt @app-state)]
-    (go (let [_ (if (zero? (count (:answer @app-state)))
-                  (when-not (empty? (:words @app-state))
-                    (js/alert "タイプ、忘れた？"))
-                  (do
-                    (show-score pt)
-                    (<! (send-score! pt))))
-              {body :body} (<! (http/get (str "/todays/" (get-login))))
-              scores (read-string body)
+
+(defn send- []
+  (if (zero? (count (:answer @app-state)))
+    (when-not (empty? (:words @app-state))
+      (js/alert "タイプ、忘れた？"))
+    (let [pt (pt @app-state)]
+      (show-score pt)
+      (go (<! (send-score! pt))))))
+
+(defn fetch-reset! []
+  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
+            scores (read-string body)
               ;;; midterm exam
               ;;; go の内側で go はいけない。
-              {ex? :body} (<! (http/get "/mt"))
-              {drill :body}  (if (:b (read-string ex?))
-                               (do
-                                 (.log js/console "ex mode")
-                                 ;;(.log js/console (:b (read-string ex?)))
-                                 (swap! mt-counter inc)
-                                 {:body (get mt (mod @mt-counter 3))})
-                               (do
-                                 (.log js/console "normal mode")
-                                 (<! (http/get (str "/drill")))))
-              words (str/split drill #"\s+")]
-          (swap! app-state
-                 assoc
-                 :text drill
-                 :answer ""
-                 :seconds timeout
-                 :errors 0
-                 :words words
-                 :words-max (count words)
-                 :pos 0
-                 :results []
-                 :todays scores)
-          (.focus (.getElementById js/document "drill"))))))
+            {ex? :body} (<! (http/get "/mt"))
+            {drill :body}  (if (:b (read-string ex?))
+                             (do
+                               (.log js/console "ex mode")
+                               (swap! mt-counter inc)
+                               {:body (get mt (mod @mt-counter 3))})
+                             (do
+                               (.log js/console "normal mode")
+                               (<! (http/get (str "/drill")))))
+            words (str/split drill #"\s+")]
+        (swap! app-state assoc
+               :text drill
+               :answer ""
+               :seconds timeout
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :results []
+               :todays scores)
+        (.focus (.getElementById js/document "drill")))))
+
+(defn send-fetch-reset! []
+  (send-)
+  (fetch-reset!))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
@@ -174,7 +182,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defn error-component []
   ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "🟡")]) ;;🙅💧💦💔❌🦠🥶🥺
+  [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
@@ -216,7 +224,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:div "hkimura, " version]])
 
 (defn start []
-  (send-fetch-reset!)
+  (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill")))
 
