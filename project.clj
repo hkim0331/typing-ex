@@ -1,12 +1,12 @@
-(defproject typing-ex "1.13.2"
+(defproject typing-ex "1.14.0"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[buddy/buddy-auth "3.0.323"]
                  [buddy/buddy-hashers "1.8.158"]
-                 [cheshire/cheshire "5.10.2"]
-                 [clojure.java-time "0.3.3"]
-                 [com.github.seancorfield/next.jdbc "1.2.780"]
+                 [cheshire/cheshire "5.11.0"]
+                 [clojure.java-time "1.1.0"]
+                 [com.github.seancorfield/next.jdbc "1.3.834"]
                  [com.taoensso/timbre "5.2.1"]
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
@@ -16,7 +16,7 @@
                  [environ "1.2.0"]
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.11.1"]
-                 [org.postgresql/postgresql "42.3.5"]]
+                 [org.postgresql/postgresql "42.5.0"]]
                  ;; no use cors
                  ;;[ring-cors "0.1.13"]
                  ;; no effect

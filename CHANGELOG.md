@@ -23,6 +23,10 @@
 - log がうるさい。
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
+- L22 データベースに依存を止める。
+
+## 1.14.0 - 2022-10-15
+- clj -Tantq outdated :upgrade true
 
 ## 1.13.2 - 2022-08-06
 - send-fetch-reset! を send- と fetch-reset! に分割した。
