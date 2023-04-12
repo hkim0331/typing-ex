@@ -4,6 +4,7 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
+   [hato.client :as hc]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.users   :as users]
    [typing-ex.boundary.results :as results]
@@ -32,8 +33,17 @@
   (fn [req]
     (view/login-page req)))
 
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+(defn- find-user [login]
+  (let [url (str l22 login)
+        body (:body (hc/get url {:as :json}))]
+    ;;(timbre/debug "find-user url" url)
+    ;;(timbre/debug "find-user body" body)
+    body))
+
 (defn auth? [db login password]
-  (let [ret (users/find-user-by-login db login)]
+  (let [;;ret (users/find-user-by-login db login)
+        ret (find-user login)]
     (timbre/debug "auth?" login)
     (and (some? ret)
          (hashers/check password (:password ret)))))
