@@ -1,4 +1,4 @@
-(defproject typing-ex "1.13.2"
+(defproject typing-ex "1.14.0"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -14,6 +14,7 @@
                  [duct/module.sql "0.6.1"]
                  [duct/module.web "0.7.3"]
                  [environ "1.2.0"]
+                 [hato "0.9.0"]
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.3.5"]]

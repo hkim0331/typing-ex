@@ -24,6 +24,10 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+## 1.14.0 - 2023-04-12
+- l22 api auth
+- added Makefile
+
 ## 1.13.2 - 2022-08-06
 - send-fetch-reset! を send- と fetch-reset! に分割した。
 - ペーストを (empty? (:results @app-state)) で判定する。
