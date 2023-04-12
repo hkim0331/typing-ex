@@ -26,6 +26,7 @@
 
 ## 1.14.0 - 2023-04-12
 - l22 api auth
+- added Makefile
 
 ## 1.13.2 - 2022-08-06
 - send-fetch-reset! を send- と fetch-reset! に分割した。
