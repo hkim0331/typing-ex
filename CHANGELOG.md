@@ -26,6 +26,7 @@
 - L22 データベースに依存を止める。
 - BS で減点やめようか。
 - devcontainer まだだったか？
+- bug: can not record scores
 
 
 ## 1.14.3 - 2023-04-12

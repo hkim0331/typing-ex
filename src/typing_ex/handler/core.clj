@@ -109,6 +109,7 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
+      (timbre/debug "/score-post rcv:" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 

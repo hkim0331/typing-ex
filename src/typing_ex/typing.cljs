@@ -12,7 +12,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 (def ^:private version "1.14.3")
-(def ^:private timeout 60)
+(def ^:private timeout 6) ;; FIXME: was 60
 
 (def ^:private todays-limit 10)
 
@@ -51,6 +51,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;;; 1.12.x
 (def points-debug (atom {}))
+
 ;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
@@ -59,7 +60,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        err   (* errors errors)
+        ;; BS は減点しない。2023-04-12
+        ;; err   (* errors errors)
+        err 0
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     ;; 1.12.x
     (swap! points-debug
@@ -81,9 +84,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90 "がんばった。もう少しで 100 点だね。"
-             60 "だいぶ上手です。この調子でがんばれ。"
-             30 "指先を見ずに、ゆっくり、ミスを少なく。"
+             90  "がんばった。もう少しで 100 点だね。"
+             60  "だいぶ上手です。この調子でがんばれ。"
+             30  "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")
         c (+ (get-in @app-state [:results :goods])
              (get-in @app-state [:results :bads]))]
@@ -104,7 +107,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
+;; FIXME: log post  /score.
 (defn send-score! [pt]
+  (js/alert (str "score " pt))
   (http/post "/score"
              {:form-params
               {:pt pt
