@@ -8,7 +8,7 @@
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
-   [taoensso.timbre :as timbre]
+   ;; [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
 (def ^:private version "1.14.0")
