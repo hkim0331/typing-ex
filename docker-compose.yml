@@ -9,8 +9,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - TZ=Asia/Tokyo
-    # ports:
-    #   - "5432:5432"
+    # debug
+    ports:
+      - "5432:5432"
     volumes:
       - data:/var/lib/postgres/data
 

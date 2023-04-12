@@ -29,3 +29,5 @@ ${SED} -E -i \
 ${SED} -E -i \
     -e "s/main.js\?version=.*/main.js?version=$1\">/" \
     resources/typing_ex/handler/index.html
+
+npm install

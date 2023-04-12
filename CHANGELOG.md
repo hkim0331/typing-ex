@@ -28,6 +28,10 @@
 - devcontainer まだだったか？
 
 
+## 1.14.3 - 2023-04-12
+- bump-version.sh calls `num install` to update package-lock.json
+  is it right?
+
 ## 1.14.0 - 2022-10-15
 - clj -Tantq outdated :upgrade true
 
