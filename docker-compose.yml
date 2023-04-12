@@ -1,27 +1,37 @@
-version: "3.8"
+version: "3.3"
+
 services:
   db:
-    image: postgres:12.10
+    image: postgres
     restart: unless-stopped
     environment:
       - POSTGRES_DB=l22
       - POSTGRES_USER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - TZ=Asia/Tokyo
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     volumes:
       - data:/var/lib/postgres/data
+
   app:
-    build: .
+    image: clojure:lein
     tty: true
     environment:
-      LEIN_REPL_PORT: 8888
-      LEIN_REPL_HOST: 0.0.0.0
+      - LEIN_REPL_PORT=8888
+      - LEIN_REPL_HOST=0.0.0.0
     ports:
       - "3000:3000"
       - "8888:8888"
     volumes:
       - .:/usr/src/app
+      - m2:/root/.m2
+      - gitlibs:/root/.gitlibs
+
 volumes:
+  m2:
+    external: true
+  gitlibs:
+    external: true
   data:
+    driver: local
