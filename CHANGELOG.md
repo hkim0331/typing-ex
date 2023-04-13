@@ -27,11 +27,10 @@
 - BS で減点やめようか。
 - devcontainer まだだったか？
 - bug: can not record scores
-
+- yarn watch してるのにブラウザに反映しない
 
 ## 1.14.4-SNAPSHOT
 - clojure -Tantq outdated
-
 |           :file |                               :name | :current | :latest |
 | --------------- | ----------------------------------- | -------- | ------- |
 |     project.clj | clojure.java-time/clojure.java-time |    1.1.0 |   1.2.0 |

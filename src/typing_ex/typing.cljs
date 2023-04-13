@@ -11,9 +11,8 @@
    ;; [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.14.3")
-(def ^:private timeout 6) ;; FIXME: was 60
-
+(def ^:private version "0.14.4-SNAPSHOT")
+(def ^:private timeout 30)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -27,6 +26,9 @@
             :results []
             :todays {}
             :todays-trials 0}))
+
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
 
 ;; midterm exam
 (def mt
@@ -60,9 +62,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        ;; BS は減点しない。2023-04-12
+        ;; 二乗で減点するのをやめる。2023-04-12
         ;; err   (* errors errors)
-        err 0
+        err errors
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     ;; 1.12.x
     (swap! points-debug
@@ -91,25 +93,25 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         c (+ (get-in @app-state [:results :goods])
              (get-in @app-state [:results :bads]))]
     (if (empty? (:results @app-state))
-      (js/alert (str "doing nasty?"))
+      (js/alert (str "コピペじゃダメよ"))
       (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
-        (js/alert (str (:text  @app-state)
-                       "\n\n"
-                       (:answer @app-state)
-                       "\n\n"
-                       (apply str (:results @app-state))
-                       "\n\n"
-                       (str @points-debug) "=>" pt))))
+        (js/alert (str
+                   (str @points-debug) " => " pt
+                   "\n\n"
+                   (:answer @app-state)
+                   "\n\n"
+                   (apply str (:results @app-state))
+                   "\n\n"
+                   (:text  @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn csrf-token []
-  (.-value (.getElementById js/document "__anti-forgery-token")))
+
 
 ;; FIXME: log post  /score.
 (defn send-score! [pt]
-  (js/alert (str "score " pt))
+  ;; (js/alert (str "send-score! pt " pt))
   (http/post "/score"
              {:form-params
               {:pt pt
