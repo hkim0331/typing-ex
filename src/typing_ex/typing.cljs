@@ -8,7 +8,6 @@
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
-   ;; [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
 (def ^:private version "0.14.4-SNAPSHOT")
@@ -54,7 +53,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;;; 1.12.x
 (def points-debug (atom {}))
 
-;;; pt must not be nagative.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
@@ -78,7 +76,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         (+ score (* -1 err) seconds)
         (+ score (* -1 err)))))
 
-(defn pt [args]
+(defn pt
+  "スコアをマイナスにしない"
+  [args]
   (max 0 (pt-raw args)))
 
 (defn show-score [pt]
@@ -107,33 +107,26 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-
-
-;; FIXME: log post  /score.
-(defn send-score! [pt]
-  ;; (js/alert (str "send-score! pt " pt))
-  (http/post "/score"
-             {:form-params
-              {:pt pt
-               :__anti-forgery-token (csrf-token)}}))
-
 ;; (go (<!)) は非同期に実行される。
 ;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
 ;; app-state がアップデートされた後のレンダリングが保証されない。
-
 (defn send- []
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
       (js/alert "タイプ、忘れた？"))
     (let [pt (pt @app-state)]
-      (show-score pt)
-      (go (<! (send-score! pt))))))
+      (go (<! (http/post
+               "/score"
+               {:form-params
+                {:pt pt
+                 :__anti-forgery-token (csrf-token)}})))
+      (show-score pt))))
 
 (defn fetch-reset! []
   (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
             scores (read-string body)
-              ;;; midterm exam
-              ;;; go の内側で go はいけない。
+            ;; 何も表示しない。
+            ;;_ (js/alert "fetch-reset! body\n" body)
             {ex? :body} (<! (http/get "/mt"))
             {drill :body}  (if (:b (read-string ex?))
                              (do
@@ -154,9 +147,15 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :pos 0
                :results []
                :todays scores)
+        ;; 何も表示しない。
+        ;; (js/alert "app-state, todays @app-state" (str (:todays @app-state)))
+        (.log js/console "hello")
+        (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
         (.focus (.getElementById js/document "drill")))))
 
-(defn send-fetch-reset! []
+(defn send-fetch-reset!
+  "must exec sequentially"
+  []
   (send-)
   (fetch-reset!))
 
@@ -180,6 +179,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-fetch-reset!))))
 
+(comment
+  (.log js/console "hello, js!")
+  )
 (defn check-key [key]
   (case key
     " " (check-word)
@@ -195,8 +197,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
-  ;;(timbre/info "drill" (subs (:drill @app-state) 0 20))
-  ;;(timbre/info "todays" (:todays @app-state))
   [:div
    [:h2 "Typing: Challenge"]
    [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
@@ -218,11 +218,11 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
              :on-click #(do (send-fetch-reset!))}]
-    " 🔚 全部打った後にスペースかエンターでボーナス"]
+    " 🔚 全部タイプした後にスペースかエンターでボーナス"]
    [:p
     "todays:"
     [:br]
-    [bar-chart 300 150 (:todays @app-state)]]
+    (bar-chart 300 150 (:todays @app-state))]
    [:p
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "

@@ -15,6 +15,7 @@
                  [duct/module.web "0.7.3"]
                  [environ "1.2.0"]
                  [hato "0.9.0"]
+                 
                  [hiccup "1.0.5"]
                  [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.6.0"]]
