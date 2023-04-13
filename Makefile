@@ -1,8 +1,14 @@
-build:
+SERV=app.melt
+DEST=${SERV}:typing-ex/tp.jar
+
+clean:
+	${RM} -rf target
+
+build: clean
 	yarn release
 	lein uberjar
 
-deploy:
-	scp target/typing-ex-*-standalone.jar app.melt:typing-ex/tp.jar && \
-	ssh app.melt sudo systemctl restart typing-ex && \
-	ssh app.melt systemctl status typing-ex
+deploy: build
+	scp target/typing-ex-*-standalone.jar ${DEST} && \
+	ssh ${SERV} sudo systemctl restart typing-ex && \
+	ssh ${SERV} systemctl status typing-ex
