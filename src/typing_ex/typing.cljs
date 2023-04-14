@@ -10,8 +10,8 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "0.14.4-SNAPSHOT")
-(def ^:private timeout 30)
+(def ^:private version "1.15.0")
+(def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -107,14 +107,15 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-;; (go (<!)) は非同期に実行される。
-;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
-;; app-state がアップデートされた後のレンダリングが保証されない。
-(defn send- []
+
+(defn send-
+  "send- 中で (:todays @app-state) を更新する。"
+  []
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
       (js/alert "タイプ、忘れた？"))
     (let [pt (pt @app-state)]
+      (swap! app-state update :todays conj {:pt pt})
       (go (<! (http/post
                "/score"
                {:form-params
@@ -123,11 +124,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
       (show-score pt))))
 
 (defn fetch-reset! []
-  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
-            scores (read-string body)
-            ;; 何も表示しない。
-            ;;_ (js/alert "fetch-reset! body\n" body)
-            {ex? :body} (<! (http/get "/mt"))
+  (go (let [{ex? :body} (<! (http/get "/mt"))
             {drill :body}  (if (:b (read-string ex?))
                              (do
                                (.log js/console "ex mode")
@@ -146,10 +143,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :words-max (count words)
                :pos 0
                :results []
-               :todays scores)
-        ;; 何も表示しない。
-        ;; (js/alert "app-state, todays @app-state" (str (:todays @app-state)))
-        (.log js/console "hello")
+               ;; :todays の更新は send- に任せる。
+               ;; :todays scores
+               )
         (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
         (.focus (.getElementById js/document "drill")))))
 

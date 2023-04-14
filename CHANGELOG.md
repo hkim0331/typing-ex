@@ -29,7 +29,11 @@
 - bug: can not record scores
 - yarn watch してるのにブラウザに反映しない
 
-## 1.14.4-SNAPSHOT
+## 1.15.0 - 2023-04-14
+### Fixed
+- typing.cljs: (:todays @app-state) の更新を send- に移動。
+  プロットの時間差を解消した。
+
 - clojure -Tantq outdated
 |           :file |                               :name | :current | :latest |
 | --------------- | ----------------------------------- | -------- | ------- |
