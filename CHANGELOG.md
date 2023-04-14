@@ -23,7 +23,35 @@
 - log がうるさい。
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
+
+
+## 1.15.0 - 2023-04-14
+### Fixed
+- typing.cljs: (:todays @app-state) の更新を send- に移動。
+  プロットの時間差を解消した。
 - L22 データベースに依存を止める。
+- BS で減点やめようか。
+- devcontainer まだだったか？
+- bug: can not record scores
+- yarn watch してるのにブラウザに反映しない
+
+### Updated
+- clojure -Tantq outdated
+|           :file |                               :name | :current | :latest |
+| --------------- | ----------------------------------- | -------- | ------- |
+|     project.clj | clojure.java-time/clojure.java-time |    1.1.0 |   1.2.0 |
+|                 |   com.github.seancorfield/next.jdbc |  1.3.834 | 1.3.865 |
+|                 |                 com.taoensso/timbre |    5.2.1 |   6.1.0 |
+|                 |                       eftest/eftest |    0.5.9 |   0.6.0 |
+|                 |           org.postgresql/postgresql |   42.5.0 |  42.6.0 |
+| shadow-cljs.edn |                  binaryage/devtools |    1.0.6 |   1.0.7 |
+|                 |                 com.taoensso/timbre |    5.2.1 |   6.1.0 |
+|                 |                             reagent |    1.1.1 |   1.2.0 |
+
+
+## 1.14.3 - 2023-04-12
+- bump-version.sh calls `num install` to update package-lock.json
+  is it right?
 
 ## 1.14.0 - 2022-10-15
 - clj -Tantq outdated :upgrade true

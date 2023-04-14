@@ -1,0 +1,25 @@
+{
+    "name": "Clojure",
+
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "leiningen",
+    "workspaceFolder": "/workspace",
+    "remoteUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "settings": {
+            },
+            "extensions": [
+                "betterthantomorrow.calva",
+                "borkdude.clj-kondo",
+                "eduarddyckman.vscode-parinfer",
+                "jsynowiec.vscode-insertdatestring",
+                "lfs.vscode-emacs-friendly",
+                "mosapride.zenkaku",
+                "ybaumes.highlight-trailing-white-spaces"
+            ]
+        }
+    }
+}

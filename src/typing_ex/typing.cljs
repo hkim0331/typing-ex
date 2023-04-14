@@ -8,12 +8,10 @@
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
-   ;; [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.14.0")
+(def ^:private version "1.15.0")
 (def ^:private timeout 60)
-
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -27,6 +25,9 @@
             :results []
             :todays {}
             :todays-trials 0}))
+
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
 
 ;; midterm exam
 (def mt
@@ -51,7 +52,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;;; 1.12.x
 (def points-debug (atom {}))
-;;; pt must not be nagative.
+
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
@@ -59,7 +60,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        err   (* errors errors)
+        ;; 二乗で減点するのをやめる。2023-04-12
+        ;; err   (* errors errors)
+        err errors
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     ;; 1.12.x
     (swap! points-debug
@@ -73,7 +76,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         (+ score (* -1 err) seconds)
         (+ score (* -1 err)))))
 
-(defn pt [args]
+(defn pt
+  "スコアをマイナスにしない"
+  [args]
   (max 0 (pt-raw args)))
 
 (defn show-score [pt]
@@ -81,53 +86,45 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90 "がんばった。もう少しで 100 点だね。"
-             60 "だいぶ上手です。この調子でがんばれ。"
-             30 "指先を見ずに、ゆっくり、ミスを少なく。"
+             90  "がんばった。もう少しで 100 点だね。"
+             60  "だいぶ上手です。この調子でがんばれ。"
+             30  "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")
         c (+ (get-in @app-state [:results :goods])
              (get-in @app-state [:results :bads]))]
     (if (empty? (:results @app-state))
-      (js/alert (str "doing nasty?"))
+      (js/alert (str "コピペじゃダメよ"))
       (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
-        (js/alert (str (:text  @app-state)
-                       "\n\n"
-                       (:answer @app-state)
-                       "\n\n"
-                       (apply str (:results @app-state))
-                       "\n\n"
-                       (str @points-debug) "=>" pt))))
+        (js/alert (str
+                   (str @points-debug) " => " pt
+                   "\n\n"
+                   (:answer @app-state)
+                   "\n\n"
+                   (apply str (:results @app-state))
+                   "\n\n"
+                   (:text  @app-state)))))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn csrf-token []
-  (.-value (.getElementById js/document "__anti-forgery-token")))
 
-(defn send-score! [pt]
-  (http/post "/score"
-             {:form-params
-              {:pt pt
-               :__anti-forgery-token (csrf-token)}}))
-
-;; (go (<!)) は非同期に実行される。
-;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
-;; app-state がアップデートされた後のレンダリングが保証されない。
-
-(defn send- []
+(defn send-
+  "send- 中で (:todays @app-state) を更新する。"
+  []
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
       (js/alert "タイプ、忘れた？"))
     (let [pt (pt @app-state)]
-      (show-score pt)
-      (go (<! (send-score! pt))))))
+      (swap! app-state update :todays conj {:pt pt})
+      (go (<! (http/post
+               "/score"
+               {:form-params
+                {:pt pt
+                 :__anti-forgery-token (csrf-token)}})))
+      (show-score pt))))
 
 (defn fetch-reset! []
-  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
-            scores (read-string body)
-              ;;; midterm exam
-              ;;; go の内側で go はいけない。
-            {ex? :body} (<! (http/get "/mt"))
+  (go (let [{ex? :body} (<! (http/get "/mt"))
             {drill :body}  (if (:b (read-string ex?))
                              (do
                                (.log js/console "ex mode")
@@ -146,10 +143,15 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :words-max (count words)
                :pos 0
                :results []
-               :todays scores)
+               ;; :todays の更新は send- に任せる。
+               ;; :todays scores
+               )
+        (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
         (.focus (.getElementById js/document "drill")))))
 
-(defn send-fetch-reset! []
+(defn send-fetch-reset!
+  "must exec sequentially"
+  []
   (send-)
   (fetch-reset!))
 
@@ -173,6 +175,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-fetch-reset!))))
 
+(comment
+  (.log js/console "hello, js!")
+  )
 (defn check-key [key]
   (case key
     " " (check-word)
@@ -188,8 +193,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [:div.drill (apply str (@app-state :results))])
 
 (defn ex-page []
-  ;;(timbre/info "drill" (subs (:drill @app-state) 0 20))
-  ;;(timbre/info "todays" (:todays @app-state))
   [:div
    [:h2 "Typing: Challenge"]
    [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
@@ -211,11 +214,11 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
              :on-click #(do (send-fetch-reset!))}]
-    " 🔚 全部打った後にスペースかエンターでボーナス"]
+    " 🔚 全部タイプした後にスペースかエンターでボーナス"]
    [:p
     "todays:"
     [:br]
-    [bar-chart 300 150 (:todays @app-state)]]
+    (bar-chart 300 150 (:todays @app-state))]
    [:p
     [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
     " "

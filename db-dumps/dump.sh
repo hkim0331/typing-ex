@@ -1,2 +1,2 @@
 #!/bin/sh
-pg_dump -h localhost -U postgres -W l22 > `date +l22-%F.sql`
+pg_dump -h localhost -U postgres -W typing_ex > `date +typing_ex-%F.sql`

@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.14.0")
+(def ^:private version "1.15.0")
 (defn page [& contents]
   [::response/ok
    (html5
@@ -77,7 +77,7 @@
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Users"]
       " "
-      [:a {:href "http://rp.melt.kyutech.ac.jp/"
+      #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
        "RP"]
       " "
@@ -186,4 +186,3 @@
                    :class (if (= user login) "yes" "other")}
                login]])))
    (headline)))
-

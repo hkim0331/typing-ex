@@ -4,4 +4,4 @@ if [ -z "$1" ]; then
   exit
 fi
 
-psql -h localhost -U postgres -W l22 < $1
+psql -h localhost -U postgres -W typing_ex < $1

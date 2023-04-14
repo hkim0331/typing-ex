@@ -4,7 +4,7 @@
    [duct.database.sql]
    [next.jdbc.date-time]
    [next.jdbc.sql :as sql]
-   #_[taoensso.timbre :as timbre]
+   [taoensso.timbre :as timbre]
    [typing-ex.boundary.utils :refer [ds-opt]]))
 
 (next.jdbc.date-time/read-as-local)
@@ -23,6 +23,7 @@
   duct.database.sql.Boundary
 
   (insert-pt [db login-pt]
+    (timbre/debug "insert-pt:login-pt:" login-pt)
     (sql/insert! (ds-opt db) :results login-pt))
 
   (sum [db n]
