@@ -23,17 +23,19 @@
 - log がうるさい。
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
+
+
+## 1.15.0 - 2023-04-14
+### Fixed
+- typing.cljs: (:todays @app-state) の更新を send- に移動。
+  プロットの時間差を解消した。
 - L22 データベースに依存を止める。
 - BS で減点やめようか。
 - devcontainer まだだったか？
 - bug: can not record scores
 - yarn watch してるのにブラウザに反映しない
 
-## 1.15.0 - 2023-04-14
-### Fixed
-- typing.cljs: (:todays @app-state) の更新を send- に移動。
-  プロットの時間差を解消した。
-
+### Updated
 - clojure -Tantq outdated
 |           :file |                               :name | :current | :latest |
 | --------------- | ----------------------------------- | -------- | ------- |
