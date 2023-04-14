@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.15.0")
+(def ^:private version "1.15.1")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -23,7 +23,7 @@
             :words-max 0
             :pos 0
             :results []
-            :todays {}
+            :todays []
             :todays-trials 0}))
 
 (defn csrf-token []
