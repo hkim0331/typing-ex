@@ -24,6 +24,15 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 
+
+## 1.15.2 - 2023-04-23
+### Addded
+- db-dumps/fetch.sh
+
+## Changed
+- db-dumps/{dump,restore}.sh: removed `-w` switch, depends on `~/.pgpass`.
+
+
 ## 1.15.1 - 2023-04-14
 ### Fixed
 (:todays @app-state)'s initial value is []. not {}.
