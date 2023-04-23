@@ -22,7 +22,7 @@ services:
       - LEIN_REPL_PORT=8888
       - LEIN_REPL_HOST=0.0.0.0
     ports:
-      - "3000:3000"
+      - "3023:3023"
       - "8888:8888"
     volumes:
       - .:/usr/src/app
