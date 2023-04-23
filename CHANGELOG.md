@@ -10,20 +10,20 @@
 ## Unreleased
 - 各行ごとに集計。
 - 日本語例文。
-- clojure.java-time もしくは clj-time での comparator?
-  sort-by で使えるもの。
 - 周回ごとに ready, set, go! を表示。きっと邪魔だ。
-- do not treat as one if the count of exercises is less than 10.
 - 「授業中は練習なしよ」モード
-- WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
-- (next.jdbc.date-time/read-as-local) の場所。
-  今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
+- WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core,
+  being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
-- log がうるさい。
+- log がうるさい。dev/prod で切り替える方法
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
+- コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
 
+## 1.15.3 - 2023-04-23
+- CHANGELOG.md を 80 コラム未満で折り返した。
+- D.P ボタンやめた。日付入れて total, max をクリックで。
 
 ## 1.15.2 - 2023-04-23
 ### Addded
@@ -31,7 +31,6 @@
 
 ## Changed
 - db-dumps/{dump,restore}.sh: removed `-w` switch, depends on `~/.pgpass`.
-
 
 ## 1.15.1 - 2023-04-14
 ### Fixed
@@ -159,9 +158,12 @@ code polish up. not improved.
 - package.json 中の "version": を bump-version.sh でケアする。
 - 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
 - react 17 に戻した。
-  ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
+  ReactDOM.render is no longer supported in React 18. Use createRoot instead.
+  Until you switch to the new API, your app will behave as if it’s running
+   React 17. Learn more: https://reactjs.org/link/switch-to-createroot
 - build.sh
-  export TAOENSSO_TIMBRE_NS_PATTERN_EDN='{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
+  export TAOENSSO_TIMBRE_NS_PATTERN_EDN=
+   '{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
 - reset-todays! を独立させた
 
 ## 1.6.4 - 2022-05-07
@@ -618,7 +620,10 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - Fix: js/setInterval instead of js/setTimeout.
 - babashka のインストールはターミナルで１行。app.melt でやってしまう。
 
-  $ bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+  $ bash <
+    <(curl
+      -s
+      https://raw.githubusercontent.com/babashka/babashka/master/install)
 
 ## 0.4.0 - 2021-06-1
 - 間違って、initdb.d/gtypist を git に入れた。
