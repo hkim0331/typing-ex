@@ -1,5 +1,6 @@
 # typing-ex
 
+## Required
 * Clojure/ClojureScript
 * duct
 * shadow-cljs
@@ -20,6 +21,7 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 - コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
+- css .boxed が効いていない
 
 ## 1.15.3 - 2023-04-23
 - CHANGELOG.md を 80 コラム未満で折り返した。

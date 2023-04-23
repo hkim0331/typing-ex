@@ -37,4 +37,4 @@ span.mmm { margin-left: 2em;}
 .hkimura { background: blue; color: white;}
 .btn#counter { font-family: monospace;}
 
-.boxed {}
+.boxed { border: solid 1pt black;}
