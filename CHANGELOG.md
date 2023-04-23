@@ -21,8 +21,9 @@
 - 移動平均を乗せる
 - コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
 
-## 1.15.3-SNAPSHOT
+## 1.15.3 - 2023-04-23
 - CHANGELOG.md を 80 コラム未満で折り返した。
+- D.P ボタンやめた。日付入れて total, max をクリックで。
 
 ## 1.15.2 - 2023-04-23
 ### Addded
@@ -30,7 +31,6 @@
 
 ## Changed
 - db-dumps/{dump,restore}.sh: removed `-w` switch, depends on `~/.pgpass`.
-
 
 ## 1.15.1 - 2023-04-14
 ### Fixed

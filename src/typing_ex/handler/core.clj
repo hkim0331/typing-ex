@@ -17,7 +17,7 @@
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
-  (let [admins #{"hkimura" "ayako" "login888"}]
+  (let [admins #{"hkimura"}]
     (get admins s)))
 
 (defn get-login
@@ -41,6 +41,7 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
+;; 
 (defn auth? [db login password]
   (let [;;ret (users/find-user-by-login db login)
         ret (find-user login)]
@@ -122,11 +123,14 @@
       ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
+
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    ;;(timbre/debug "get-in req [:params :n]" (get-in req [:params :n]))
+    (timbre/debug "recent keys query-params" (keys (:query-params req)))
     (let [days  (get-in req [:params :n])]
-      (redirect (str "/scores/" days)))))
+      (if (get (:query-params req) "max")
+        (redirect (str "/scores/" days))
+        (redirect (str "/sum/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
