@@ -23,6 +23,15 @@
 - コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
 - css .boxed が効いていない
 
+## 1.15.4-SNAPSHOT
+- yarn 使っているのに、コンテナの設定に入ってない。
+  コンテナ立ち上げてから、npm でどうか？
+  $ npm install --global yarn
+
+- environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
+- .config/typing-ex/ 作って .zshenv から外す。
+
+
 ## 1.15.3 - 2023-04-23
 - CHANGELOG.md を 80 コラム未満で折り返した。
 - D.P ボタンやめた。日付入れて total, max をクリックで。

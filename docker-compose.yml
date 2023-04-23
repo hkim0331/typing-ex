@@ -9,21 +9,20 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - TZ=Asia/Tokyo
-    # debug
     ports:
-      - "5432:5432"
+      - "55432:5432"
     volumes:
       - data:/var/lib/postgres/data
 
   app:
-    image: clojure:lein
+    image: hkim0331/luminus:latest
     tty: true
-    environment:
-      - LEIN_REPL_PORT=8888
-      - LEIN_REPL_HOST=0.0.0.0
+    # environment:
+    #   - LEIN_REPL_PORT=8888
+    #   - LEIN_REPL_HOST=0.0.0.0
     ports:
       - "3023:3023"
-      - "8888:8888"
+      # - "8888:8888"
     volumes:
       - .:/usr/src/app
       - m2:/root/.m2
