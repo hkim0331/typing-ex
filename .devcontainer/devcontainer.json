@@ -1,12 +1,10 @@
 {
     "name": "Clojure",
-
     "dockerComposeFile": [
         "../docker-compose.yml"
     ],
-    "service": "leiningen",
-    "workspaceFolder": "/workspace",
-    "remoteUser": "vscode",
+    "service": "app",
+    "workspaceFolder": "/usr/src/app",
     "customizations": {
         "vscode": {
             "settings": {

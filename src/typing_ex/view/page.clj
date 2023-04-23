@@ -9,7 +9,8 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.2")
+(def ^:private version "1.15.3")
+
 (defn page [& contents]
   [::response/ok
    (html5
@@ -43,8 +44,8 @@
     (submit-button  "login"))
    [:br]
    [:ul
-    [:li "タイピングは楽だ。考えずに平常点稼げる。タイピング平常点だけね。"]
-    [:li "その他の平常点項目、QA とか、Python とかには、関係しない。"]]))
+    [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
+    [:li "10分練習したら休憩入れよう。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -60,18 +61,23 @@
      [:div.d-inline
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
-      [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+      #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
      "&nbsp;"
-     [:div.d-inline
+     [:div.d-inline {:class "boxed"}
       (form-to
        [:get "/recent"]
-       (submit-button {:class "btn btn-primary btn-sm"}
-                      "max")
        (text-field {:size 2
-                    :value "7"
+                    :value "1"
                     :style "text-align:right"}
                    "n")
-       "days")]
+       "days "
+       (submit-button {:class "btn btn-primary btn-sm"
+                       :name "total"}
+                      "total")
+       " "
+       (submit-button {:class "btn btn-primary btn-sm"
+                       :name "max"}
+                      "max"))]
      "&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
@@ -99,8 +105,9 @@
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline)
-   [:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
+   #_[:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
 情報リテラシー以外の科目も大切にしよう。"]
+   [:p "情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -176,7 +183,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "タイピング平常点は昨日と今日のポイントの和。"]
+   [:p "表示は昨日と今日のポイントの和。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
