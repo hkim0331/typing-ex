@@ -5,19 +5,20 @@
    [buddy.hashers :as hashers]
    [clojure.string :as str]
    [hato.client :as hc]
-   [typing-ex.boundary.drills  :as drills]
-   [typing-ex.boundary.users   :as users]
-   [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   [typing-ex.view.page :as view]
    [integrant.core :as ig]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
-   [ring.util.anti-forgery :refer [anti-forgery-field]]))
+   [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.status  :as status]
+   [typing-ex.boundary.users   :as users]
+   [typing-ex.view.page :as view]
+   ))
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
-  (let [admins #{"hkimura" "ayako" "login888"}]
+  (let [admins #{"hkimura"}]
     (get admins s)))
 
 (defn get-login
@@ -41,6 +42,7 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
+;;
 (defn auth? [db login password]
   (let [;;ret (users/find-user-by-login db login)
         ret (find-user login)]
@@ -118,15 +120,18 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db)]
+          ex-days (results/find-ex-days db days)]
       ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
+
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    ;;(timbre/debug "get-in req [:params :n]" (get-in req [:params :n]))
+    (timbre/debug "recent keys query-params" (keys (:query-params req)))
     (let [days  (get-in req [:params :n])]
-      (redirect (str "/scores/" days)))))
+      (if (get (:query-params req) "max")
+        (redirect (str "/scores/" days))
+        (redirect (str "/sum/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]

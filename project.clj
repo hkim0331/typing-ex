@@ -1,4 +1,4 @@
-(defproject typing-ex "1.15.1"
+(defproject typing-ex "1.15.4"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -6,7 +6,7 @@
                  [buddy/buddy-hashers "1.8.158"]
                  [cheshire/cheshire "5.11.0"]
                  [clojure.java-time "1.2.0"]
-                 [com.github.seancorfield/next.jdbc "1.3.865"]
+                 [com.github.seancorfield/next.jdbc "1.3.874"]
                  [com.taoensso/timbre "6.1.0"]
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
