@@ -62,8 +62,8 @@
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
       #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
-     "&nbsp;"
-     [:div.d-inline {:class "boxed"}
+     "&nbsp;|&nbsp;"
+     [:div.d-inline
       (form-to
        [:get "/recent"]
        (text-field {:size 2
@@ -78,7 +78,7 @@
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
                       "max"))]
-     "&nbsp;"
+     "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Users"]
