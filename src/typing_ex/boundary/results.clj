@@ -68,11 +68,12 @@
            (take n))))
 
   (find-ex-days [db days]
-    (let [ret (sql/query
-               (ds-opt db)
-               ["select login, date(timestamp) from results
-                 where timestamp >= CURRENT_TIMESTAMP - INTERVAL '?' DAY
-                 group by login, date(timestamp)" days])]
+    (let [q (str/replace "select login, date(timestamp) from results
+                 where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
+                 group by login, date(timestamp)"
+                         #"XXX" (str days))
+          _ (timbre/info "q" q)
+          ret (sql/query (ds-opt db) [q])]
       ret))
 
   (todays-act [db]
