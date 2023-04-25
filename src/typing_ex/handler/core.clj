@@ -120,7 +120,7 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db)]
+          ex-days (results/find-ex-days db days)]
       ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 

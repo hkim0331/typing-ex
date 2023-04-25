@@ -16,7 +16,7 @@
   (fetch-records [db login])
   (todays-score [db login])
   (active-users [db n])
-  (find-ex-days [db])
+  (find-ex-days [db days])
   (todays-act [db]))
 
 (extend-protocol Results
@@ -67,11 +67,12 @@
            (partition-by :login)
            (take n))))
 
-  (find-ex-days [db]
+  (find-ex-days [db days]
     (let [ret (sql/query
                (ds-opt db)
                ["select login, date(timestamp) from results
-                 group by login, date(timestamp)"])]
+                 where timestamp >= CURRENT_TIMESTAMP - INTERVAL '?' DAY
+                 group by login, date(timestamp)" days])]
       ret))
 
   (todays-act [db]
