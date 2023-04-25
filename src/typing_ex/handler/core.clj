@@ -5,15 +5,16 @@
    [buddy.hashers :as hashers]
    [clojure.string :as str]
    [hato.client :as hc]
-   [typing-ex.boundary.drills  :as drills]
-   [typing-ex.boundary.users   :as users]
-   [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   [typing-ex.view.page :as view]
    [integrant.core :as ig]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
-   [ring.util.anti-forgery :refer [anti-forgery-field]]))
+   [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.status  :as status]
+   [typing-ex.boundary.users   :as users]
+   [typing-ex.view.page :as view]
+   ))
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
