@@ -41,7 +41,7 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
-;; 
+;;
 (defn auth? [db login password]
   (let [;;ret (users/find-user-by-login db login)
         ret (find-user login)]
