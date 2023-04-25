@@ -67,7 +67,7 @@
       (form-to
        [:get "/recent"]
        (text-field {:size 2
-                    :value "1"
+                    :value "7"
                     :style "text-align:right"}
                    "n")
        "days "

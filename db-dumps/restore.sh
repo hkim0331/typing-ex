@@ -4,4 +4,8 @@ if [ -z "$1" ]; then
   exit
 fi
 
-psql -h db -U postgres typing_ex < $1
+#PSQL="psql -h db -U postgres --port=55432"
+PSQL="psql -h db -U postgres"
+${PSQL} -c "drop database typing_ex"
+${PSQL} -c "create database typing_ex owner=postgres"
+${PSQL} typing_ex < $1

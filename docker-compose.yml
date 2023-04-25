@@ -2,10 +2,10 @@ version: "3.3"
 
 services:
   db:
-    image: postgres
+    image: postgres:14.7
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=l22
+      - POSTGRES_DB=typing_ex
       - POSTGRES_USER=postgres
       - POSTGRES_HOST_AUTH_METHOD=trust
       - TZ=Asia/Tokyo
