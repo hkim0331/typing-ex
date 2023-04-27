@@ -171,7 +171,7 @@
                   (map first)
                   (sort-by :timestamp)
                   reverse)]
-     (view/todays-act-page ret))))
+     (view/todays-act-page ret (get-login req)))))
 
 ;; midterm exam
 (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
