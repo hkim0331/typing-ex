@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.4")
+(def ^:private version "1.15.5")
 
 (defn page [& contents]
   [::response/ok
@@ -62,8 +62,8 @@
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
       #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
-     "&nbsp;"
-     [:div.d-inline {:class "boxed"}
+     "&nbsp;|&nbsp;"
+     [:div.d-inline
       (form-to
        [:get "/recent"]
        (text-field {:size 2
@@ -78,10 +78,10 @@
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
                       "max"))]
-     "&nbsp;"
+     "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Users"]
+       "Today"]
       " "
       #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
