@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.4")
+(def ^:private version "1.15.5")
 
 (defn page [& contents]
   [::response/ok
@@ -81,7 +81,7 @@
      "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Users"]
+       "Today"]
       " "
       #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
