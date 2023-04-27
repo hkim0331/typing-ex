@@ -81,7 +81,7 @@
      "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Users"]
+       "Today"]
       " "
       #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
