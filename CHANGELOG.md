@@ -17,12 +17,18 @@
   being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
-- log がうるさい。dev/prod で切り替える方法
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
-- コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
 - develop: .zshenv への依存をなくす
 - environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
+- 上と関連、develop 時は auth を省略したい。
+
+## 1.15.6 - 2023-04-27
+- /daily で、自分を赤表示するように。
+
+## 1.15.5
+- hkim0331/luminus:latest と postgres:14.7
+  postgres:latest は 15.2 まで行っちゃって dump/restore がうまくいかないことある。
 
 ## 1.15.4 - 2023-04-25
 - '7 days max' で過去7日間の練習日数を表示。今までは過去のすべての日数だった。

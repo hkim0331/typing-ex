@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.5")
+(def ^:private version "1.15.6")
 
 (defn page [& contents]
   [::response/ok
@@ -168,7 +168,7 @@
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
-(defn todays-act-page [ret]
+(defn todays-act-page [ret login]
   (page
    [:h2 "Typing: todays"]
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
@@ -176,9 +176,10 @@
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
             " "
-            [:a {:href (str "/record/" (:login r))} (:login r)]]))))
+            [:a {:href (str "/record/" (:login r))
+                 :class (if (= login (:login r)) "yes" "other")}
+             (:login r)]]))))
 
-;; 自分は赤
 (defn sums-page [ret user]
   (page
    [:h2 "Typing: Daily Points"]
