@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.5")
+(def ^:private version "1.15.6")
 
 (defn page [& contents]
   [::response/ok
@@ -180,7 +180,6 @@
                  :class (if (= login (:login r)) "yes" "other")}
              (:login r)]]))))
 
-;; 自分は赤
 (defn sums-page [ret user]
   (page
    [:h2 "Typing: Daily Points"]
