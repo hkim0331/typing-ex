@@ -1,10 +1,10 @@
 {
-    "name": "Clojure",
+    "name": "Luminus",
+    "service": "luminus",
+    "workspaceFolder": "/usr/src/app",
     "dockerComposeFile": [
         "../docker-compose.yml"
     ],
-    "service": "app",
-    "workspaceFolder": "/usr/src/app",
     "customizations": {
         "vscode": {
             "settings": {
@@ -12,12 +12,9 @@
             "extensions": [
                 "betterthantomorrow.calva",
                 "borkdude.clj-kondo",
-                "eduarddyckman.vscode-parinfer",
                 "jsynowiec.vscode-insertdatestring",
                 "lfs.vscode-emacs-friendly",
                 "mosapride.zenkaku",
                 "ybaumes.highlight-trailing-white-spaces"
-            ]
-        }
-    }
+            ]}}
 }
