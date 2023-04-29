@@ -1,6 +1,6 @@
 {
-    "name": "Luminus",
-    "service": "luminus",
+    "name": "Typing Exercise",
+    "service": "typing-ex",
     "remoteUser": "vscode",
     "workspaceFolder": "/usr/src/app",
     "dockerComposeFile": [

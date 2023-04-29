@@ -1,8 +1,8 @@
 version: "3.3"
 
 services:
-  luminus:
-    image: hkim0331/luminus
+  typing-ex:
+    image: hkim0331/typing-ex
     user: vscode
     ports:
       - "3000:3000"

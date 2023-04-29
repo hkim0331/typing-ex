@@ -3,7 +3,7 @@ FROM clojure:lein
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install --no-install-recommends \
-           git npm postgresql-client-14 2>&1
+           sudo git npm postgresql-client-14 2>&1
 
 ARG USERNAME=vscode
 ARG USER_UID=1000
