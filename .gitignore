@@ -33,3 +33,6 @@ pom.xml.asc
 !/utils/excerpt/out/.placeholder
 /start-stop/
 *.sql
+
+# not depend on global gitignore
+.DS_Store

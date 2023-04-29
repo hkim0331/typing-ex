@@ -21,10 +21,10 @@
 - 移動平均を乗せる
 - develop: .zshenv への依存をなくす
 - environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
-- 上と関連、develop 時は auth を省略したい。
+- develop 時は auth を省略したい。
 
 ## 1.15.6 - 2023-04-27
-- /daily で、自分を赤表示するように。
+- /daily で、自分を赤表示する
 
 ## 1.15.5
 - hkim0331/luminus:latest と postgres:14.7

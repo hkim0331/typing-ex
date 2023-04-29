@@ -5,7 +5,7 @@ services:
     image: hkim0331/typing-ex
     user: vscode
     ports:
-      - "3000:3000"
+      - "3002:3002"
     volumes:
       - .:/usr/src/app
       # - m2:/home/vscode/.m2
@@ -16,10 +16,10 @@ services:
       - infinity
 
   db:
-    image: postgres
+    image: postgres:14.7
     restart: always
     environment:
-      POSTGRES_DB: py99
+      POSTGRES_DB: typing_ex
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_INITDB_ARGS: --encoding=UTF-8 --locale=C
       TZ: Asia/Toky

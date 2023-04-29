@@ -5,6 +5,8 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends \
            sudo git npm postgresql-client-14 2>&1
 
+RUN npm install -g yarn
+
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -16,4 +18,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 
+
 ENTRYPOINT [ "lein", "repl", ":headless" ]
+#ENTRYPOINT [ "sleep", "infinity" ]
