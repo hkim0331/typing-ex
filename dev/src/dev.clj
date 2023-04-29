@@ -34,12 +34,6 @@
 
 ;;; add by me.
 
-(comment
-  (timbre/set-level! :debug)
-  (timbre/info "timbre/set-level! :debug")
-  (def ^:dynamic *debug* true)
-  )
-
 ;;https://github.com/duct-framework/docs/blob/master/GUIDE.rst
 (defn db []
   (-> system (ig/find-derived-1 :duct.database/sql) val :spec))
