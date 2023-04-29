@@ -8,8 +8,8 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/src/app
-      - m2:/home/vscode/.m2
-      - gitlibs:/home/vscode/.gitlibs
+      # - m2:/home/vscode/.m2
+      # - gitlibs:/home/vscode/.gitlibs
     working_dir: /usr/src/app
     entrypoint:
       - sleep
