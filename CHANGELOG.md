@@ -20,8 +20,19 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 - develop: .zshenv への依存をなくす
-- environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
+  environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
 - develop 時は auth を省略したい。
+
+
+## 1.15.7 - 2023-05-01
+### FIXME
+- core/auth? FIXME: env 以外、system をみてスイッチしたい
+
+### Added
+- WIL を headline に追加した
+
+### Removed
+- typing-ex.boundary.users を core から外した
 
 ## 1.15.6 - 2023-04-27
 - /daily で、自分を赤表示する

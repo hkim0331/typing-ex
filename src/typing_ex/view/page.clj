@@ -45,7 +45,7 @@
    [:br]
    [:ul
     [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
-    [:li "10分練習したら休憩入れよう。"]]))
+    [:li "10 分練習したら休憩入れよう。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -83,9 +83,9 @@
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Today"]
       " "
-      #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
+      [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
-       "RP"]
+       "WIL"]
       " "
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -107,7 +107,7 @@
    (headline)
    #_[:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
 情報リテラシー以外の科目も大切にしよう。"]
-   [:p "情報リテラシー以外の科目も大切に。"]
+   [:p "スコア伸びないのは練習足りない？ 情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -147,7 +147,7 @@
         todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
      (when (or me? admin?)
@@ -184,7 +184,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "表示は昨日と今日のポイントの和。"]
+   [:p "7days で 3000 点が合格ライン。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
