@@ -72,7 +72,7 @@
                  where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
                  group by login, date(timestamp)"
                          #"XXX" (str days))
-          _ (timbre/info "q" q)
+          _ (timbre/debug "q" q)
           ret (sql/query (ds-opt db) [q])]
       ret))
 
