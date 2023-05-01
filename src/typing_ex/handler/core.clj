@@ -4,16 +4,18 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
+   [environ.core :refer [env]]
    [hato.client :as hc]
-   [typing-ex.boundary.drills  :as drills]
-   [typing-ex.boundary.users   :as users]
-   [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   [typing-ex.view.page :as view]
    [integrant.core :as ig]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
-   [ring.util.anti-forgery :refer [anti-forgery-field]]))
+   [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.status  :as status]
+   #_[typing-ex.boundary.users   :as users]
+   [typing-ex.view.page :as view]
+   ))
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
@@ -41,17 +43,18 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
-;; 
-(defn auth? [db login password]
-  (let [;;ret (users/find-user-by-login db login)
-        ret (find-user login)]
-    (timbre/debug "auth?" login)
-    (and (some? ret)
-         (hashers/check password (:password ret)))))
+;; FIXME: env 以外、system をみてスイッチしたい
+(defn auth? [login password]
+  (if (env :tp-dev)
+    true
+    (let [ret (find-user login)]
+      ;; (timbre/debug "auth?" login)
+      (and (some? ret)
+           (hashers/check password (:password ret))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
-    (if (and (seq login) (auth? db login password))
+    (if (and (seq login) (auth? login password))
       (do
         (timbre/debug "login success" login)
         (-> (redirect "/sum/1")
@@ -119,7 +122,7 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db)]
+          ex-days (results/find-ex-days db days)]
       ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
@@ -170,7 +173,7 @@
                   (map first)
                   (sort-by :timestamp)
                   reverse)]
-     (view/todays-act-page ret))))
+     (view/todays-act-page ret (get-login req)))))
 
 ;; midterm exam
 (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]

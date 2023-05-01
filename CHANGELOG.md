@@ -1,5 +1,6 @@
 # typing-ex
 
+## Required
 * Clojure/ClojureScript
 * duct
 * shadow-cljs
@@ -16,10 +17,39 @@
   being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
-- log がうるさい。dev/prod で切り替える方法
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
-- コンテナ。clojure:lein をベースにするとしても、yarn を追加しなくちゃ。
+- develop: .zshenv への依存をなくす
+  environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
+- develop 時は auth を省略したい。
+
+
+## 1.15.7 - 2023-05-01
+### FIXME
+- core/auth? FIXME: env 以外、system をみてスイッチしたい
+
+### Added
+- WIL を headline に追加した
+
+### Removed
+- typing-ex.boundary.users を core から外した
+
+## 1.15.6 - 2023-04-27
+- /daily で、自分を赤表示する
+
+## 1.15.5
+- hkim0331/luminus:latest と postgres:14.7
+  postgres:latest は 15.2 まで行っちゃって dump/restore がうまくいかないことある。
+
+## 1.15.4 - 2023-04-25
+- '7 days max' で過去7日間の練習日数を表示。今までは過去のすべての日数だった。
+- postgres:15.2 でイメージをリストア後、postgres:14.7 にすると
+  接続してくれない。app.melt と同じバージョンの 14.7 で restore からやり直す。
+- yarn 使っているのに、コンテナの設定に入ってない。
+  コンテナ立ち上げてから npm で入る。
+  $ npm install --global yarn
+  コンテナで動き出した。
+- initdb.d から初期データをすんなり入れられなくちゃ。
 
 ## 1.15.3 - 2023-04-23
 - CHANGELOG.md を 80 コラム未満で折り返した。

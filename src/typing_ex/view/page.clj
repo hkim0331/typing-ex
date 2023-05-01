@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.3")
+(def ^:private version "1.15.7")
 
 (defn page [& contents]
   [::response/ok
@@ -45,7 +45,7 @@
    [:br]
    [:ul
     [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
-    [:li "10分練習したら休憩入れよう。"]]))
+    [:li "10 分練習したら休憩入れよう。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -62,12 +62,12 @@
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
       #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
-     "&nbsp;"
-     [:div.d-inline {:class "boxed"}
+     "&nbsp;|&nbsp;"
+     [:div.d-inline
       (form-to
        [:get "/recent"]
        (text-field {:size 2
-                    :value "1"
+                    :value "7"
                     :style "text-align:right"}
                    "n")
        "days "
@@ -78,14 +78,14 @@
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
                       "max"))]
-     "&nbsp;"
+     "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Users"]
+       "Today"]
       " "
-      #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
+      [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
-       "RP"]
+       "WIL"]
       " "
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -107,7 +107,7 @@
    (headline)
    #_[:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
 情報リテラシー以外の科目も大切にしよう。"]
-   [:p "情報リテラシー以外の科目も大切に。"]
+   [:p "スコア伸びないのは練習足りない？ 情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -147,7 +147,7 @@
         todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
      (when (or me? admin?)
@@ -168,7 +168,7 @@
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
-(defn todays-act-page [ret]
+(defn todays-act-page [ret login]
   (page
    [:h2 "Typing: todays"]
    [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
@@ -176,14 +176,15 @@
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
             " "
-            [:a {:href (str "/record/" (:login r))} (:login r)]]))))
+            [:a {:href (str "/record/" (:login r))
+                 :class (if (= login (:login r)) "yes" "other")}
+             (:login r)]]))))
 
-;; 自分は赤
 (defn sums-page [ret user]
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "表示は昨日と今日のポイントの和。"]
+   [:p "7days で 3000 点が合格ライン。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
