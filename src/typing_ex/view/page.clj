@@ -136,7 +136,7 @@
               (map :timestamp)
               (map java-time/local-date)
               (map str)
-              (group-by identity))))
+              (group-by identity)))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
@@ -147,7 +147,7 @@
         todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]0
      [:div (scatter 300 150 positives)]
      [:br]
      (when (or me? admin?)
@@ -184,7 +184,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "7days で 3000 点が合格ライン。"]
+   [:p "7 days で 3000 点が合格ラインだったのは先週。今週は 3500 くらいか。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
