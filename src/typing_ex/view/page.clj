@@ -45,7 +45,8 @@
    [:br]
    [:ul
     [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
-    [:li "10 分練習したら休憩入れよう。"]]))
+    [:li "10 分練習したら休憩入れよう。"]
+    [:li "練習しないと平常点にならない。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -136,7 +137,7 @@
               (map :timestamp)
               (map java-time/local-date)
               (map str)
-              (group-by identity)))
+              (group-by identity))))
 
 ;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
 ;; ret は lazySeq
@@ -147,7 +148,7 @@
         todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]0
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
      (when (or me? admin?)
