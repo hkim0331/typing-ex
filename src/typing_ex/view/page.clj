@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.7")
+(def ^:private version "1.15.8")
 
 (defn page [& contents]
   [::response/ok
@@ -45,7 +45,8 @@
    [:br]
    [:ul
     [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
-    [:li "10 分練習したら休憩入れよう。"]]))
+    [:li "10 分練習したら休憩入れよう。"]
+    [:li "練習しないと平常点にならない。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -184,7 +185,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline)
-   [:p "7days で 3000 点が合格ライン。"]
+   [:p "7 days で 3000 点が合格ラインだったのは先週。今週は 3500 くらいか。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
