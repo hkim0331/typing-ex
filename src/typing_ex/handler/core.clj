@@ -4,9 +4,10 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
-   [environ.core :refer [env]]
+   #_[environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
+   [integrant.repl.state :refer [system]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
@@ -43,14 +44,17 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
+(comment
+  (:duct.core/environment system)
+  :rcf)
+
 ;; FIXME: env 以外、system をみてスイッチしたい
 (defn auth? [login password]
-  (if (env :tp-dev)
-    true
-    (let [ret (find-user login)]
-      ;; (timbre/debug "auth?" login)
-      (and (some? ret)
-           (hashers/check password (:password ret))))))
+  (or
+   (= :development (:duct.core/environment system))
+   (let [ret (find-user login)]
+     (and (some? ret)
+          (hashers/check password (:password ret))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
