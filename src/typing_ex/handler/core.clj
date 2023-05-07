@@ -110,7 +110,7 @@
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [ret (results/sum db n)
           user (get-login req)]
-      (view/sums-page ret user))))
+      (view/sums-page ret user n))))
 
 ;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
