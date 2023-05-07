@@ -21,6 +21,25 @@
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 
+
+## 1.15.12-SNAPSHOT
+- DB のクエリを伴う関数自身が timbre/log しなくても、duct がログする。
+
+## 1.15.11 - 2023-05-07
+- clean up typing-ex.boundary.drills
+- extracted random-id from fetch-drill, log produced random ids.
+
+## 1.15.10 - 2023-05-07
+## Fixed
+- adding [integrant/repl "0.3.2"] to dependencies.
+integralt/repl is only for development?
+
+```
+1.15.9: Syntax error macroexpanding at (core.clj:1:1).
+Execution error (FileNotFoundException) at typing-ex.handler.core/loading (core.clj:1).
+Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or integrant/repl/state.cljc on classpath.
+```
+
 ## 1.15.9 - 2023-05-07
 - docker container yarn
 - develop 時は auth? を省略
