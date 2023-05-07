@@ -42,10 +42,5 @@
   (jdbc/query (db) sql))
 
 (comment
-  (db)
-  (-> system
-      (ig/find-derived-1 :duct.core/environment)
-      :val)
-  (keys system)
-  (:duct.core/environment system)
-  :rcf)
+ (q "select (1+(random() * (max(id)-1)))::int from drills")
+ :rcf)

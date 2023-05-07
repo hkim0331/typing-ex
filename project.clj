@@ -21,10 +21,6 @@
                  ;;
                  [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.6.0"]]
-                 ;; no use cors
-                 ;;[ring-cors "0.1.13"]
-                 ;; no effect
-                 ;; [medley/medley "1.4.0"]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
