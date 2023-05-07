@@ -21,9 +21,9 @@
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 
-
-## 1.15.12-SNAPSHOT
+## 1.15.12 - 2023-05-08
 - DB のクエリを伴う関数自身が timbre/log しなくても、duct がログする。
+- headline に 引数 n
 
 ## 1.15.11 - 2023-05-07
 - clean up typing-ex.boundary.drills
