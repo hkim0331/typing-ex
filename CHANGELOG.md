@@ -19,13 +19,18 @@
 - D.P. up/down/even を表示できるか？
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
-- develop 時は auth を省略したい。
-  develop: .zshenv への依存をなくす
-  environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
-  container したら、container 内部の環境変数を設置しないといけない。
-  やっぱり、環境変数以外の作戦を確立しないとダメ。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 
+## 1.15.9 - 2023-05-07
+- docker container yarn
+- develop 時は auth? を省略
+```
+(defn auth? [login password]
+  (or
+   (= :development (:duct.core/environment system))
+   ...
+ ))
+```
 
 ## 1.15.8 - 2023-05-05
 - 合格点は 3500
