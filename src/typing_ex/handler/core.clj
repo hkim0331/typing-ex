@@ -61,7 +61,7 @@
     (if (and (seq login) (auth? login password))
       (do
         (timbre/debug "login success" login)
-        (-> (redirect "/sum/1")
+        (-> (redirect "/sum/7")
             (assoc-in [:session :identity] (keyword login))))
       (do
         (timbre/debug "login failure" login)

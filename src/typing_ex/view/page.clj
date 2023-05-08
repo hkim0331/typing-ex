@@ -62,7 +62,7 @@
      [:div.d-inline
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
-      #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+      #_[:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]]
      "&nbsp;|&nbsp;"
      [:div.d-inline
       (form-to

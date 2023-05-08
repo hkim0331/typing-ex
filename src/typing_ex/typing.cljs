@@ -224,7 +224,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     [:br]
     (bar-chart 300 150 (:todays @app-state))]
    [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+    [:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
