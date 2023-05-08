@@ -53,6 +53,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;;; 1.12.x
 (def points-debug (atom {}))
 
+;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
