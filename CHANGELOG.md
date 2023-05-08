@@ -19,12 +19,56 @@
 - D.P. up/down/even を表示できるか？
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
-- develop: .zshenv への依存をなくす
-- environ 入れてんだから環境変数見てログインの仕方、ログの出し方変えられるはず
-- 上と関連、develop 時は auth を省略したい。
+- 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
+
+## 1.15.13 - 2023-05-08
+- default 7 days
+
+## 1.15.12 - 2023-05-08
+- DB のクエリを伴う関数自身が timbre/log しなくても、duct がログする。
+- headline に 引数 n
+
+## 1.15.11 - 2023-05-07
+- clean up typing-ex.boundary.drills
+- extracted random-id from fetch-drill, log produced random ids.
+
+## 1.15.10 - 2023-05-07
+## Fixed
+- adding [integrant/repl "0.3.2"] to dependencies.
+integralt/repl is only for development?
+
+```
+1.15.9: Syntax error macroexpanding at (core.clj:1:1).
+Execution error (FileNotFoundException) at typing-ex.handler.core/loading (core.clj:1).
+Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or integrant/repl/state.cljc on classpath.
+```
+
+## 1.15.9 - 2023-05-07
+- docker container yarn
+- develop 時は auth? を省略
+```
+(defn auth? [login password]
+  (or
+   (= :development (:duct.core/environment system))
+   ...
+ ))
+```
+
+## 1.15.8 - 2023-05-05
+- 合格点は 3500
+
+## 1.15.7 - 2023-05-01
+### FIXME
+- core/auth? FIXME: env 以外、system をみてスイッチしたい
+
+### Added
+- WIL を headline に追加した
+
+### Removed
+- typing-ex.boundary.users を core から外した
 
 ## 1.15.6 - 2023-04-27
-- /daily で、自分を赤表示するように。
+- /daily で、自分を赤表示する
 
 ## 1.15.5
 - hkim0331/luminus:latest と postgres:14.7

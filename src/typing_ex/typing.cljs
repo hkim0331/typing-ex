@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.15.6")
+(def ^:private version "1.15.13")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -53,6 +53,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;;; 1.12.x
 (def points-debug (atom {}))
 
+;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
@@ -90,8 +91,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              60  "だいぶ上手です。この調子でがんばれ。"
              30  "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")
-        c (+ (get-in @app-state [:results :goods])
-             (get-in @app-state [:results :bads]))]
+        ;; c (+ (get-in @app-state [:results :goods])
+        ;;      (get-in @app-state [:results :bads]))
+        ]
     (if (empty? (:results @app-state))
       (js/alert (str "コピペじゃダメよ"))
       (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
@@ -123,7 +125,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                  :__anti-forgery-token (csrf-token)}})))
       (show-score pt))))
 
-(defn fetch-reset! []
+;; FIXME: ex-mode and normal-mode
+(defn fetch-reset!
+  []
   (go (let [{ex? :body} (<! (http/get "/mt"))
             {drill :body}  (if (:b (read-string ex?))
                              (do
@@ -132,7 +136,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                                {:body (get mt (mod @mt-counter 3))})
                              (do
                                (.log js/console "normal mode")
-                               (<! (http/get (str "/drill")))))
+                               (<! (http/get "/drill"))))
             words (str/split drill #"\s+")]
         (swap! app-state assoc
                :text drill
@@ -220,7 +224,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     [:br]
     (bar-chart 300 150 (:todays @app-state))]
    [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
+    [:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]

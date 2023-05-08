@@ -1,37 +1,38 @@
 version: "3.3"
 
 services:
-  db:
-    image: postgres:14.7
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=typing_ex
-      - POSTGRES_USER=postgres
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - TZ=Asia/Tokyo
+  typing-ex:
+    image: hkim0331/typing-ex
+    user: vscode
     ports:
-      - "55432:5432"
-    volumes:
-      - data:/var/lib/postgres/data
-
-  app:
-    image: hkim0331/luminus:latest
-    tty: true
-    # environment:
-    #   - LEIN_REPL_PORT=8888
-    #   - LEIN_REPL_HOST=0.0.0.0
-    ports:
-      - "3023:3023"
-      # - "8888:8888"
+      - "3002:3002"
     volumes:
       - .:/usr/src/app
-      - m2:/root/.m2
-      - gitlibs:/root/.gitlibs
+      # - m2:/home/vscode/.m2
+      # - gitlibs:/home/vscode/.gitlibs
+    working_dir: /usr/src/app
+    entrypoint:
+      - sleep
+      - infinity
+
+  db:
+    image: postgres:14.7
+    restart: always
+    environment:
+      POSTGRES_DB: typing_ex
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --locale=C
+      TZ: Asia/Toky
+    # ports:
+    #   - "55432:5432"
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - data:/var/lib/postgresql/data
 
 volumes:
-  m2:
-    external: true
-  gitlibs:
-    external: true
   data:
     driver: local
+  gitlibs:
+    external: true
+  m2:
+    external: true
