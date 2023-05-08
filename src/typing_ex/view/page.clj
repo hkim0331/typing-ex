@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.6")
+(def ^:private version "1.15.12")
 
 (defn page [& contents]
   [::response/ok
@@ -45,7 +45,8 @@
    [:br]
    [:ul
     [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
-    [:li "10分練習したら休憩入れよう。"]]))
+    [:li "10 分練習したら休憩入れよう。"]
+    [:li "練習しないと平常点にならない。"]]))
 
 ;; right place, here?
 (defn- count-ex-days [days login]
@@ -55,7 +56,7 @@
 
 (defn- headline
   "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
-  []
+  [n]
   [:div {:style "margin-left:1rem;"}
     [:div.row
      [:div.d-inline
@@ -67,7 +68,7 @@
       (form-to
        [:get "/recent"]
        (text-field {:size 2
-                    :value "7"
+                    :value n
                     :style "text-align:right"}
                    "n")
        "days "
@@ -83,9 +84,9 @@
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Today"]
       " "
-      #_[:a {:href "http://rp.melt.kyutech.ac.jp/"
+      [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
-       "RP"]
+       "WIL"]
       " "
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -104,10 +105,10 @@
 (defn scores-page [max-pt ex-days user days]
   (page
    [:h2 "Typing: Last " days " days Maxes"]
-   (headline)
+   (headline days)
    #_[:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
 情報リテラシー以外の科目も大切にしよう。"]
-   [:p "情報リテラシー以外の科目も大切に。"]
+   [:p "スコア伸びないのは練習足りない？ 情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -116,7 +117,7 @@
              [:a {:href (str "/record/" login)
                   :class (if (= login user) "yes" "other")}
               login]])])
-   (headline)))
+   (headline days)))
 
 ;; not good
 (defn- ss
@@ -147,7 +148,7 @@
         todays (filter #(today? (:timestamp %)) ret)]
     (page
      [:h2 "Typing: " login " records"]
-     [:p "付け焼き刃はもろい。毎日 10 分、練習しよう。"]
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
      (when (or me? admin?)
@@ -180,11 +181,11 @@
                  :class (if (= login (:login r)) "yes" "other")}
              (:login r)]]))))
 
-(defn sums-page [ret user]
+(defn sums-page [ret user n]
   (page
    [:h2 "Typing: Daily Points"]
-   (headline)
-   [:p "表示は昨日と今日のポイントの和。"]
+   (headline n)
+   [:p "7 days で 3000 点が合格ラインだったのは先週。今週は 3500 くらいか。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
@@ -193,4 +194,4 @@
               [:a {:href (str "/record/" login)
                    :class (if (= user login) "yes" "other")}
                login]])))
-   (headline)))
+   (headline n)))

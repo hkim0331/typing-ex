@@ -4,15 +4,17 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
+   #_[environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
+   [integrant.repl.state :refer [system]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.status  :as status]
-   [typing-ex.boundary.users   :as users]
+   #_[typing-ex.boundary.users   :as users]
    [typing-ex.view.page :as view]
    ))
 
@@ -42,17 +44,21 @@
     ;;(timbre/debug "find-user body" body)
     body))
 
-;;
-(defn auth? [db login password]
-  (let [;;ret (users/find-user-by-login db login)
-        ret (find-user login)]
-    (timbre/debug "auth?" login)
-    (and (some? ret)
-         (hashers/check password (:password ret)))))
+(comment
+  (:duct.core/environment system)
+  :rcf)
+
+;; FIXME: env 以外、system をみてスイッチしたい
+(defn auth? [login password]
+  (or
+   (= :development (:duct.core/environment system))
+   (let [ret (find-user login)]
+     (and (some? ret)
+          (hashers/check password (:password ret))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
-    (if (and (seq login) (auth? db login password))
+    (if (and (seq login) (auth? login password))
       (do
         (timbre/debug "login success" login)
         (-> (redirect "/sum/1")
@@ -104,7 +110,7 @@
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [ret (results/sum db n)
           user (get-login req)]
-      (view/sums-page ret user))))
+      (view/sums-page ret user n))))
 
 ;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]

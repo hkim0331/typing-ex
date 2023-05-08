@@ -18,6 +18,5 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 
-
 ENTRYPOINT [ "lein", "repl", ":headless" ]
 #ENTRYPOINT [ "sleep", "infinity" ]
