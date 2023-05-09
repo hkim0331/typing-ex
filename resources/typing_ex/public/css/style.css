@@ -39,3 +39,6 @@ span.mmm { margin-left: 2em;}
 
 .boxed { border: solid 1pt black;
          padding: 2px;}
+
+.normal {background-color: white;}
+.yellow {background-color: yellow;}

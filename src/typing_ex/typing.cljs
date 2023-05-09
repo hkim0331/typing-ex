@@ -24,7 +24,8 @@
             :pos 0
             :results []
             :todays []
-            :todays-trials 0}))
+            :todays-trials 0
+            :bg "white"}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -72,10 +73,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (cond
       (< goods 10) 0
       (= all (+ goods bads)) (+ score seconds (- err))
-      :else (+ score (- err)))
-    #_(if (= all (+ goods bads))
-        (+ score (* -1 err) seconds)
-        (+ score (* -1 err)))))
+      :else (+ score (- err)))))
 
 (defn pt
   "スコアをマイナスにしない"
@@ -109,7 +107,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
   []
@@ -128,7 +125,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-reset!
   []
-  (go (let [{ex? :body} (<! (http/get "/mt"))
+  (go (let [{bg :body} (<! (http/get "/bg"))
+            {ex? :body} (<! (http/get "/mt"))
             {drill :body}  (if (:b (read-string ex?))
                              (do
                                (.log js/console "ex mode")
@@ -139,6 +137,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                                (<! (http/get "/drill"))))
             words (str/split drill #"\s+")]
         (swap! app-state assoc
+               :bg bg
                :text drill
                :answer ""
                :seconds timeout
@@ -150,7 +149,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                ;; :todays の更新は send- に任せる。
                ;; :todays scores
                )
-        (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
+        ;; (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
         (.focus (.getElementById js/document "drill")))))
 
 (defn send-fetch-reset!
@@ -182,6 +181,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (comment
   (.log js/console "hello, js!")
   )
+
 (defn check-key [key]
   (case key
     " " (check-word)
@@ -196,8 +196,12 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn results-component []
   [:div.drill (apply str (@app-state :results))])
 
+(comment
+  (:bg @app-state)
+  :rcf)
+
 (defn ex-page []
-  [:div
+  [:div {:class (:bg @app-state)}
    [:h2 "Typing: Challenge"]
    [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
