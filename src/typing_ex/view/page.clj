@@ -195,3 +195,13 @@
                    :class (if (= user login) "yes" "other")}
                login]])))
    (headline n)))
+
+(defn stat-page [stat]
+  (page
+   [:h2 "Typing: Stat"]
+   (form-to
+    [:post "/stat"]
+    (anti-forgery-field)
+    [:input {:name "stat" :placeholder stat}]
+    [:p "normal, roll-call, exam"]
+    [:input {:type "submit"}])))

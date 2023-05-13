@@ -125,19 +125,18 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-reset!
   []
-  (go (let [{bg :body} (<! (http/get "/bg"))
-            {ex? :body} (<! (http/get "/mt"))
-            {drill :body}  (if (:b (read-string ex?))
-                             (do
-                               (.log js/console "ex mode")
-                               (swap! mt-counter inc)
-                               {:body (get mt (mod @mt-counter 3))})
-                             (do
-                               (.log js/console "normal mode")
-                               (<! (http/get "/drill"))))
+  (go (let [stat (-> (<! (http/get "/stat"))
+                     :body)
+            _ (.log js/console "fetch-reset! stat" stat)
+            drill (if (= stat "exam")
+                    (do
+                      (swap! mt-counter inc)
+                      (get mt (mod @mt-counter 3)))
+                    (-> (<! (http/get "/drill"))
+                        :body))
             words (str/split drill #"\s+")]
         (swap! app-state assoc
-               :bg bg
+               :stat stat
                :text drill
                :answer ""
                :seconds timeout
@@ -201,7 +200,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   :rcf)
 
 (defn ex-page []
-  [:div {:class (:bg @app-state)}
+  [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
    [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]

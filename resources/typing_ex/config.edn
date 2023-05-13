@@ -18,17 +18,23 @@
     [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
+
+    ;; TODO ^:auth when deploy
+    [:get  "/stat-page"] ^:auth [:typing-ex.handler.core/stat-page]
+    [:get  "/stat"] [:typing-ex.handler.core/stat]
+    [:post "/stat"] [:typing-ex.handler.core/stat!]
+
     ;; midterm exam
-    [:get "/mt"] [:typing-ex.handler.core/mt]
-    [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]
-    [:get  "/bg"] [:typing-ex.handler.core/bg]
-    [:post "/bg"] [:typing-ex.handler.core/bg!]}
+    ;; [:get "/mt"] [:typing-ex.handler.core/mt]
+    ;; [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]
+    ;; [:get  "/bg"] [:typing-ex.handler.core/bg]
+    ;; [:post "/bg"] [:typing-ex.handler.core/bg!]
+    }
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/bg   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/bg!  {:db #ig/ref :duct.database/sql}
+
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
@@ -44,8 +50,16 @@
   :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}}
+
+  :typing-ex.handler.core/stat-page {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/stat  {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/stat! {:db #ig/ref :duct.database/sql}
+
+  ;; :typing-ex.handler.core/bg   {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/bg!  {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
+  ;; :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}
+  }
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"
