@@ -21,7 +21,10 @@
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 例文を足すか？ moby-dick
+- /stat を admin only に制限
+- /rc に誰の出席データかを表示
 
+## 1.16.1-SNAPSHOT
 
 ## 1.16.0 - 2023-05-13
 roll-calls
