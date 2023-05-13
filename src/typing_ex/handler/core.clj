@@ -13,6 +13,7 @@
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.stat :as stat]
    #_[typing-ex.boundary.status  :as status]
    #_[typing-ex.boundary.bg      :as bg]
    #_[typing-ex.boundary.users   :as users]
@@ -181,13 +182,9 @@
      (view/todays-act-page ret (get-login req)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
-  (fn [req]
-    (let [ret (->> (results/todays-act db)
-                   (partition-by :login)
-                   (map first)
-                   (sort-by :timestamp)
-                   reverse)]
-      (view/todays-act-page ret (get-login req)))))
+  (fn [_]
+    (let [ret (stat/stat db)]
+      [::response/ok (str ret)])))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [req]

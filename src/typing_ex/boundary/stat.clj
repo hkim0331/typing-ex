@@ -11,12 +11,15 @@
 
 (extend-protocol Stat
   duct.database.sql.Boundary
+
   (stat [db]
     (let [ret (first
                (sql/query
                 (ds-opt db)
-                ["select stat rom stat"]))]
+                ["select stat from stat"]))]
+      (println "ret" (str ret))
       ret))
+  
   (stat! [db stat]
    (let [ret (jdbc/execute-one!
               (ds-opt db)

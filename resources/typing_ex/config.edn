@@ -19,8 +19,10 @@
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
 
-    [:get "/stat"] ^:auth [:typing-ex.handler.core/stat]
-    [:post "/stat"] ^:auth [:typing-ex.handler.core/stat!]
+    ;; ^:auth
+    [:get "/stat"]  [:typing-ex.handler.core/stat]
+    [:post "/stat"] [:typing-ex.handler.core/stat!]
+
     ;; midterm exam
     ;; [:get "/mt"] [:typing-ex.handler.core/mt]
     ;; [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]
