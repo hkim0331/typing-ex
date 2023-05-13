@@ -19,8 +19,9 @@
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
     [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
 
-    ;; ^:auth
-    [:get "/stat"]  [:typing-ex.handler.core/stat]
+    ;; TODO ^:auth when deploy
+    [:get  "/stat-page"] ^:auth [:typing-ex.handler.core/stat-page]
+    [:get  "/stat"] [:typing-ex.handler.core/stat]
     [:post "/stat"] [:typing-ex.handler.core/stat!]
 
     ;; midterm exam
@@ -50,8 +51,10 @@
   :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
 
+  :typing-ex.handler.core/stat-page {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat! {:db #ig/ref :duct.database/sql}
+
   ;; :typing-ex.handler.core/bg   {:db #ig/ref :duct.database/sql}
   ;; :typing-ex.handler.core/bg!  {:db #ig/ref :duct.database/sql}
   ;; :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}

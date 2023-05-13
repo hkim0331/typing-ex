@@ -7,7 +7,7 @@
 
 (defprotocol Stat
   (stat [db])
-  (stat! [db]))
+  (stat! [db stat]))
 
 (extend-protocol Stat
   duct.database.sql.Boundary
@@ -17,7 +17,7 @@
                (sql/query
                 (ds-opt db)
                 ["select stat from stat"]))]
-      (println "ret" (str ret))
+      ;; (println "ret" (str ret))
       ret))
   
   (stat! [db stat]

@@ -183,17 +183,17 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]
-    (let [ret (stat/stat db)]
-      [::response/ok (str ret)])))
+    [::response/ok (:stat (stat/stat db))]))
+
+(defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
+  (fn [_]
+    (view/stat-page (:stat (stat/stat db)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
-  (fn [req]
-    (let [ret (->> (results/todays-act db)
-                   (partition-by :login)
-                   (map first)
-                   (sort-by :timestamp)
-                   reverse)]
-      (view/todays-act-page ret (get-login req)))))
+  (fn [{{:keys [stat]} :params}]
+    (println stat)
+    (stat/stat! db stat)
+    (redirect "/")))
 
 
 ;; ;; midterm exam
