@@ -1,25 +1,31 @@
-(ns typing-ex.boundary.status
+(ns typing-ex.boundary.stat
   (:require
    [typing-ex.boundary.utils :refer [ds-opt]]
    [next.jdbc :as jdbc]
    [next.jdbc.sql :as sql]
    [duct.database.sql]))
 
-(defprotocol Status
-  (mt [db])
-  (toggle-mt! [db]))
+(defprotocol Stat
+  (stat [db])
+  (stat! [db]))
 
-(extend-protocol Status
+(extend-protocol Stat
   duct.database.sql.Boundary
-  (mt [db]
+  (stat [db]
     (let [ret (first
                (sql/query
                 (ds-opt db)
-                ["select name, b from status where name = 'mt'"]))]
+                ["select stat rom stat"]))]
       ret))
-  (toggle-mt! [db]
+  (stat! [db stat]
    (let [ret (jdbc/execute-one!
               (ds-opt db)
-              ["update status set b = not b where name='mt'"]
+              ["update stat set stat=?, updated_at=?"
+               stat
+               (java.util.Date.)]
               {:return-keys true})]
      ret)))
+
+(comment
+  (java.util.Date.)
+  :rcf)

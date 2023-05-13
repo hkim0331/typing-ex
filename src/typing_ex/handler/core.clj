@@ -13,8 +13,8 @@
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   [typing-ex.boundary.bg      :as bg]
+   #_[typing-ex.boundary.status  :as status]
+   #_[typing-ex.boundary.bg      :as bg]
    #_[typing-ex.boundary.users   :as users]
    [typing-ex.view.page :as view]
    ))
@@ -180,22 +180,42 @@
                   reverse)]
      (view/todays-act-page ret (get-login req)))))
 
-;; midterm exam
-(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
-  (fn [_]
-    (let [ret (status/mt db)]
-      [::response/ok (str ret)])))
+(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret (get-login req)))))
 
-(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
-  (fn [_]
-    (let [ret (status/toggle-mt! db)]
-      (timbre/debug "toggle-mt returns " ret)
-      [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+(defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret (get-login req)))))
 
-(defmethod ig/init-key :typing-ex.handler.core/bg [_ {:keys [db]}]
-  (fn [_]
-    [::response/ok ]))
 
-(defmethod ig/init-key :typing-ex.handler.core/bg! [_ {:keys [db]}]
-  (fn [_]
-    ))
+;; ;; midterm exam
+;; (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+;;   (fn [_]
+;;     (let [ret (status/mt db)]
+;;       [::response/ok (str ret)])))
+
+;; (defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
+;;   (fn [_]
+;;     (let [ret (status/toggle-mt! db)]
+;;       (timbre/debug "toggle-mt returns " ret)
+;;       [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+
+;; ;; beggining 
+;; (defmethod ig/init-key :typing-ex.handler.core/bg [_ {:keys [db]}]
+;;   (fn [_]
+;;     [::response/ok ]))
+
+;; (defmethod ig/init-key :typing-ex.handler.core/bg! [_ {:keys [db]}]
+;;   (fn [_]
+;;     ))
