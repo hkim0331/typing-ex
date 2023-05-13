@@ -214,5 +214,6 @@
 (defn rc-page [ret]
   (page
    [:h2 "Typing: roll calls"]
-   (str ret)
-   ))
+   [:ul
+     (for [r ret]
+       [:li (str (:created_at r))])]))

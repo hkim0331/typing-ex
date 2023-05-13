@@ -16,6 +16,7 @@
     (let [ret (sql/query
                (ds-opt db)
                ["select * from roll_calls where login=?" login])]
+      (println "roll-calls/rc ret:" (str ret))
       ret))
 
   (rc! [db login pt]
