@@ -183,10 +183,8 @@
      (view/todays-act-page ret (get-login req)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
-  (fn [req]
-    (if (= "hkimura" (get-login req))
-      [::response/ok (:stat (stat/stat db))]
-      [::response/forbidden "should not come here"])))
+  (fn [_]
+    [::response/ok (:stat (stat/stat db))]))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
   (fn [req]
