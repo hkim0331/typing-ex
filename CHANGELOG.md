@@ -22,6 +22,9 @@
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 例文を足すか？ moby-dick
 
+## 1.16.5
+### bugfix /stat は hkimura only ではいけない
+
 ## 1.16.4
 - /rc ボタンに、Clear Browsin Data... してねのメッセージ
 
