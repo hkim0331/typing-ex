@@ -199,6 +199,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
     (let [ret [roll-calls/rc db (get-login req)]]
+      (println "rc ret:" (str ret))
       (view/rc-page ret))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
