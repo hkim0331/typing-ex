@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.16.0")
+(def ^:private version "1.16.3")
 
 (defn page [& contents]
   [::response/ok
@@ -213,7 +213,8 @@
 ;; roll-call
 (defn rc-page [ret]
   (page
-   [:h2 "Typing: roll calls"]
+   [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
+   [:p "タイピングの背景が黄色い時にタイプした人のデータを記録している。"]
    [:ul
      (for [r ret]
        [:li (str (:created_at r))])]))

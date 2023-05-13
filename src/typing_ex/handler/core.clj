@@ -183,12 +183,16 @@
      (view/todays-act-page ret (get-login req)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
-  (fn [_]
-    [::response/ok (:stat (stat/stat db))]))
+  (fn [req]
+    (if (= "hkimura" (get-login req))
+      [::response/ok (:stat (stat/stat db))]
+      [::response/forbidden "should not come here"])))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
-  (fn [_]
-    (view/stat-page (:stat (stat/stat db)))))
+  (fn [req]
+    (if (= "hkimura" (get-login req))
+      (view/stat-page (:stat (stat/stat db)))
+      [::response/forbidden "access forbidden"])))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [{{:keys [stat]} :params}]
@@ -207,24 +211,3 @@
     (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
       (println "rc! ret" (str ret))
       [::response/ok (str pt (get-login req) (java.util.Date.))])))
-
-;; ;; midterm exam
-;; (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
-;;   (fn [_]
-;;     (let [ret (status/mt db)]
-;;       [::response/ok (str ret)])))
-
-;; (defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
-;;   (fn [_]
-;;     (let [ret (status/toggle-mt! db)]
-;;       (timbre/debug "toggle-mt returns " ret)
-;;       [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
-
-;; ;; beggining 
-;; (defmethod ig/init-key :typing-ex.handler.core/bg [_ {:keys [db]}]
-;;   (fn [_]
-;;     [::response/ok ]))
-
-;; (defmethod ig/init-key :typing-ex.handler.core/bg! [_ {:keys [db]}]
-;;   (fn [_]
-;;     ))
