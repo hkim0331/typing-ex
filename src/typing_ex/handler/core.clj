@@ -12,7 +12,7 @@
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
-   [typing-ex.boundary.roll-calls :as rc-call]
+   [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
    #_[typing-ex.boundary.status  :as status]

@@ -209,3 +209,10 @@
     [:input {:name "stat" :placeholder stat}]
     [:p "normal, roll-call, exam"]
     [:input {:type "submit"}])))
+
+;; roll-call
+(defn rc-page [ret]
+  (page
+   [:h2 "Typing: roll calls"]
+   (str ret)
+   ))
