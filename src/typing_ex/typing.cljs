@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.16.0")
+(def ^:private version "1.15.13")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -25,7 +25,7 @@
             :results []
             :todays []
             :todays-trials 0
-            :bg "white"}))
+            :stat "normal"}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -107,7 +107,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
-;; roll-call?
+
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
   []
@@ -121,6 +121,12 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                {:form-params
                 {:pt pt
                  :__anti-forgery-token (csrf-token)}})))
+      (when (= "roll-call" (:stat @app-state))
+        (go (<! (http/post
+                 "/rc"
+                 {:form-params
+                  {:__anti-forgery-token (csrf-token)
+                   :pt pt}}))))
       (show-score pt))))
 
 ;; FIXME: ex-mode and normal-mode

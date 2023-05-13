@@ -74,15 +74,19 @@
        "days "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "total"}
-                      "total")
+                      "Total")
        " "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
-                      "max"))]
+                      "Max"))]
      "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Today"]
+      " "
+      [:a {:href "/rc"
+           :class "btn btn-info btn-sm"}
+       "RC"]
       " "
       [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
