@@ -20,6 +20,23 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
+- 例文を足すか？ moby-dick
+- /stat を admin only に制限
+- /rc に誰の出席データかを表示
+
+## 1.16.1-SNAPSHOT
+
+## 1.16.0 - 2023-05-13
+roll-calls
+- ブランチを作らず、1.15.13 の上に足してしまった。
+- table stat
+- boundary.stat
+- style.css .stat class
+- change background color in normal/roll-call/exam as white/yello/pink
+
+
+## 1.15.13 - 2023-05-08
+- default 7 days
 
 ## 1.15.12 - 2023-05-08
 - DB のクエリを伴う関数自身が timbre/log しなくても、duct がログする。

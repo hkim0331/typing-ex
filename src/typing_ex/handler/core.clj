@@ -12,8 +12,11 @@
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
+   [typing-ex.boundary.stat :as stat]
+   #_[typing-ex.boundary.status  :as status]
+   #_[typing-ex.boundary.bg      :as bg]
    #_[typing-ex.boundary.users   :as users]
    [typing-ex.view.page :as view]
    ))
@@ -61,7 +64,7 @@
     (if (and (seq login) (auth? login password))
       (do
         (timbre/debug "login success" login)
-        (-> (redirect "/sum/1")
+        (-> (redirect "/sum/7")
             (assoc-in [:session :identity] (keyword login))))
       (do
         (timbre/debug "login failure" login)
@@ -179,14 +182,49 @@
                   reverse)]
      (view/todays-act-page ret (get-login req)))))
 
-;; midterm exam
-(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]
-    (let [ret (status/mt db)]
-      [::response/ok (str ret)])))
+    [::response/ok (:stat (stat/stat db))]))
 
-(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
   (fn [_]
-    (let [ret (status/toggle-mt! db)]
-      (timbre/debug "toggle-mt returns " ret)
-      [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+    (view/stat-page (:stat (stat/stat db)))))
+
+(defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
+  (fn [{{:keys [stat]} :params}]
+    ;; (println stat)
+    (stat/stat! db stat)
+    (redirect "/")))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (roll-calls/rc db (get-login req))]
+      (println "rc ret:" (str ret))
+      (view/rc-page ret))))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
+  (fn [{{:keys [pt]} :params :as req}]
+    (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
+      (println "rc! ret" (str ret))
+      [::response/ok (str pt (get-login req) (java.util.Date.))])))
+
+;; ;; midterm exam
+;; (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+;;   (fn [_]
+;;     (let [ret (status/mt db)]
+;;       [::response/ok (str ret)])))
+
+;; (defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
+;;   (fn [_]
+;;     (let [ret (status/toggle-mt! db)]
+;;       (timbre/debug "toggle-mt returns " ret)
+;;       [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+
+;; ;; beggining 
+;; (defmethod ig/init-key :typing-ex.handler.core/bg [_ {:keys [db]}]
+;;   (fn [_]
+;;     [::response/ok ]))
+
+;; (defmethod ig/init-key :typing-ex.handler.core/bg! [_ {:keys [db]}]
+;;   (fn [_]
+;;     ))

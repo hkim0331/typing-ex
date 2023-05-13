@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.12")
+(def ^:private version "1.16.0")
 
 (defn page [& contents]
   [::response/ok
@@ -62,7 +62,7 @@
      [:div.d-inline
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
-      #_[:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]]
+      #_[:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]]
      "&nbsp;|&nbsp;"
      [:div.d-inline
       (form-to
@@ -74,15 +74,19 @@
        "days "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "total"}
-                      "total")
+                      "Total")
        " "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
-                      "max"))]
+                      "Max"))]
      "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Today"]
+      " "
+      [:a {:href "/rc"
+           :class "btn btn-info btn-sm"}
+       "RC"]
       " "
       [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -195,3 +199,21 @@
                    :class (if (= user login) "yes" "other")}
                login]])))
    (headline n)))
+
+(defn stat-page [stat]
+  (page
+   [:h2 "Typing: Stat"]
+   (form-to
+    [:post "/stat"]
+    (anti-forgery-field)
+    [:input {:name "stat" :placeholder stat}]
+    [:p "normal, roll-call, exam"]
+    [:input {:type "submit"}])))
+
+;; roll-call
+(defn rc-page [ret]
+  (page
+   [:h2 "Typing: roll calls"]
+   [:ul
+     (for [r ret]
+       [:li (str (:created_at r))])]))
