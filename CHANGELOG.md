@@ -22,7 +22,10 @@
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 例文を足すか？ moby-dick
 
-## 1.16.2
+## 1.16.4
+- /rc ボタンに、Clear Browsin Data... してねのメッセージ
+
+## 1.16.3
 - /stat と /stat-page admin only に制限
 
 ## 1.16.1 - 2023-05-13

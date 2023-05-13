@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.16.3")
+(def ^:private version "1.16.4")
 
 (defn page [& contents]
   [::response/ok
@@ -214,7 +214,9 @@
 (defn rc-page [ret]
   (page
    [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
-   [:p "タイピングの背景が黄色い時にタイプした人のデータを記録している。"]
+   [:p "タイピングの背景が黄色い時にタイプ練習 1 回以上終了した時の時刻。"
+    "ブラウザに表示されるタイピングのバージョンが 1.6.4 より低い時は"
+    "2週目でやった「閲覧履歴の消去」しないと出席取れない。"]
    [:ul
      (for [r ret]
        [:li (str (:created_at r))])]))
