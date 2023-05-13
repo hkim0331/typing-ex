@@ -21,13 +21,15 @@
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 例文を足すか？ moby-dick
-
+- 
 
 ## 1.16.0-SNAPSHOT
 - ブランチを作らず、1.15.13 の上に足してしまった。
-- table bg
-- boundary.bg
-- business logic
+- table stat
+- boundary.stat
+- style.css .stat class
+- change background color in normal/roll-call/exam as white/yello/pink
+
 
 ## 1.15.13 - 2023-05-08
 - default 7 days
