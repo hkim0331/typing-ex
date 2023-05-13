@@ -12,6 +12,7 @@
    [ring.util.response :refer [redirect]]
    [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
    #_[typing-ex.boundary.status  :as status]
@@ -191,10 +192,19 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [{{:keys [stat]} :params}]
-    (println stat)
+    ;; (println stat)
     (stat/stat! db stat)
     (redirect "/")))
 
+
+(defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
+  (fn [req]
+    (let [ret [roll-calls/rc db (get-login req)]]
+      (view/rc-page ret))))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
+  (fn [{{:keys [pt]} :params :as req}]
+    [::response/ok (str pt (get-login req) (java.util.Date.))]))
 
 ;; ;; midterm exam
 ;; (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]

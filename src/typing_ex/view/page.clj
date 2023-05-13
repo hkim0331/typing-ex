@@ -9,7 +9,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.15.13")
+(def ^:private version "1.16.0")
 
 (defn page [& contents]
   [::response/ok
@@ -74,15 +74,19 @@
        "days "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "total"}
-                      "total")
+                      "Total")
        " "
        (submit-button {:class "btn btn-primary btn-sm"
                        :name "max"}
-                      "max"))]
+                      "Max"))]
      "&nbsp;|&nbsp;"
      [:div.d-inline
       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
        "Today"]
+      " "
+      [:a {:href "/rc"
+           :class "btn btn-info btn-sm"}
+       "RC"]
       " "
       [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -205,3 +209,10 @@
     [:input {:name "stat" :placeholder stat}]
     [:p "normal, roll-call, exam"]
     [:input {:type "submit"}])))
+
+;; roll-call
+(defn rc-page [ret]
+  (page
+   [:h2 "Typing: roll calls"]
+   (str ret)
+   ))

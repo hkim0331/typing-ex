@@ -24,6 +24,8 @@
     [:get  "/stat"] [:typing-ex.handler.core/stat]
     [:post "/stat"] [:typing-ex.handler.core/stat!]
 
+    [:get  "/rc"] ^:auth [:typing-ex.handler.core/rc]
+    [:post "/rc"]        [:typing-ex.handler.core/rc!]
     ;; midterm exam
     ;; [:get "/mt"] [:typing-ex.handler.core/mt]
     ;; [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]
@@ -54,6 +56,9 @@
   :typing-ex.handler.core/stat-page {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat! {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/rc  {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql} 
 
   ;; :typing-ex.handler.core/bg   {:db #ig/ref :duct.database/sql}
   ;; :typing-ex.handler.core/bg!  {:db #ig/ref :duct.database/sql}
