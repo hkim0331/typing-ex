@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.15.13")
+(def ^:private version "1.16.0")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -107,6 +107,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
+;; roll-call?
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
   []
