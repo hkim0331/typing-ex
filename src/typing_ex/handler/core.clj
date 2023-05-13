@@ -196,7 +196,6 @@
     (stat/stat! db stat)
     (redirect "/")))
 
-
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
     (let [ret [roll-calls/rc db (get-login req)]]
@@ -204,7 +203,9 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
   (fn [{{:keys [pt]} :params :as req}]
-    [::response/ok (str pt (get-login req) (java.util.Date.))]))
+    (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
+      (println "rc! ret" (str ret))
+      [::response/ok (str pt (get-login req) (java.util.Date.))])))
 
 ;; ;; midterm exam
 ;; (defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
