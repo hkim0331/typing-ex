@@ -26,6 +26,8 @@
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 
+## 1.16.8
+- headline two lines
 
 ## 1.16.7
 - メッセージの修正
