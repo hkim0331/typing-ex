@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [abs])
   (:require
    [ataraxy.response :as response]
+   [clojure.string :as str]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
    [java-time]
@@ -9,7 +10,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.16.6")
+(def ^:private version "1.16.7")
 
 (defn page [& contents]
   [::response/ok
@@ -44,7 +45,7 @@
     (submit-button  "login"))
    [:br]
    [:ul
-    [:li "焦らず、ゆっくり、正確にタイピングが上達の早道。"]
+    [:li "焦らず、ゆっくり、正しい指使いがタイピングが上達の早道。"]
     [:li "10 分練習したら休憩入れよう。"]
     [:li "練習しないと平常点にならない。"]]))
 
@@ -60,9 +61,8 @@
   [:div {:style "margin-left:1rem;"}
     [:div.row
      [:div.d-inline
-      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-      " "
-      #_[:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]]
+      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
+     " "
      "&nbsp;|&nbsp;"
      [:div.d-inline
       (form-to
@@ -110,8 +110,6 @@
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
-   #_[:p "直近 " days " 日間のユーザ毎最高得点。カッコは通算練習日数。<br>
-情報リテラシー以外の科目も大切にしよう。"]
    [:p "スコア伸びないのは練習足りない？ 情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
@@ -143,8 +141,7 @@
               (map str)
               (group-by identity))))
 
-;; 平均を求めるのに、DB 引かなくても ret から求めればいい。
-;; ret は lazySeq
+;; ret is a  lazySeq. should use mapv?
 ;; 1.5.8 Exercise days
 (defn svg-self-records [login ret me? admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
@@ -189,7 +186,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline n)
-   [:p "7 days で 3000 点が合格ラインだったのは先週。今週は 3500 くらいか。"]
+   [:p "毎週地道に点数アップが一番。1 回にたくさんやっても身につかない。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
@@ -211,12 +208,19 @@
     [:input {:type "submit"}])))
 
 ;; roll-call
+;; FIXME: 表示で工夫するよりも、データベースに入れる時に加工するか？
 (defn rc-page [ret]
   (page
    [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
-   [:p "タイピングの背景が黄色い時にタイプ練習 1 回以上終了した時の時刻。"
-    "ブラウザに表示されるタイピングのバージョンが 1.6.4 より低い時は"
-    "2週目でやった「閲覧履歴の消去」しないと出席取れない。"]
+   [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
+    "タイピングのバージョンが 1.6.7 より低い時は"
+    "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"]
    [:ul {:class "roll-call"}
-     (for [r ret]
-       [:li (str (:created_at r))])]))
+    #_(for [r (->> ret
+                 (map #(str (:created_at %)))
+                 (map #(str/replace % #"T.*" ""))
+                 dedupe)]
+      [:li r])
+    (for [r ret]
+      [:li (str (:created_at r))])
+    ]))
