@@ -30,6 +30,7 @@
 ## 1.16.7
 - メッセージの修正
 - Bootstrap 5.2.3
+- forget to update integrity in bootstrap
 
 ## 1.16.5
 - **bugfix** /stat は hkimura only ではいけない
