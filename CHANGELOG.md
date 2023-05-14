@@ -26,6 +26,13 @@
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 
+## 1.16.9
+### Removed
+- exam_mode.clj
+- users.clj
+- timbre
+- useless println
+
 ## 1.16.8
 - headline two lines
 
