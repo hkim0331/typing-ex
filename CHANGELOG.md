@@ -17,37 +17,40 @@
   being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
-- 回帰直線、回帰曲線を乗せる。
-- 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 例文を足す moby-dick
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
+- plot の左マージン
 
-## 1.16.9
+
+## 1.17.0 - 2023-05-14
+- 回帰直線
+
+## 1.16.9 - 2023-05-14
 ### Removed
 - exam_mode.clj
 - users.clj
 - timbre
 - useless println
 
-## 1.16.8
+## 1.16.8 - 2023-05-14
 - headline two lines
 
-## 1.16.7
+## 1.16.7 - 2023-05-14
 - メッセージの修正
 - Bootstrap 5.2.3
 - forget to update integrity in bootstrap
 
-## 1.16.5
+## 1.16.5 - 2023-05-14
 - **bugfix** /stat は hkimura only ではいけない
 
-## 1.16.4
+## 1.16.4 - 2023-05-14
 - /rc ボタンに、Clear Browsin Data... してねのメッセージ
 
-## 1.16.3
+## 1.16.3 - 2023-05-14
 - /stat と /stat-page admin only に制限
 
 ## 1.16.1 - 2023-05-13
