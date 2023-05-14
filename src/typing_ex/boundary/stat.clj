@@ -19,7 +19,7 @@
                 ["select stat from stat"]))]
       ;; (println "ret" (str ret))
       ret))
-  
+
   (stat! [db stat]
    (let [ret (jdbc/execute-one!
               (ds-opt db)

@@ -1,7 +1,7 @@
 (ns typing-ex.boundary.roll-calls
  (:require
    [typing-ex.boundary.utils :refer [ds-opt]]
-   [next.jdbc :as jdbc]
+   #_[next.jdbc :as jdbc]
    [next.jdbc.sql :as sql]
    [duct.database.sql]))
 

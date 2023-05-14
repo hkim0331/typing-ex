@@ -58,12 +58,8 @@
   :typing-ex.handler.core/stat! {:db #ig/ref :duct.database/sql}
 
   :typing-ex.handler.core/rc  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql} 
+  :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql}
 
-  ;; :typing-ex.handler.core/bg   {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/bg!  {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/mt         {:db #ig/ref :duct.database/sql}
-  ;; :typing-ex.handler.core/toggle-mt  {:db #ig/ref :duct.database/sql}
   }
 
  :duct.profile/dev   #duct/include "dev"
