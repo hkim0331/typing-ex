@@ -92,7 +92,7 @@
                      :value n
                      :style "text-align:right"}
                     "n")
-        " days -> "
+        " days → "
         (submit-button {:class "btn btn-primary btn-sm"
                         :name "total"}
                        "total")
