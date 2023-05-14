@@ -20,7 +20,7 @@
      [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
     [:link
      {:rel "stylesheet"
-      :href "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      :href "https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/css/bootstrap.min.css"
       :integrity "sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
       :crossorigin "anonymous"}]
     [:link
@@ -186,7 +186,7 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline n)
-   [:p "毎週地道に点数アップが一番。1 回にたくさんやっても身につかない。"]
+   [:p "毎日ちょっとずつ点数アップが一番。1 回にたくさんやっても身につかない。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)]
@@ -213,7 +213,7 @@
   (page
    [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
-    "タイピングのバージョンが 1.6.7 より低い時は"
+    "タイピングのバージョンが 1.16.7 より低い時は"
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"]
    [:ul {:class "roll-call"}
     #_(for [r (->> ret
@@ -222,5 +222,4 @@
                  dedupe)]
       [:li r])
     (for [r ret]
-      [:li (str (:created_at r))])
-    ]))
+      [:li (str (:created_at r))])]))

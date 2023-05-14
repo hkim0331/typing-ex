@@ -20,10 +20,19 @@
 - 回帰直線、回帰曲線を乗せる。
 - 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- 例文を足すか？ moby-dick
+- 例文を足す moby-dick
+- admin? を DB から引く
+  l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
+  あるいは /admin/:user を作るか。
+- VScode で cljs repl につながらなくなった。以前はどうだったか？
+
+
+## 1.16.7
+- メッセージの修正
+- Bootstrap 5.2.3
 
 ## 1.16.5
-### bugfix /stat は hkimura only ではいけない
+- **bugfix** /stat は hkimura only ではいけない
 
 ## 1.16.4
 - /rc ボタンに、Clear Browsin Data... してねのメッセージ
