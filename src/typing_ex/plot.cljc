@@ -57,16 +57,14 @@
         [a b] (lsm xs ys)
         f #(+ (* (- a) %) (- b))]
     (println "y = " a "x+" b)
-    (into
-     (frame w h)
-     (conj
-
+    (conj
+     (into
+      (frame w h)
       (for [[x y] (map list xs ys)]
         [:circle
-         {:cx x :cy y :r 2 :fill "green"}])
-
-      [:line {:x1 0 :y1 (f 0)
-              :x2 w :y2 (f w)
-              :stroke "yellow"
-              :stroke-width 10}]
-      ))))
+         {:cx x :cy y :r 2 :fill "green"}]))
+     [:line {:x1 0 :y1 (f 0)
+             :x2 w :y2 (f w)
+             :stroke "yellow"
+             :stroke-width 10}])))
+             
