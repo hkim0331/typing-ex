@@ -171,7 +171,7 @@
   (page
    [:h2 "Typing: todays"]
    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-        "一日練習回数 10 回以下は平常点にカウントしないのはイジワルイ？"]
+        "一日 10 回以下は練習日数に入れないよ。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
