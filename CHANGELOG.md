@@ -25,6 +25,8 @@
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
+- plot の左マージン
+
 
 ## 1.16.9
 ### Removed
