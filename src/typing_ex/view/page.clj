@@ -10,7 +10,7 @@
    #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.16.7")
+(def ^:private version "1.16.8")
 
 (defn page [& contents]
   [::response/ok
@@ -20,7 +20,11 @@
      [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
     [:link
      {:rel "stylesheet"
+<<<<<<< HEAD
       :href "https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/css/bootstrap.min.css"
+=======
+      :href "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+>>>>>>> hotfix/1.16.8
       :integrity "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       :crossorigin "anonymous"}]
     [:link
@@ -61,32 +65,9 @@
   [:div {:style "margin-left:1rem;"}
     [:div.row
      [:div.d-inline
-      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]]
-     " "
-     "&nbsp;|&nbsp;"
-     [:div.d-inline
-      (form-to
-       [:get "/recent"]
-       (text-field {:size 2
-                    :value n
-                    :style "text-align:right"}
-                   "n")
-       "days "
-       (submit-button {:class "btn btn-primary btn-sm"
-                       :name "total"}
-                      "Total")
-       " "
-       (submit-button {:class "btn btn-primary btn-sm"
-                       :name "max"}
-                      "Max"))]
-     "&nbsp;|&nbsp;"
-     [:div.d-inline
-      [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Today"]
+      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       " "
-      [:a {:href "/rc"
-           :class "btn btn-info btn-sm"}
-       "RC"]
+      [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
       " "
       [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
@@ -104,7 +85,26 @@
            :class "btn btn-info btn-sm"}
        "L22"]
       " "
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]]])
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+     [:div.d-inline-flex
+      [:a {:href "/daily" :class "btn btn-danger btn-sm"}
+       "Today"]
+      "&nbsp;"
+      (form-to
+       [:get "/recent"]
+       (text-field {:size 2
+                    :value n
+                    :style "text-align:right"}
+                   "n")
+       "days -> "
+       (submit-button {:class "btn btn-primary btn-sm"
+                       :name "total"}
+                      "Total")
+       " "
+       (submit-button {:class "btn btn-primary btn-sm"
+                       :name "max"}
+                      "Max"))
+      ]]])
 
 (defn scores-page [max-pt ex-days user days]
   (page
