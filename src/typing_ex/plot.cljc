@@ -25,10 +25,9 @@
         sy  (reduce + y)
         sxy (reduce + (map * x y))
         sx2 (reduce + (map * x x))]
-    (println x)
-    (println y)
+    ;; (println x)
+    ;; (println y)
     (solve [sx2 sx (- sxy)] [sx n (- sy)])))
-
 
 (defn- frame [w h]
   [:svg {:width w :height h :viewBox (str "0 0 " w " " h)}
@@ -56,7 +55,7 @@
         ys (map #(- h 10 %) (map :pt data))
         [a b] (lsm xs ys)
         f #(+ (* (- a) %) (- b))]
-    (println "y = " a "x+" b)
+    ;; (println "y = " a "x+" b)
     (conj
      (into
       (frame w h)
@@ -67,4 +66,3 @@
              :x2 w :y2 (f w)
              :stroke "yellow"
              :stroke-width 10}])))
-             

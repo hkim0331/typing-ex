@@ -9,7 +9,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.17.0")
+(def ^:private version "1.17.1")
 
 (defn page [& contents]
   [::response/ok
@@ -105,7 +105,8 @@
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
-   [:p "スコア伸びないのは練習足りない？ 情報リテラシー以外の科目も大切に。"]
+   [:p "スコア伸びないのは練習足りない。10 回以下で 1 日練習したつもりもよくない。" [:br]
+    "情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
             [:li
@@ -138,7 +139,7 @@
 
 ;; ret is a  lazySeq. should use mapv?
 ;; 1.5.8 Exercise days
-(defn svg-self-records [login ret me? admin?]
+(defn svg-self-records [login ret me? _admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
@@ -147,7 +148,7 @@
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
-     (when (or me? admin?)
+     (when true ;; (or me? admin?)
        [:ul
         [:li "Max " (apply max (map :pt positives))]
         [:li "Average (last 10) " avg]
