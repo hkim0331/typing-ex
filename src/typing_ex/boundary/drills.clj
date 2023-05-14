@@ -3,7 +3,6 @@
    [typing-ex.boundary.utils :refer [ds-opt]]
    [next.jdbc.sql :as sql]
    [duct.database.sql]
-   #_[taoensso.timbre :as timbre]
    ))
 
 (defprotocol Drills
@@ -17,7 +16,6 @@
                  ["select (1 + (random() * (max(id)-1)))::int from drills"])
                 first
                 :int4)]
-    ;; (timbre/debug "random-id" rid)
     rid))
 
 (extend-protocol Drills

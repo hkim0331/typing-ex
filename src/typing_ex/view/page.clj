@@ -2,15 +2,14 @@
   (:refer-clojure :exclude [abs])
   (:require
    [ataraxy.response :as response]
-   [clojure.string :as str]
+   #_[clojure.string :as str]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
    [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   #_[taoensso.timbre :as timbre]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.16.8")
+(def ^:private version "1.16.9")
 
 (defn page [& contents]
   [::response/ok
@@ -60,47 +59,47 @@
   [n]
   [:div {:style "margin-left:1rem;"}
     [:div.row
-     [:div.d-inline
+     [:div.d-inline-flex
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
-      " "
+      "&nbsp;"
       [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
-      " "
+      "&nbsp;"
       [:a {:href "https://wil.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
        "WIL"]
-      " "
+      "&nbsp;"
       [:a {:href "http://qa.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
        "QA"]
-      " "
+      "&nbsp;"
       [:a {:href "http://mt.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
        "MT"]
-      " "
+      "&nbsp;"
       [:a {:href "http://l22.melt.kyutech.ac.jp/"
            :class "btn btn-info btn-sm"}
        "L22"]
-      " "
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
-     [:div.d-inline-flex
-      [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-       "Today"]
       "&nbsp;"
-      (form-to
-       [:get "/recent"]
-       (text-field {:size 2
-                    :value n
-                    :style "text-align:right"}
-                   "n")
-       "days -> "
-       (submit-button {:class "btn btn-primary btn-sm"
-                       :name "total"}
-                      "Total")
-       " "
-       (submit-button {:class "btn btn-primary btn-sm"
-                       :name "max"}
-                      "Max"))
-      ]]])
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
+     [:div.row
+      [:div.d-inline-flex
+       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
+        "today"]
+       "&nbsp;"
+       (form-to
+        [:get "/recent"]
+        (text-field {:size 2
+                     :value n
+                     :style "text-align:right"}
+                    "n")
+        " days -> "
+        (submit-button {:class "btn btn-primary btn-sm"
+                        :name "total"}
+                       "total")
+        "&nbsp;"
+        (submit-button {:class "btn btn-primary btn-sm"
+                        :name "max"}
+                       "max"))]]])
 
 (defn scores-page [max-pt ex-days user days]
   (page
@@ -167,9 +166,11 @@
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
 (defn todays-act-page [ret login]
+  ;;(println "todays-act-page " (str ret))
   (page
    [:h2 "Typing: todays"]
-   [:p "本日の Typing ユーザ。重複を省いて最終利用時間で並べ替え。"]
+   [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
+        "一日練習回数 10 回以下は平常点にカウントしないのはイジワルイ？"]
    (into [:ol]
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
@@ -182,15 +183,18 @@
   (page
    [:h2 "Typing: Daily Points"]
    (headline n)
-   [:p "毎日ちょっとずつ点数アップが一番。1 回にたくさんやっても身につかない。"]
+   [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。" [:br]
+    "7 日間で 3000 点以下はリストから外す？"]
    (into [:ol]
          (for [r ret]
-           (let [login (:login r)]
-             [:li (:sum r)
-              " "
-              [:a {:href (str "/record/" login)
-                   :class (if (= user login) "yes" "other")}
-               login]])))
+           (let [login (:login r)
+                 sum (:sum r)]
+             (when (< -1 sum)
+               [:li sum
+                " "
+                [:a {:href (str "/record/" login)
+                     :class (if (= user login) "yes" "other")}
+                 login]]))))
    (headline n)))
 
 (defn stat-page [stat]
@@ -212,10 +216,5 @@
     "タイピングのバージョンが 1.16.7 より低い時は"
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"]
    [:ul {:class "roll-call"}
-    #_(for [r (->> ret
-                 (map #(str (:created_at %)))
-                 (map #(str/replace % #"T.*" ""))
-                 dedupe)]
-      [:li r])
     (for [r ret]
       [:li (str (:created_at r))])]))

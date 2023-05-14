@@ -1,4 +1,4 @@
-(defproject typing-ex "1.16.8"
+(defproject typing-ex "1.16.9"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -7,7 +7,7 @@
                  [cheshire/cheshire "5.11.0"]
                  [clojure.java-time "1.2.0"]
                  [com.github.seancorfield/next.jdbc "1.3.874"]
-                 [com.taoensso/timbre "6.1.0"]
+                 #_[com.taoensso/timbre "6.1.0"]
                  [duct/core "0.8.0"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
@@ -17,7 +17,7 @@
                  [hato "0.9.0"]
                  [hiccup "1.0.5"]
                  ;; develop only?
-                 [integrant/repl "0.3.2"]
+                 ;; [integrant/repl "0.3.2"]
                  ;;
                  [org.clojure/clojure "1.11.1"]
                  [org.postgresql/postgresql "42.6.0"]]

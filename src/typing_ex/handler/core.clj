@@ -4,23 +4,22 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
-   #_[environ.core :refer [env]]
+   [environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
-   [integrant.repl.state :refer [system]]
+   #_[integrant.repl.state :refer [system]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
-   #_[typing-ex.boundary.status  :as status]
-   #_[typing-ex.boundary.bg      :as bg]
-   #_[typing-ex.boundary.users   :as users]
    [typing-ex.view.page :as view]
    ))
 
+(comment
+  (env :tp-dev)
+  :rcf)
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -43,18 +42,12 @@
 (defn- find-user [login]
   (let [url (str l22 login)
         body (:body (hc/get url {:as :json}))]
-    ;;(timbre/debug "find-user url" url)
-    ;;(timbre/debug "find-user body" body)
     body))
-
-(comment
-  (:duct.core/environment system)
-  :rcf)
 
 ;; FIXME: env 以外、system をみてスイッチしたい
 (defn auth? [login password]
   (or
-   (= :development (:duct.core/environment system))
+   (= "true" (env :tp-dev))
    (let [ret (find-user login)]
      (and (some? ret)
           (hashers/check password (:password ret))))))
@@ -62,15 +55,11 @@
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
     (if (and (seq login) (auth? login password))
-      (do
-        (timbre/debug "login success" login)
-        (-> (redirect "/sum/7")
-            (assoc-in [:session :identity] (keyword login))))
-      (do
-        (timbre/debug "login failure" login)
-        (-> (redirect "/login")
-            (dissoc :session)
-            (assoc :flash "login failure"))))))
+      (-> (redirect "/sum/7")
+          (assoc-in [:session :identity] (keyword login)))
+      (-> (redirect "/login")
+        (dissoc :session)
+        (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -120,7 +109,6 @@
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      (timbre/debug "/score-post rcv:" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -130,13 +118,11 @@
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ex-days (results/find-ex-days db days)]
-      ;;(timbre/debug "n" n)
       (view/scores-page max-pt ex-days login days))))
 
 
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    (timbre/debug "recent keys query-params" (keys (:query-params req)))
     (let [days  (get-in req [:params :n])]
       (if (get (:query-params req) "max")
         (redirect (str "/scores/" days))
@@ -194,18 +180,17 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [{{:keys [stat]} :params}]
-    ;; (println stat)
     (stat/stat! db stat)
     (redirect "/")))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
     (let [ret (roll-calls/rc db (get-login req))]
-      (println "rc ret:" (str ret))
       (view/rc-page ret))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
   (fn [{{:keys [pt]} :params :as req}]
     (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
-      (println "rc! ret" (str ret))
-      [::response/ok (str pt (get-login req) (java.util.Date.))])))
+      (if ret
+        [::response/ok (str pt (get-login req) (java.util.Date.))]
+        [::response/bad-request "rc! errored"]))))

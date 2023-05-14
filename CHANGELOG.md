@@ -26,12 +26,20 @@
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 
+## 1.16.9
+### Removed
+- exam_mode.clj
+- users.clj
+- timbre
+- useless println
+
 ## 1.16.8
 - headline two lines
 
 ## 1.16.7
 - メッセージの修正
 - Bootstrap 5.2.3
+- forget to update integrity in bootstrap
 
 ## 1.16.5
 - **bugfix** /stat は hkimura only ではいけない
