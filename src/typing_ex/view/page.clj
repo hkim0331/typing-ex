@@ -48,8 +48,6 @@
     [:li "10 分練習したら休憩入れよう。"]
     [:li "練習しないと平常点にならない。"]]))
 
-
-
 (defn- headline
   "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
   [n]
@@ -90,17 +88,21 @@
                     "n")
         " days → "
         (submit-button {:class "btn btn-primary btn-sm"
-                        :name "total"}
+                        :name "kind"}
                        "total")
         "&nbsp;"
         (submit-button {:class "btn btn-primary btn-sm"
-                        :name "max"}
+                        :name "kind"}
+                       "days")
+        "&nbsp;"
+        (submit-button {:class "btn btn-primary btn-sm"
+                        :name "kind"}
                        "max"))]]])
 
 (defn- count-ex-days
-  "引数 days の中身は、[{:login ... :date ...} ...]"
   [days login]
-  (println "days:" (str days))
+  ;; 引数 days の中身は、[{:login ... :date ...} ...]
+  ;; (println "days:" (str days))
   (->> days
        (filter #(= (:login %) login))
        count))
@@ -110,7 +112,7 @@
    ex-days: 練習日数
    user: アカウント
    days: 何日間のデータか？"
-  [max-pt ex-days user days]
+  [max-pt _ex-days user days]
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
@@ -121,7 +123,8 @@
           (for [{:keys [max login]} max-pt]
             [:li
              max
-             (format "(%d) " (count-ex-days ex-days login))
+             #_(format "(%d) " (count-ex-days ex-days login))
+             " "
              [:a {:href (str "/record/" login)
                   :class (if (= login user) "yes" "other")}
               login]])])
@@ -149,7 +152,7 @@
 
 ;; ret is a  lazySeq. should use mapv?
 ;; 1.5.8 Exercise days
-(defn svg-self-records [login ret me? _admin?]
+(defn svg-self-records [login ret _me? _admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
@@ -194,13 +197,12 @@
   (page
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
-   [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。" [:br]
-    "3000 点未満はリストから外すか。平常点出せないし。"]
+   [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)
                  sum (:sum r)]
-             (when (< 2999 sum)
+             (when (< -1 sum)
                [:li sum
                 " "
                 [:a {:href (str "/record/" login)

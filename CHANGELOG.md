@@ -24,7 +24,10 @@
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 - plot の左マージン
-- ゼロ割でエラーにしない
+- hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
+
+
+## 1.17.2-SNAPSHOT - 2023-05-15
 
 ## 1.17.1 - 2023-05-14
 - can see other's details

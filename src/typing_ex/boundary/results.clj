@@ -15,6 +15,7 @@
   (fetch-records [db login])
   (todays-score [db login])
   (active-users [db n])
+  ;; (find-ex-days-thres [db days thres])
   (find-ex-days [db days])
   (todays-act [db]))
 
@@ -22,7 +23,7 @@
   duct.database.sql.Boundary
 
   (insert-pt [db login-pt]
-             (sql/insert! (ds-opt db) :results login-pt))
+    (sql/insert! (ds-opt db) :results login-pt))
 
   (sum [db n]
     (let [sql (format
@@ -64,6 +65,14 @@
       (->> ret
            (partition-by :login)
            (take n))))
+
+  ;; (find-ex-days-thres [db days thres]
+  ;;   (let [q (str/replace "select login, date(timestamp) from results
+  ;;                where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
+  ;;                group by login, date(timestamp)"
+  ;;                        #"XXX" (str days))
+  ;;         ret (sql/query (ds-opt db) [q])]
+  ;;     ret))
 
   (find-ex-days [db days]
     (let [q (str/replace "select login, date(timestamp) from results
