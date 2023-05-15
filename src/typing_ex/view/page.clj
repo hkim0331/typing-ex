@@ -9,7 +9,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.17.1")
+(def ^:private version "1.17.2")
 
 (defn page [& contents]
   [::response/ok
@@ -48,11 +48,7 @@
     [:li "10 分練習したら休憩入れよう。"]
     [:li "練習しないと平常点にならない。"]]))
 
-;; right place, here?
-(defn- count-ex-days [days login]
-  (->> days
-       (filter #(= (:login %) login))
-       count))
+
 
 (defn- headline
   "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
@@ -101,11 +97,25 @@
                         :name "max"}
                        "max"))]]])
 
-(defn scores-page [max-pt ex-days user days]
+(defn- count-ex-days
+  "引数 days の中身は、[{:login ... :date ...} ...]"
+  [days login]
+  (println "days:" (str days))
+  (->> days
+       (filter #(= (:login %) login))
+       count))
+
+(defn scores-page
+  "maxpt: 最高点
+   ex-days: 練習日数
+   user: アカウント
+   days: 何日間のデータか？"
+  [max-pt ex-days user days]
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
-   [:p "スコア伸びないのは練習足りない。10 回以下で 1 日練習したつもりもよくない。" [:br]
+   [:p "スコア伸びないのは練習足りないじゃね？"
+    "10 回未満で 1 日練習したつもりもよくない。" [:br]
     "情報リテラシー以外の科目も大切に。"]
    (into [:ol
           (for [{:keys [max login]} max-pt]
@@ -144,7 +154,7 @@
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
     (page
-     [:h2 "Typing: " login " records"]
+     [:h2 "Typing: " login " Records"]
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
@@ -169,9 +179,9 @@
 (defn todays-act-page [ret login]
   ;;(println "todays-act-page " (str ret))
   (page
-   [:h2 "Typing: todays"]
+   [:h2 "Typing: Todays"]
    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-        "一日 10 回以下は練習日数に入れないよ。"]
+        "一日 10 回未満は練習日数にカウントしない。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
@@ -182,15 +192,15 @@
 
 (defn sums-page [ret user n]
   (page
-   [:h2 "Typing: Daily Points"]
+   [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。" [:br]
-    "7 日間で 3000 点以下はリストから外す？"]
+    "3000 点未満はリストから外すか。平常点出せないし。"]
    (into [:ol]
          (for [r ret]
            (let [login (:login r)
                  sum (:sum r)]
-             (when (< -1 sum)
+             (when (< 2999 sum)
                [:li sum
                 " "
                 [:a {:href (str "/record/" login)
