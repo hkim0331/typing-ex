@@ -25,9 +25,13 @@
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 - plot の左マージン
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
+- sum, ex-days, max のネーミング
 
+## 1.17.3-SNAPSHOT
+refactor
 
-## 1.17.2-SNAPSHOT - 2023-05-15
+## 1.17.2 - 2023-05-15
+- sum, ex-days, max に分割。
 
 ## 1.17.1 - 2023-05-14
 - can see other's details

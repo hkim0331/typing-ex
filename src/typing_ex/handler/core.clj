@@ -102,7 +102,8 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
-    (let [ret (results/sum db n)
+    (let [n (Integer/parseInt n)
+          ret (results/sum db n)
           user (get-login req)]
       (view/sums-page ret user n))))
 
@@ -123,15 +124,23 @@
           ]
       (view/scores-page max-pt ex-days login days))))
 
+(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [days (Integer/parseInt n)
+          login (get-login req)
+          ex-days (results/find-ex-days db days)
+          ]
+      (view/ex-days-page ex-days login days))))
+
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
     (let [days (get-in req [:params :n])
           kind (get-in req [:query-params "kind"])]
       ;; (println "kind" kind)
       (case kind
-        "max"   (redirect (str "/scores/" days))
         "total" (redirect (str "/sum/" days))
-        "days"  [::response/forbidden "under construction"]))))
+        "days"  (redirect (str "/ex-days/" days))
+        "max"   (redirect (str "/scores/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]

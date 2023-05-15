@@ -99,14 +99,6 @@
                         :name "kind"}
                        "max"))]]])
 
-(defn- count-ex-days
-  [days login]
-  ;; 引数 days の中身は、[{:login ... :date ...} ...]
-  ;; (println "days:" (str days))
-  (->> days
-       (filter #(= (:login %) login))
-       count))
-
 (defn scores-page
   "maxpt: 最高点
    ex-days: 練習日数
@@ -116,19 +108,52 @@
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
-   [:p "スコア伸びないのは練習足りないじゃね？"
-    "10 回未満で 1 日練習したつもりもよくない。" [:br]
-    "情報リテラシー以外の科目も大切に。"]
-   (into [:ol
-          (for [{:keys [max login]} max-pt]
-            [:li
-             max
-             #_(format "(%d) " (count-ex-days ex-days login))
-             " "
-             [:a {:href (str "/record/" login)
-                  :class (if (= login user) "yes" "other")}
-              login]])])
+   [:div {:style "margin-left:1rem;"}
+    [:p "瞬間最大風速。それほど気にする必要はない。" [:br]
+     "タイプの正確さ＋あまりの秒数なので、理論的な最高得点は 159。"]
+    (into [:ol
+           (for [{:keys [max login]} max-pt]
+             [:li
+              max
+              " "
+              [:a {:href (str "/record/" login)
+                   :class (if (= login user) "yes" "other")}
+               login]])])]
    (headline days)))
+
+(defn- count-ex-days
+  [days login]
+  ;; 引数 days の中身は、[{:login ... :date ...} ...]
+  ;; (println "days:" (str days))
+  (->> days
+       (filter #(= (:login %) login))
+       count))
+
+(defn ex-days-page
+  "ex-days: 練習日数
+   user: アカウント
+   days: 何日間のデータか？"
+  [ex-days user days]
+  (let [logins (->> ex-days (map :login) distinct)
+        data (->> (for [login logins]
+                    [(count-ex-days ex-days login) login])
+                  (sort-by first)
+                  reverse)]
+    (page
+     [:h2 "Typing: Last " days " days Maxes"]
+     (headline days)
+     [:div {:style "margin-left:1rem;"}
+      [:p "「1 日 10 回未満はノーカウント」て言うと 10 回で終わる人いるからなあ。" [:br]
+       "そういうスタンスはなんて言うの？(数え間違ってる？)"]
+      (into [:ol
+             (for [[count login] data]
+               [:li
+                (format "(%d) " count)
+                " "
+                [:a {:href (str "/record/" login)
+                     :class (if (= login user) "yes" "other")}
+                 login]])])]
+     (headline days))))
 
 ;; not good
 (defn- ss
@@ -197,17 +222,18 @@
   (page
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
-   [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
-   (into [:ol]
-         (for [r ret]
-           (let [login (:login r)
-                 sum (:sum r)]
-             (when (< -1 sum)
-               [:li sum
-                " "
-                [:a {:href (str "/record/" login)
-                     :class (if (= user login) "yes" "other")}
-                 login]]))))
+   [:div {:style "margin-left:1rem;"}
+    [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
+    (into [:ol]
+          (for [r ret]
+            (let [login (:login r)
+                  sum (:sum r)]
+              (when (< -1 sum)
+                [:li sum
+                 " "
+                 [:a {:href (str "/record/" login)
+                      :class (if (= user login) "yes" "other")}
+                  login]]))))]
    (headline n)))
 
 (defn stat-page [stat]
