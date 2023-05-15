@@ -26,6 +26,8 @@
 - plot の左マージン
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 
+## 1.18.1 - 2023-05-16
+- plot todays when (< 9 (count todays))
 
 ## 1.18.0 - 2023-05-16
 - double plots. need adjust margin and position
