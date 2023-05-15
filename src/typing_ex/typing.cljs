@@ -3,7 +3,7 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
-   [cljs.reader :refer [read-string]]
+   #_[cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :as r]
@@ -45,7 +45,8 @@ my drawing frightened them. They answered: 'Why should
 anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
-(defonce mt-counter (atom 0))
+
+(defonce ^:private mt-counter (atom 0))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -66,7 +67,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         ;; err   (* errors errors)
         err errors
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    ;; 1.12.x
     (swap! points-debug
            assoc
            :all all :goods goods :bads bads :bs err :bonus seconds)
@@ -171,8 +171,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
-;;(declare countdown)
-(defonce updater (js/setInterval countdown 1000))
+;; (declare countdown)
+
+(defonce ^:private updater (js/setInterval countdown 1000))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
@@ -183,10 +184,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-fetch-reset!))))
-
-(comment
-  (.log js/console "hello, js!")
-  )
 
 (defn check-key [key]
   (case key

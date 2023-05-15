@@ -20,6 +20,7 @@
 (comment
   (env :tp-dev)
   :rcf)
+
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -39,6 +40,7 @@
     (view/login-page req)))
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
 (defn- find-user [login]
   (let [url (str l22 login)
         body (:body (hc/get url {:as :json}))]
@@ -52,10 +54,10 @@
      (and (some? ret)
           (hashers/check password (:password ret))))))
 
-(defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/login-post [_ _]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
     (if (and (seq login) (auth? login password))
-      (-> (redirect "/sum/7")
+      (-> (redirect "/total/7")
           (assoc-in [:session :identity] (keyword login)))
       (-> (redirect "/login")
         (dissoc :session)
@@ -98,13 +100,13 @@
   </body>
 </html>")]))
 
-(defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
-    (let [ret (results/sum db n)
+    (let [n (Integer/parseInt n)
+          ret (results/sum db n)
           user (get-login req)]
       (view/sums-page ret user n))))
 
-;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
@@ -117,16 +119,29 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db days)]
+          ;;ex-days (results/find-ex-days db days)
+          ex-days "dummy"
+          ]
       (view/scores-page max-pt ex-days login days))))
 
+(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [days (Integer/parseInt n)
+          login (get-login req)
+          ex-days (results/find-ex-days db days)
+          ]
+      (view/ex-days-page ex-days login days))))
 
+;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    (let [days  (get-in req [:params :n])]
-      (if (get (:query-params req) "max")
-        (redirect (str "/scores/" days))
-        (redirect (str "/sum/" days))))))
+    (let [days (get-in req [:params :n])
+          kind (get-in req [:query-params "kind"])]
+      ;; (println "kind" kind)
+      (case kind
+        "total" (redirect (str "/total/" days))
+        "days"  (redirect (str "/days/" days))
+        "max"   (redirect (str "/max/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
