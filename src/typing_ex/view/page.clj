@@ -7,7 +7,8 @@
    [hiccup.form :refer [form-to text-field password-field submit-button]]
    [java-time]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
-   [typing-ex.plot :refer [scatter]]))
+   [typing-ex.plot :refer [scatter]]
+   [clojure.test :as t]))
 
 (def ^:private version "1.17.3")
 
@@ -53,7 +54,7 @@
   [n]
   [:div {:style "margin-left:1rem;"}
     [:div.row
-     [:div.d-inline-flex
+     [:div.d-inline-
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
       "&nbsp;"
       [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
@@ -176,28 +177,37 @@
               (group-by identity))))
 
 ;; ret is a  lazySeq. should use mapv?
-;; 1.5.8 Exercise days
-(defn svg-self-records [login ret _me? _admin?]
+(defn svg-self-records
+  [login ret _me? _admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
-        todays (filter #(today? (:timestamp %)) ret)]
+        todays (filter #(today? (:timestamp %)) ret)
+        ;; _ (def p positives)
+        ;; _ (def t todays)
+        ]
     (page
      [:h2 "Typing: " login " Records"]
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
-     [:div (scatter 300 150 positives)]
+     [:div.d-inline-flex
+      (when (pos? (count todays))
+        [:div.px-2.mx-auto (scatter 300 150 todays) [:br] [:b "TODAYS"]])
+      [:div.px-2]
+      [:div.px-2.mx-auto (scatter 300 150 positives) [:br] [:b "TOTAL"]]]
+     [:br]
      [:br]
      (when true ;; (or me? admin?)
        [:ul
         [:li "Max " (apply max (map :pt positives))]
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) "
-         [:a {:href (str "/todays/" login)} (count todays)]
-         "/"
-         (count positives)]
+        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
+(comment
+  p
+  t
+  :rcf)
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]
