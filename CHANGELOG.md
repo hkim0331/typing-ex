@@ -25,7 +25,10 @@
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 - plot の左マージン
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
-- sum, ex-days, max のネーミング
+
+
+## 1.18.0 - 2023-05-16
+- double plots. need adjust margin and position
 
 ## 1.17.3 - 2023-05-15
 ### refactor
