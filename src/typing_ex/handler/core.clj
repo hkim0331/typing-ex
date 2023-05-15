@@ -57,7 +57,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ _]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
     (if (and (seq login) (auth? login password))
-      (-> (redirect "/sum/7")
+      (-> (redirect "/total/7")
           (assoc-in [:session :identity] (keyword login)))
       (-> (redirect "/login")
         (dissoc :session)
@@ -100,7 +100,7 @@
   </body>
 </html>")]))
 
-(defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [n (Integer/parseInt n)
           ret (results/sum db n)
@@ -132,15 +132,16 @@
           ]
       (view/ex-days-page ex-days login days))))
 
+;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
     (let [days (get-in req [:params :n])
           kind (get-in req [:query-params "kind"])]
       ;; (println "kind" kind)
       (case kind
-        "total" (redirect (str "/sum/" days))
-        "days"  (redirect (str "/ex-days/" days))
-        "max"   (redirect (str "/scores/" days))))))
+        "total" (redirect (str "/total/" days))
+        "days"  (redirect (str "/days/" days))
+        "max"   (redirect (str "/max/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]

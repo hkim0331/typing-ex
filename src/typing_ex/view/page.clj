@@ -77,8 +77,8 @@
       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
      [:div.row
       [:div.d-inline-flex
-       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-        "today"]
+       [:a {:href "/todays" :class "btn btn-danger btn-sm"}
+        "todays"]
        "&nbsp;"
        (form-to
         [:get "/recent"]
@@ -155,7 +155,7 @@
                  login]])])]
      (headline days))))
 
-;; not good
+;; FIXME
 (defn- ss
   "shorten string"
   [s]
@@ -191,7 +191,10 @@
         [:li "Max " (apply max (map :pt positives))]
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Exercises (today/total) "
+         [:a {:href (str "/todays/" login)} (count todays)]
+         "/"
+         (count positives)]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 

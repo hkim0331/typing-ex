@@ -27,8 +27,14 @@
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - sum, ex-days, max のネーミング
 
-## 1.17.3-SNAPSHOT
-refactor
+## 1.17.3 - 2023-05-15
+### refactor
+- /daily => /todays
+- /sum => /total
+- /ex-days => /days
+- /scores => /max
+- remove /scores-no-arg
+- link from /record/:login to /todays/:login
 
 ## 1.17.2 - 2023-05-15
 - sum, ex-days, max に分割。
