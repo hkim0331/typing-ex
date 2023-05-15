@@ -9,7 +9,7 @@
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]))
 
-(def ^:private version "1.17.1")
+(def ^:private version "1.17.3")
 
 (defn page [& contents]
   [::response/ok
@@ -48,12 +48,6 @@
     [:li "10 分練習したら休憩入れよう。"]
     [:li "練習しないと平常点にならない。"]]))
 
-;; right place, here?
-(defn- count-ex-days [days login]
-  (->> days
-       (filter #(= (:login %) login))
-       count))
-
 (defn- headline
   "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
   [n]
@@ -83,8 +77,8 @@
       [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
      [:div.row
       [:div.d-inline-flex
-       [:a {:href "/daily" :class "btn btn-danger btn-sm"}
-        "today"]
+       [:a {:href "/todays" :class "btn btn-danger btn-sm"}
+        "todays"]
        "&nbsp;"
        (form-to
         [:get "/recent"]
@@ -92,32 +86,76 @@
                      :value n
                      :style "text-align:right"}
                     "n")
-        " days -> "
+        " days → "
         (submit-button {:class "btn btn-primary btn-sm"
-                        :name "total"}
+                        :name "kind"}
                        "total")
         "&nbsp;"
         (submit-button {:class "btn btn-primary btn-sm"
-                        :name "max"}
+                        :name "kind"}
+                       "days")
+        "&nbsp;"
+        (submit-button {:class "btn btn-primary btn-sm"
+                        :name "kind"}
                        "max"))]]])
 
-(defn scores-page [max-pt ex-days user days]
+(defn scores-page
+  "maxpt: 最高点
+   ex-days: 練習日数
+   user: アカウント
+   days: 何日間のデータか？"
+  [max-pt _ex-days user days]
   (page
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
-   [:p "スコア伸びないのは練習足りない。10 回以下で 1 日練習したつもりもよくない。" [:br]
-    "情報リテラシー以外の科目も大切に。"]
-   (into [:ol
-          (for [{:keys [max login]} max-pt]
-            [:li
-             max
-             (format "(%d) " (count-ex-days ex-days login))
-             [:a {:href (str "/record/" login)
-                  :class (if (= login user) "yes" "other")}
-              login]])])
+   [:div {:style "margin-left:1rem;"}
+    [:p "瞬間最大風速。それほど気にする必要はない。" [:br]
+     "タイプの正確さ＋あまりの秒数なので、理論的な最高得点は 159。"]
+    (into [:ol
+           (for [{:keys [max login]} max-pt]
+             [:li
+              max
+              " "
+              [:a {:href (str "/record/" login)
+                   :class (if (= login user) "yes" "other")}
+               login]])])]
    (headline days)))
 
-;; not good
+(defn- count-ex-days
+  [days login]
+  ;; 引数 days の中身は、[{:login ... :date ...} ...]
+  ;; (println "days:" (str days))
+  (->> days
+       (filter #(= (:login %) login))
+       count))
+
+(defn ex-days-page
+  "ex-days: 練習日数
+   user: アカウント
+   days: 何日間のデータか？"
+  [ex-days user days]
+  (let [logins (->> ex-days (map :login) distinct)
+        data (->> (for [login logins]
+                    [(count-ex-days ex-days login) login])
+                  (sort-by first)
+                  reverse)]
+    (page
+     [:h2 "Typing: Last " days " days Maxes"]
+     (headline days)
+     [:div {:style "margin-left:1rem;"}
+      [:p "「1 日 10 回未満はノーカウント」て言うと 10 回で終わる人いるからなあ。" [:br]
+       "そういうスタンスはなんて言うの？(数え間違ってる？)"]
+      (into [:ol
+             (for [[count login] data]
+               [:li
+                (format "(%d) " count)
+                " "
+                [:a {:href (str "/record/" login)
+                     :class (if (= login user) "yes" "other")}
+                 login]])])]
+     (headline days))))
+
+;; FIXME
 (defn- ss
   "shorten string"
   [s]
@@ -139,12 +177,12 @@
 
 ;; ret is a  lazySeq. should use mapv?
 ;; 1.5.8 Exercise days
-(defn svg-self-records [login ret me? _admin?]
+(defn svg-self-records [login ret _me? _admin?]
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)]
     (page
-     [:h2 "Typing: " login " records"]
+     [:h2 "Typing: " login " Records"]
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div (scatter 300 150 positives)]
      [:br]
@@ -153,7 +191,10 @@
         [:li "Max " (apply max (map :pt positives))]
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Exercises (today/total) "
+         [:a {:href (str "/todays/" login)} (count todays)]
+         "/"
+         (count positives)]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -169,9 +210,9 @@
 (defn todays-act-page [ret login]
   ;;(println "todays-act-page " (str ret))
   (page
-   [:h2 "Typing: todays"]
+   [:h2 "Typing: Todays"]
    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-        "一日練習回数 10 回以下は平常点にカウントしないのはイジワルイ？"]
+        "一日 10 回未満は練習日数にカウントしない。"]
    (into [:ol]
          (for [r ret]
            [:li (ss (java-time/local-date-time (:timestamp r)))
@@ -182,20 +223,20 @@
 
 (defn sums-page [ret user n]
   (page
-   [:h2 "Typing: Daily Points"]
+   [:h2 "Typing: Last " n " days Totals"]
    (headline n)
-   [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。" [:br]
-    "7 日間で 3000 点以下はリストから外す？"]
-   (into [:ol]
-         (for [r ret]
-           (let [login (:login r)
-                 sum (:sum r)]
-             (when (< -1 sum)
-               [:li sum
-                " "
-                [:a {:href (str "/record/" login)
-                     :class (if (= user login) "yes" "other")}
-                 login]]))))
+   [:div {:style "margin-left:1rem;"}
+    [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
+    (into [:ol]
+          (for [r ret]
+            (let [login (:login r)
+                  sum (:sum r)]
+              (when (< -1 sum)
+                [:li sum
+                 " "
+                 [:a {:href (str "/record/" login)
+                      :class (if (= user login) "yes" "other")}
+                  login]]))))]
    (headline n)))
 
 (defn stat-page [stat]

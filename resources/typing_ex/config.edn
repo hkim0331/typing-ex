@@ -4,20 +4,29 @@
   :duct.router/ataraxy
   {:routes
    {[:get  "/login"] [:typing-ex.handler.core/login]
-    [:post "/login" {params :form-params}]
-    [:typing-ex.handler.core/login-post params]
-    [:get "/logout"]  [:typing-ex.handler.core/logout]
+    [:post "/login" {params :form-params}] [:typing-ex.handler.core/login-post params]
+    [:get  "/logout"] [:typing-ex.handler.core/logout]
+
     [:get "/"]      ^:auth [:typing-ex.handler.core/typing]
     [:get "/drill"] ^:auth [:typing-ex.handler.core/drill]
-    [:get "/scores"]    ^:auth [:typing-ex.handler.core/scores-no-arg]
-    [:get "/scores/" n] ^:auth [:typing-ex.handler.core/scores n]
-    [:get "/recent"]    ^:auth [:typing-ex.handler.core/recent]
-    [:get "/sum/" n]    ^:auth [:typing-ex.handler.core/sum ^int n]
+
+    [:get "/todays"]      ^:auth [:typing-ex.handler.core/todays-act]
+    ;; recent is a meta endpoint of total, days, max
+    [:get "/recent"]     ^:auth [:typing-ex.handler.core/recent]
+    [:get "/total/" n]     ^:auth [:typing-ex.handler.core/total n]
+    [:get "/days/" n] ^:auth [:typing-ex.handler.core/ex-days n]
+    [:get "/max/" n]  ^:auth [:typing-ex.handler.core/scores n]
+    ;; [:get "/scores"]     ^:auth [:typing-ex.handler.core/scores-no-arg]
+
+    ;; send typing score
     [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
+
+    ;; show page including svg plot
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
+    ;; returns [{:pt n} {:pt m} {:pt k} ....]
     [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
+
     [:get "/trials"] ^:auth [:typing-ex.handler.core/trials]
-    [:get "/daily"]  ^:auth [:typing-ex.handler.core/todays-act]
 
     ;; TODO ^:auth when deploy
     [:get  "/stat-page"] ^:auth [:typing-ex.handler.core/stat-page]
@@ -25,13 +34,7 @@
     [:post "/stat"] [:typing-ex.handler.core/stat!]
 
     [:get  "/rc"] ^:auth [:typing-ex.handler.core/rc]
-    [:post "/rc"]        [:typing-ex.handler.core/rc!]
-    ;; midterm exam
-    ;; [:get "/mt"] [:typing-ex.handler.core/mt]
-    ;; [:get "/toggle-mt"] [:typing-ex.handler.core/toggle-mt]
-    ;; [:get  "/bg"] [:typing-ex.handler.core/bg]
-    ;; [:post "/bg"] [:typing-ex.handler.core/bg!]
-    }
+    [:post "/rc"]        [:typing-ex.handler.core/rc!]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 
@@ -40,26 +43,23 @@
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/logout     {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/typing {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores        {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/recent        {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/scores-no-arg {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/sum           {:db #ig/ref :duct.database/sql}
- ;;:typing-ex.handler.core/score       {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/record      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/todays      {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/drill       {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/trials     {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
 
-  :typing-ex.handler.core/stat-page {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/stat  {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/stat! {:db #ig/ref :duct.database/sql}
-
+  :typing-ex.handler.core/drill    {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/ex-days  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/rc  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql}
-
+  :typing-ex.handler.core/recent   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/record   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/scores   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/stat      {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/stat-page {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/stat!    {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/todays   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/total    {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/trials   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/typing   {:db #ig/ref :duct.database/sql}
   }
 
  :duct.profile/dev   #duct/include "dev"

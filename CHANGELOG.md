@@ -24,7 +24,20 @@
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 - plot の左マージン
-- ゼロ割でエラーにしない
+- hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
+- sum, ex-days, max のネーミング
+
+## 1.17.3 - 2023-05-15
+### refactor
+- /daily => /todays
+- /sum => /total
+- /ex-days => /days
+- /scores => /max
+- remove /scores-no-arg
+- link from /record/:login to /todays/:login
+
+## 1.17.2 - 2023-05-15
+- sum, ex-days, max に分割。
 
 ## 1.17.1 - 2023-05-14
 - can see other's details
