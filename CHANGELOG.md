@@ -26,7 +26,7 @@
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - /todays に today's total を表示。
 
-## 1.18.4-SNAPSHOT
+## 1.18.4 - 2023-05-16
 - FIXME: plot 中で (map :pt data) は役割分担としておかしい。
 
 ## 1.18.3 - 2023-05-16
