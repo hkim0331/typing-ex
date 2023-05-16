@@ -23,10 +23,14 @@
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
-- plot の左マージン
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
-- FIXME: plot 中で (map :pt data) は役割分担としておかしい。
 - /todays に today's total を表示。
+
+## 1.18.4-SNAPSHOT
+- FIXME: plot 中で (map :pt data) は役割分担としておかしい。
+
+## 1.18.3 - 2023-05-16
+- todays, total 入れ替え
 
 ## 1.18.2 - 2023-05-16
 ダミーリリース。「ブラウザの履歴をクリア」のチェック。
