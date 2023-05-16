@@ -110,8 +110,8 @@
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
    [:div {:style "margin-left:1rem;"}
-    [:p "瞬間最大風速。それほど気にする必要はない。" [:br]
-     "タイプの正確さ＋あまりの秒数なので、理論的な最高得点は 159。"]
+    [:p "瞬間最大風速。"
+         "(タイプの正確さ) + (あまりの秒数)なので、理論的な最高得点は 159。"]
     (into [:ol
            (for [{:keys [max login]} max-pt]
              [:li
@@ -204,10 +204,12 @@
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
-(comment
-  p
-  t
-  :rcf)
+;; (comment
+;;   p
+;;   t
+;;   :rcf)
+
+;; using?
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]
@@ -217,19 +219,23 @@
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
+;; view of /todays
 (defn todays-act-page [ret login]
   ;;(println "todays-act-page " (str ret))
   (page
    [:h2 "Typing: Todays"]
-   [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-        "一日 10 回未満は練習日数にカウントしない。"]
-   (into [:ol]
-         (for [r ret]
-           [:li (ss (java-time/local-date-time (:timestamp r)))
-            " "
-            [:a {:href (str "/record/" (:login r))
-                 :class (if (= login (:login r)) "yes" "other")}
-             (:login r)]]))))
+   (headline 7)
+   [:div {:style "margin-left:1rem;"}
+    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
+     "練習したフリはタメにならない。"]
+    (into [:ol]
+          (for [r ret]
+            [:li (ss (java-time/local-date-time (:timestamp r)))
+             " "
+             [:a {:href (str "/record/" (:login r))
+                  :class (if (= login (:login r)) "yes" "other")}
+              (:login r)]]))]
+   (headline 7)))
 
 (defn sums-page [ret user n]
   (page

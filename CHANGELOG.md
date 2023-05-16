@@ -27,8 +27,10 @@
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - FIXME: plot 中で (map :pt data) は役割分担としておかしい。
 
+
 ## 1.18.1-SNAPSHOT
 - plot todays when (< 9 (count todays))
+- /todays に headline day=1
 
 ## 1.18.0 - 2023-05-16
 - double plots. need adjust margin and position
