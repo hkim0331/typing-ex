@@ -4,19 +4,22 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
-   #_[environ.core :refer [env]]
+   [environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
-   [integrant.repl.state :refer [system]]
+   #_[integrant.repl.state :refer [system]]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre]
    [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   #_[typing-ex.boundary.users   :as users]
+   [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
    ))
+
+(comment
+  (env :tp-dev)
+  :rcf)
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
@@ -37,37 +40,28 @@
     (view/login-page req)))
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
 (defn- find-user [login]
   (let [url (str l22 login)
         body (:body (hc/get url {:as :json}))]
-    ;;(timbre/debug "find-user url" url)
-    ;;(timbre/debug "find-user body" body)
     body))
-
-(comment
-  (:duct.core/environment system)
-  :rcf)
 
 ;; FIXME: env 以外、system をみてスイッチしたい
 (defn auth? [login password]
   (or
-   (= :development (:duct.core/environment system))
+   (= "true" (env :tp-dev))
    (let [ret (find-user login)]
      (and (some? ret)
           (hashers/check password (:password ret))))))
 
-(defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/login-post [_ _]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
     (if (and (seq login) (auth? login password))
-      (do
-        (timbre/debug "login success" login)
-        (-> (redirect "/sum/7")
-            (assoc-in [:session :identity] (keyword login))))
-      (do
-        (timbre/debug "login failure" login)
-        (-> (redirect "/login")
-            (dissoc :session)
-            (assoc :flash "login failure"))))))
+      (-> (redirect "/total/7")
+          (assoc-in [:session :identity] (keyword login)))
+      (-> (redirect "/login")
+        (dissoc :session)
+        (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -106,18 +100,17 @@
   </body>
 </html>")]))
 
-(defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
-    (let [ret (results/sum db n)
+    (let [n (Integer/parseInt n)
+          ret (results/sum db n)
           user (get-login req)]
       (view/sums-page ret user n))))
 
-;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
           rcv {:pt (Integer/parseInt pt) :login login}]
-      (timbre/debug "/score-post rcv:" rcv)
       (results/insert-pt db rcv)
       [::response/ok (str rcv)])))
 
@@ -126,18 +119,29 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db days)]
-      ;;(timbre/debug "n" n)
+          ;;ex-days (results/find-ex-days db days)
+          ex-days "dummy"
+          ]
       (view/scores-page max-pt ex-days login days))))
 
+(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [days (Integer/parseInt n)
+          login (get-login req)
+          ex-days (results/find-ex-days db days)
+          ]
+      (view/ex-days-page ex-days login days))))
 
+;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    (timbre/debug "recent keys query-params" (keys (:query-params req)))
-    (let [days  (get-in req [:params :n])]
-      (if (get (:query-params req) "max")
-        (redirect (str "/scores/" days))
-        (redirect (str "/sum/" days))))))
+    (let [days (get-in req [:params :n])
+          kind (get-in req [:query-params "kind"])]
+      ;; (println "kind" kind)
+      (case kind
+        "total" (redirect (str "/total/" days))
+        "days"  (redirect (str "/days/" days))
+        "max"   (redirect (str "/max/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
@@ -179,14 +183,29 @@
                   reverse)]
      (view/todays-act-page ret (get-login req)))))
 
-;; midterm exam
-(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]
-    (let [ret (status/mt db)]
-      [::response/ok (str ret)])))
+    [::response/ok (:stat (stat/stat db))]))
 
-(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
-  (fn [_]
-    (let [ret (status/toggle-mt! db)]
-      (timbre/debug "toggle-mt returns " ret)
-      [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+(defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
+  (fn [req]
+    (if (= "hkimura" (get-login req))
+      (view/stat-page (:stat (stat/stat db)))
+      [::response/forbidden "access forbidden"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
+  (fn [{{:keys [stat]} :params}]
+    (stat/stat! db stat)
+    (redirect "/")))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (roll-calls/rc db (get-login req))]
+      (view/rc-page ret))))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
+  (fn [{{:keys [pt]} :params :as req}]
+    (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
+      (if ret
+        [::response/ok (str pt (get-login req) (java.util.Date.))]
+        [::response/bad-request "rc! errored"]))))

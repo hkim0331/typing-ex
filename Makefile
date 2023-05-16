@@ -5,7 +5,7 @@ build:
 	docker build -t hkim0331/typing-ex .
 
 clean:
-	${RM} -rf target
+	${RM} -r target
 
 uberjar: clean
 	yarn release
