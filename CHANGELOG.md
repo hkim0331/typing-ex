@@ -26,11 +26,14 @@
 - plot の左マージン
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - FIXME: plot 中で (map :pt data) は役割分担としておかしい。
+- /todays に today's total を表示。
 
+## 1.18.2 - 2023-05-16
+ダミーリリース。「ブラウザの履歴をクリア」のチェック。
 
-## 1.18.1-SNAPSHOT
+## 1.18.1 - 2023-05-16
 - plot todays when (< 9 (count todays))
-- /todays に headline day=1
+- /todays に (headline 7)
 
 ## 1.18.0 - 2023-05-16
 - double plots. need adjust margin and position

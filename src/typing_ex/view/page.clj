@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.1")
+(def ^:private version "1.18.2")
 
 (defn page [& contents]
   [::response/ok
@@ -145,7 +145,7 @@
      (headline days)
      [:div {:style "margin-left:1rem;"}
       [:p "「1 日 10 回未満はノーカウント」て言うと 10 回で終わる人いるからなあ。" [:br]
-       "そういうスタンスはなんて言うの？(数え間違ってる？)"]
+       "そういうスタンスじゃ上手にならんやろ。"]
       (into [:ol
              (for [[count login] data]
                [:li
