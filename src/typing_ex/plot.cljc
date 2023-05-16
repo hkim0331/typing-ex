@@ -37,12 +37,16 @@
    [:line {:x1 0 :y1 (- h 70) :x2 w :y2 (- h 70) :stroke "blue"}]
    [:line {:x1 0 :y1 (- h 40) :x2 w :y2 (- h 40) :stroke "green"}]])
 
-(defn bar-chart [w h data]
+(defn bar-chart
+  "w: width
+   h: height
+   data: [1 2 3...]"
+  [w h data]
   (let [n  (count data)
         dx (* 1.0 (/ w (count data)))]
     (into
      (frame w h)
-     (for [[x y] (map list (range n) (map :pt data))]
+     (for [[x y] (map list (range n) data)]
        ;; FIXME DRY!
        [:rect
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
