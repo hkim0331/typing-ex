@@ -48,11 +48,15 @@
         {:x (* dx x) :y (- h 10 y) :width (/ dx 2) :height y
          :fill "green"}]))))
 
-(defn scatter [w h data]
+(defn scatter
+  "w: width
+   h: height
+   data: [1 2 3...]"
+  [w h data]
   (let [n  (count data)
         dx (* 1.0 (/ w (count data)))
         xs (map #(* dx %) (range n))
-        ys (map #(- h 10 %) (map :pt data))
+        ys (map #(- h 10 %) data)
         [a b] (lsm xs ys)
         f #(+ (* (- a) %) (- b))]
     ;; (println "y = " a "x+" b)
