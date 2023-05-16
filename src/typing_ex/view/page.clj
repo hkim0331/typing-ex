@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.1-SNAPSHOT")
+(def ^:private version "1.18.1")
 
 (defn page [& contents]
   [::response/ok
@@ -110,7 +110,7 @@
    [:h2 "Typing: Last " days " days Maxes"]
    (headline days)
    [:div {:style "margin-left:1rem;"}
-    [:p "瞬間最大風速。"
+    [:p "瞬間最大風速。" [:br]
          "(タイプの正確さ) + (あまりの秒数)なので、理論的な最高得点は 159。"]
     (into [:ol
            (for [{:keys [max login]} max-pt]
