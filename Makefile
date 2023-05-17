@@ -8,6 +8,7 @@ clean:
 	${RM} -rf target
 
 uberjar: clean
+
 	yarn release
 	lein uberjar
 
