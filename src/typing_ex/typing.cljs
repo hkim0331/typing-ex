@@ -3,14 +3,14 @@
    [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
-   [cljs.reader :refer [read-string]]
+   #_[cljs.reader :refer [read-string]]
    [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.15.13")
+(def ^:private version "1.18.4")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -25,7 +25,7 @@
             :results []
             :todays []
             :todays-trials 0
-            :bg "white"}))
+            :stat "normal"}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -45,7 +45,8 @@ my drawing frightened them. They answered: 'Why should
 anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
-(defonce mt-counter (atom 0))
+
+(defonce ^:private mt-counter (atom 0))
 
 (defn get-login []
   (-> (.getElementById js/document "login")
@@ -66,7 +67,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         ;; err   (* errors errors)
         err errors
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    ;; 1.12.x
     (swap! points-debug
            assoc
            :all all :goods goods :bads bads :bs err :bonus seconds)
@@ -107,6 +107,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
 
+
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
   []
@@ -120,24 +121,29 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                {:form-params
                 {:pt pt
                  :__anti-forgery-token (csrf-token)}})))
+      (when (= "roll-call" (:stat @app-state))
+        (go (<! (http/post
+                 "/rc"
+                 {:form-params
+                  {:__anti-forgery-token (csrf-token)
+                   :pt pt}}))))
       (show-score pt))))
 
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-reset!
   []
-  (go (let [{bg :body} (<! (http/get "/bg"))
-            {ex? :body} (<! (http/get "/mt"))
-            {drill :body}  (if (:b (read-string ex?))
-                             (do
-                               (.log js/console "ex mode")
-                               (swap! mt-counter inc)
-                               {:body (get mt (mod @mt-counter 3))})
-                             (do
-                               (.log js/console "normal mode")
-                               (<! (http/get "/drill"))))
+  (go (let [stat (-> (<! (http/get "/stat"))
+                     :body)
+            _ (.log js/console "fetch-reset! stat" stat)
+            drill (if (= stat "exam")
+                    (do
+                      (swap! mt-counter inc)
+                      (get mt (mod @mt-counter 3)))
+                    (-> (<! (http/get "/drill"))
+                        :body))
             words (str/split drill #"\s+")]
         (swap! app-state assoc
-               :bg bg
+               :stat stat
                :text drill
                :answer ""
                :seconds timeout
@@ -165,8 +171,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
-;;(declare countdown)
-(defonce updater (js/setInterval countdown 1000))
+;; (declare countdown)
+
+(defonce ^:private updater (js/setInterval countdown 1000))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
@@ -177,10 +184,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
       (send-fetch-reset!))))
-
-(comment
-  (.log js/console "hello, js!")
-  )
 
 (defn check-key [key]
   (case key
@@ -197,11 +200,11 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [:div.drill (apply str (@app-state :results))])
 
 (comment
-  (:bg @app-state)
+  (:stat @app-state)
   :rcf)
 
 (defn ex-page []
-  [:div {:class (:bg @app-state)}
+  [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
    [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
@@ -226,9 +229,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:p
     "todays:"
     [:br]
-    (bar-chart 300 150 (:todays @app-state))]
+    (bar-chart 300 150 (map :pt (:todays @app-state)))]
    [:p
-    [:a {:href "/sum/7" :class "btn btn-primary btn-sm"} "D.P."]
+    [:a {:href "/total/7" :class "btn btn-primary btn-sm"} "D.P."]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]

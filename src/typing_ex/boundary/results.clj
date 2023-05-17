@@ -4,7 +4,6 @@
    [duct.database.sql]
    [next.jdbc.date-time]
    [next.jdbc.sql :as sql]
-   #_[taoensso.timbre :as timbre]
    [typing-ex.boundary.utils :refer [ds-opt]]))
 
 (next.jdbc.date-time/read-as-local)
@@ -16,6 +15,7 @@
   (fetch-records [db login])
   (todays-score [db login])
   (active-users [db n])
+  ;; (find-ex-days-thres [db days thres])
   (find-ex-days [db days])
   (todays-act [db]))
 
@@ -23,7 +23,6 @@
   duct.database.sql.Boundary
 
   (insert-pt [db login-pt]
-    ;;(timbre/debug "insert-pt:login-pt:" login-pt)
     (sql/insert! (ds-opt db) :results login-pt))
 
   (sum [db n]
@@ -67,12 +66,19 @@
            (partition-by :login)
            (take n))))
 
+  ;; (find-ex-days-thres [db days thres]
+  ;;   (let [q (str/replace "select login, date(timestamp) from results
+  ;;                where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
+  ;;                group by login, date(timestamp)"
+  ;;                        #"XXX" (str days))
+  ;;         ret (sql/query (ds-opt db) [q])]
+  ;;     ret))
+
   (find-ex-days [db days]
     (let [q (str/replace "select login, date(timestamp) from results
                  where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
                  group by login, date(timestamp)"
                          #"XXX" (str days))
-          ;; _ (timbre/debug "q" q)
           ret (sql/query (ds-opt db) [q])]
       ret))
 

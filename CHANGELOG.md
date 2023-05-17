@@ -17,17 +17,86 @@
   being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
-- 回帰直線、回帰曲線を乗せる。
-- 移動平均を乗せる
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- 例文を足すか？ moby-dick
+- 例文を足す moby-dick
+- admin? を DB から引く
+  l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
+  あるいは /admin/:user を作るか。
+- VScode で cljs repl につながらなくなった。以前はどうだったか？
+- hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
+- /todays に today's total を表示。
+- devcontainer 時、(env :tp-dev) が解決できてない。
 
 
-## 1.16.0-SNAPSHOT
+## 1.18.4 - 2023-05-16
+- FIXME: plot 中で (map :pt data) は役割分担としておかしい。
+
+## 1.18.3 - 2023-05-16
+- todays, total 入れ替え
+
+## 1.18.2 - 2023-05-16
+ダミーリリース。「ブラウザの履歴をクリア」のチェック。
+
+## 1.18.1 - 2023-05-16
+- plot todays when (< 9 (count todays))
+- /todays に (headline 7)
+
+## 1.18.0 - 2023-05-16
+- double plots. need adjust margin and position
+
+## 1.17.3 - 2023-05-15
+### refactor
+- /daily => /todays
+- /sum => /total
+- /ex-days => /days
+- /scores => /max
+- remove /scores-no-arg
+- link from /record/:login to /todays/:login
+
+## 1.17.2 - 2023-05-15
+- sum, ex-days, max に分割。
+
+## 1.17.1 - 2023-05-14
+- can see other's details
+
+## 1.17.0 - 2023-05-14
+- 回帰直線
+
+## 1.16.9 - 2023-05-14
+### Removed
+- exam_mode.clj
+- users.clj
+- timbre
+- useless println
+
+## 1.16.8 - 2023-05-14
+- headline two lines
+
+## 1.16.7 - 2023-05-14
+- メッセージの修正
+- Bootstrap 5.2.3
+- forget to update integrity in bootstrap
+
+## 1.16.5 - 2023-05-14
+- **bugfix** /stat は hkimura only ではいけない
+
+## 1.16.4 - 2023-05-14
+- /rc ボタンに、Clear Browsin Data... してねのメッセージ
+
+## 1.16.3 - 2023-05-14
+- /stat と /stat-page admin only に制限
+
+## 1.16.1 - 2023-05-13
+- /rc に誰の出席データかを表示
+
+## 1.16.0 - 2023-05-13
+roll-calls
 - ブランチを作らず、1.15.13 の上に足してしまった。
-- table bg
-- boundary.bg
-- business logic
+- table stat
+- boundary.stat
+- style.css .stat class
+- change background color in normal/roll-call/exam as white/yello/pink
+
 
 ## 1.15.13 - 2023-05-08
 - default 7 days

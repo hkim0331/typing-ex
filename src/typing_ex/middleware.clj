@@ -7,9 +7,7 @@
    [buddy.auth.backends.session :refer [session-backend]]
    [buddy.auth.middleware :refer [wrap-authorization wrap-authentication]]
    [integrant.core :as ig]
-   ;;[ring.middleware.cors :refer [wrap-cors]]
-   #_[ring.middleware.params :refer [wrap-params]]
-   [taoensso.timbre :as timbre]))
+   ))
 
 (defn unauthorized-handler
   [request _]
@@ -35,7 +33,7 @@
 
 (defn probe [handler keys]
   (fn [req]
-    (timbre/debug (select-keys req keys))
+    (println "probe" (select-keys req keys))
     (handler req)))
 
 (defmethod ig/init-key :typing-ex.middleware/probe [_ _]
