@@ -25,9 +25,21 @@
 - VScode で cljs repl につながらなくなった。以前はどうだったか？
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - /todays に today's total を表示。
+- 環境変数の参照以外に develop/production を判定する方法。
+  devcontainer 時、(env :tp-dev) が解決できてない。
+
+
+## 1.18.7 - 2023-05-19
+- link to /stat-page from `/rc`. only admin can follow the link.
+
+## 1.18.6 - 2023-05-18
+- radio button /stat-page
+
+## 1.18.5 - 2023-05-18
+- /rc の表示する日時を dedupe する。
 
 ## 1.18.4 - 2023-05-16
-- FIXME: plot 中で (map :pt data) は役割分担としておかしい。
+- FIXED: plot 中で (map :pt data) は役割分担としておかしい。
 
 ## 1.18.3 - 2023-05-16
 - todays, total 入れ替え
