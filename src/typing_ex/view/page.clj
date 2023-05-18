@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.2")
+(def ^:private version "1.18.5")
 
 (defn page [& contents]
   [::response/ok
@@ -189,10 +189,16 @@
      [:h2 "Typing: " login " Records"]
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div.d-inline-flex
+      [:div.px-2.mx-auto
+       (scatter 300 150 (map :pt positives))
+       [:br]
+       [:b "TOTAL"]]
       (when (< 9 (count todays))
-        [:div.px-2.mx-auto (scatter 300 150 todays) [:br] [:b "TODAYS"]])
-      [:div.px-2]
-      [:div.px-2.mx-auto (scatter 300 150 positives) [:br] [:b "TOTAL"]]]
+        [:div.px-2.mx-auto
+         (scatter 300 150 (map :pt todays))
+         [:br]
+         [:b "TODAYS"]])
+      [:div.px-2]]
      [:br]
      [:br]
      (when true ;; (or me? admin?)
@@ -275,4 +281,4 @@
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"]
    [:ul {:class "roll-call"}
     (for [r ret]
-      [:li (str (:created_at r))])]))
+      [:li r])]))
