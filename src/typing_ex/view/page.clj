@@ -281,4 +281,4 @@
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"]
    [:ul {:class "roll-call"}
     (for [r ret]
-      [:li (str (:created_at r))])]))
+      [:li r])]))
