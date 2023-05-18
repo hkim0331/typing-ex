@@ -27,7 +27,10 @@
 - /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
-- button to /stat-page
+
+
+## 1.18.7 - 2023-05-19
+- link to /stat-page from `/rc`. only admin can follow the link.
 
 ## 1.18.6 - 2023-05-18
 - radio button /stat-page
