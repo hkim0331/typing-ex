@@ -26,8 +26,12 @@
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - /todays に today's total を表示。
 - devcontainer 時、(env :tp-dev) が解決できてない。
+- button to /stat-page
 
-## 1.18.5
+## 1.18.6 - 2023-05-18
+- radio button /stat-page
+
+## 1.18.5 - 2023-05-18
 - /rc の表示する日時を dedupe する。
 
 ## 1.18.4 - 2023-05-16
