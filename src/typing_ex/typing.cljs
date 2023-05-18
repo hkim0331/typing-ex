@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.18.5")
+(def ^:private version "1.18.6")
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -231,7 +231,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     [:br]
     (bar-chart 300 150 (map :pt (:todays @app-state)))]
    [:p
-    [:a {:href "/total/7" :class "btn btn-primary btn-sm"} "D.P."]
+    [:a {:href "/total/7" :class "btn btn-primary btn-sm"} "total"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]

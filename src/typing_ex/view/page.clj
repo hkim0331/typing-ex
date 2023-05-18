@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.5")
+(def ^:private version "1.18.6")
 
 (defn page [& contents]
   [::response/ok
@@ -261,15 +261,24 @@
                   login]]))))]
    (headline n)))
 
-(defn stat-page [stat]
+(defn stat-page
+  "stat は現在値が渡ってくる。
+   返すべき値は [normal roll-call exam] のどれか。"
+  [stat]
+  ;; (println "stat " stat)
   (page
    [:h2 "Typing: Stat"]
    (form-to
     [:post "/stat"]
     (anti-forgery-field)
-    [:input {:name "stat" :placeholder stat}]
-    [:p "normal, roll-call, exam"]
-    [:input {:type "submit"}])))
+    (for [val ["normal" "roll-call" "exam"]]
+      [:div
+        [:input
+         (if (= stat val)
+           {:type "radio" :name "stat" :value val :checked "checked"}
+           {:type "radio" :name "stat" :value val})
+         val]])
+    [:input.btn.btn-primary.btn-sm {:type "submit" :value "change"}])))
 
 ;; roll-call
 ;; FIXME: 表示で工夫するよりも、データベースに入れる時に加工するか？
