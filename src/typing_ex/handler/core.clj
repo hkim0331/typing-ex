@@ -191,7 +191,7 @@
   (fn [req]
     (if (= "hkimura" (get-login req))
       (view/stat-page (:stat (stat/stat db)))
-      [::response/forbidden "access forbidden"])))
+      [::response/forbidden "ACCESS FORBIDDEN"])))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [{{:keys [stat]} :params}]
