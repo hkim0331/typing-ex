@@ -191,16 +191,25 @@
   (fn [req]
     (if (= "hkimura" (get-login req))
       (view/stat-page (:stat (stat/stat db)))
-      [::response/forbidden "access forbidden"])))
+      [::response/forbidden "ACCESS FORBIDDEN"])))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
   (fn [{{:keys [stat]} :params}]
     (stat/stat! db stat)
     (redirect "/")))
 
+(defn- date-only
+  "datetime is a java.time.LocalDateTime object"
+  [datetime]
+  (first (str/split (str datetime) #"T")))
+
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
-    (let [ret (roll-calls/rc db (get-login req))]
+    (let [ret (->> (roll-calls/rc db (get-login req))
+                   (map :created_at)
+                   (map date-only)
+                   dedupe)]
+      ;; (println (str ret))
       (view/rc-page ret))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
