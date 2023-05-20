@@ -11,7 +11,9 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 (def ^:private version "1.18.7")
-(def ^:private timeout 60)
+
+(def ^:private timeout      60)
+(def ^:private wil          4)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -93,8 +95,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         ;;      (get-in @app-state [:results :bads]))
         ]
     (if (empty? (:results @app-state))
-      (js/alert (str "コピペじゃダメよ"))
-      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
+      (js/alert (str "コピペはダメよ"))
+      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)"))
         (js/alert (str
                    (str @points-debug) " => " pt
                    "\n\n"
@@ -103,9 +105,12 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state)))))
+    (when (zero? (mod (:todays-trials @app-state) wil))
+      (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？"))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
-      (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
+      (js/alert
+       (str "連続 " todays-limit " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
 
 
 (defn send-
