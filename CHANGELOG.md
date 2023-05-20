@@ -28,6 +28,8 @@
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
 
+## 1.18.8 - 2023-05-20
+- encourage wil
 
 ## 1.18.7 - 2023-05-19
 - link to /stat-page from `/rc`. only admin can follow the link.
