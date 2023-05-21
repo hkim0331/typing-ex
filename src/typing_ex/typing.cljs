@@ -13,7 +13,7 @@
 (def ^:private version "1.18.8")
 
 (def ^:private timeout 60)
-(def ^:private wil          4)
+;; (def ^:private wil          4)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -105,8 +105,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state)))))
-    (when (zero? (mod (:todays-trials @app-state) wil))
-      (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？"))
+    ;; (when (zero? (mod (:todays-trials @app-state) wil))
+    ;;   (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？"))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert
@@ -245,6 +245,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn start []
   (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
+  (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？")
   (.focus (.getElementById js/document "drill")))
 
 (defn ^:export init []
