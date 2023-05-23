@@ -236,7 +236,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     [:br]
     (bar-chart 300 150 (map :pt (:todays @app-state)))]
    [:p
-    [:a {:href "/total/7" :class "btn btn-primary btn-sm"} "total"]
+    [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]
