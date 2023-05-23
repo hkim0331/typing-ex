@@ -5,7 +5,7 @@ services:
     image: hkim0331/typing-ex
     user: vscode
     ports:
-      - "3002:3002"
+      - "3002:3000"
     volumes:
       - .:/usr/src/app
       # - m2:/home/vscode/.m2
