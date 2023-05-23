@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.9")
+(def ^:private version "1.18.10")
 
 (defn page [& contents]
   [::response/ok
