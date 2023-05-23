@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.18.9")
+(def ^:private version "1.18.10")
 
 (def ^:private timeout 60)
 ;; (def ^:private wil          4)
@@ -91,8 +91,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              60  "だいぶ上手です。この調子でがんばれ。"
              30  "指先を見ずに、ゆっくり、ミスを少なく。"
              "練習あるのみ。")
-        ;; c (+ (get-in @app-state [:results :goods])
-        ;;      (get-in @app-state [:results :bads]))
         ]
     (if (empty? (:results @app-state))
       (js/alert (str "コピペはダメよ"))
@@ -105,8 +103,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state)))))
-    ;; (when (zero? (mod (:todays-trials @app-state) wil))
-    ;;   (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？"))
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert
@@ -236,7 +232,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     [:br]
     (bar-chart 300 150 (map :pt (:todays @app-state)))]
    [:p
-    [:a {:href "/total/7" :class "btn btn-primary btn-sm"} "total"]
+    [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
     " "
     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
    [:hr]

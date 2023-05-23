@@ -29,6 +29,11 @@
   devcontainer 時、(env :tp-dev) が解決できてない。
 
 
+## 1.18.10 - 2023-05-23
+- return to /todays page
+/total/7 だと、上位20位以外の人はスクロールしないと自分の行にたどりつかない。
+/todays だと一番上付近に見つかる。
+
 ## 1.18.9 - 2023-05-21
 - asking wil start time only
 
