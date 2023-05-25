@@ -12,6 +12,7 @@
    [ring.util.response :refer [redirect]]
    [typing-ex.boundary.drills  :as drills]
    [typing-ex.boundary.roll-calls :as roll-calls]
+   [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
@@ -218,3 +219,17 @@
       (if ret
         [::response/ok (str pt (get-login req) (java.util.Date.))]
         [::response/bad-request "rc! errored"]))))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (println "login " login)
+    (let [ret (restarts/restarts db login)]
+      [::response/ok (str ret)]
+      )))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts! [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (restarts/restarts! db (get-login req))]
+      (if ret
+        [::response/ok "posted"]
+        [::response/bad-request "restarts! errored"]))))
