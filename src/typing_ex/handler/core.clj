@@ -221,7 +221,11 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result}]
-    ;; (println "login " login)
+    (let [ret (restarts/restarts db login)]
+      [::response/ok "restarts"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts-page [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
     (let [ret (restarts/restarts db login)]
       (view/restarts-page login ret))))
 
