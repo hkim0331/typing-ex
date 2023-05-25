@@ -241,8 +241,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn startup-message []
   (go (<! (http/post
            "/restarts"
-           {:form-params
-            {:__anti-forgery-token (csrf-token)}})))
+           {:form-params {:__anti-forgery-token (csrf-token)}})))
   (js/alert
    "授業資料読んだか？\nWIL 👍😐👎 した？\nスタート時刻記録してます。苦手も練習しなくちゃ。"))
 
@@ -250,8 +249,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (startup-message)
-  )
+  (startup-message))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads
