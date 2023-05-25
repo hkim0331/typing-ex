@@ -232,7 +232,7 @@
     (let [ret (restarts/restarts db login)]
       (view/restarts-page login ret))))
 
-
 (defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result}]
-    [::response/ok (str "/restarts/" login)]))
+    (let [recent (last (restarts/restarts db login))]
+      [::response/ok (str recent)])))

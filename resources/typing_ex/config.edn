@@ -54,9 +54,11 @@
   :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/recent   {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/restarts      {:db #ig/ref :duct.database/sql}
+
+  :typing-ex.handler.core/restarts {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/restarts-page {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/restarts!     {:db #ig/ref :duct.database/sql}
+
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/scores   {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat      {:db #ig/ref :duct.database/sql}

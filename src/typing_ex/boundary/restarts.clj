@@ -16,7 +16,7 @@
     (let [ret (sql/query
                (ds-opt db)
                ["select * from restarts
-                  where login= ? and
+                  where login = ? and
                   date(created_at) = CURRENT_DATE" login])]
       ret))
 
