@@ -205,7 +205,7 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
         [:li "Exercises (today/total) " (count todays) "/" (count positives)]
-        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go! "]]
+        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
