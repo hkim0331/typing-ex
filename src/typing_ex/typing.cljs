@@ -239,11 +239,17 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:div "hkimura, " version]])
 
 (defn startup-message []
-  (go (<! (http/post
-           "/restarts"
-           {:form-params {:__anti-forgery-token (csrf-token)}})))
-  (js/alert
-   "授業資料読んだか？\nWIL 👍😐👎 した？\nスタート時刻記録してます。苦手も練習しなくちゃ。"))
+  (let [last-go (go (-> (<! (http/get "/restarts"))
+                        :body
+                       ))
+        _ (go (<! (http/post
+                   "/restarts"
+                   {:form-params {:__anti-forgery-token (csrf-token)}})))]
+    (js/alert (str last-go))
+    (js/alert
+     (str "授業資料読んだか？\n"
+          "WIL 👍😐👎 した？\n"
+          "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
 
 (defn start []
   (fetch-reset!)
