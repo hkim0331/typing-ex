@@ -34,7 +34,10 @@
     [:post "/stat"] [:typing-ex.handler.core/stat!]
 
     [:get  "/rc"] ^:auth [:typing-ex.handler.core/rc]
-    [:post "/rc"]        [:typing-ex.handler.core/rc!]}
+    [:post "/rc"]        [:typing-ex.handler.core/rc!]
+
+    [:get  "/restarts/" login] [:typing-ex.handler.core/restarts login]
+    [:post "/restarts"] [:typing-ex.handler.core/restarts!]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 
@@ -50,6 +53,8 @@
   :typing-ex.handler.core/rc! {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/recent   {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/record   {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/restarts  {:db #ig/ref :duct.database/sql}
+  :typing-ex.handler.core/restarts! {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/score-post  {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/scores   {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/stat      {:db #ig/ref :duct.database/sql}
