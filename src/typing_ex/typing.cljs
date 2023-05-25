@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.18.10")
+(def ^:private version "1.19.0-SNAPSHOT")
 
 (def ^:private timeout 60)
 ;; (def ^:private wil          4)
@@ -238,11 +238,20 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:hr]
    [:div "hkimura, " version]])
 
+(defn startup-message []
+  (go (<! (http/post
+           "/restarts"
+           {:form-params
+            {:__anti-forgery-token (csrf-token)}})))
+  (js/alert
+   "授業資料読んだか？\nWIL 👍😐👎 した？\nスタート時刻記録してます。苦手も練習しなくちゃ。"))
+
 (defn start []
   (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
-  (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？")
-  (.focus (.getElementById js/document "drill")))
+  (.focus (.getElementById js/document "drill"))
+  (startup-message)
+  )
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

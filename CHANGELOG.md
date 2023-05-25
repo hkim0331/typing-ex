@@ -28,6 +28,10 @@
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
 
+## 1.19.0 - 2023-05-25
+- created table restarts
+- post /restarts
+- get /restarts shows today's restarted (launched) times
 
 ## 1.18.10 - 2023-05-23
 - return to /todays page
