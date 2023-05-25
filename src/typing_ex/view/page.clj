@@ -205,7 +205,7 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
         [:li "Exercises (today/total) " (count todays) "/" (count positives)]
-        ;; [:li "Today's " [:a {:href (str "/restarts/" login)} "Launch times"]]
+        [:li "Today's " [:a {:href (str "/restarts/" login)} "Launch times"]]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -286,3 +286,11 @@
    [:ul {:class "roll-call"}
     (for [r ret]
       [:li r])]))
+
+(defn restarts-page [login ret]
+  (page
+   [:h2 "Typing: リスタート時刻 " login]
+   [:p "苦手を流しちゃ練習にならんやろ。"]
+   [:ol
+    (for [r ret]
+      [:li (:login r) " " (:created_at r)])]))

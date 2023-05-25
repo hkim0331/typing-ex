@@ -18,15 +18,15 @@
                ["select * from restarts
                   where login=? and
                   date(created_at) = CURRENT_DATE" login])]
-      (println "ret" (str ret))
+      ;;(println "ret" (str ret))
       ret))
 
   (restarts! [db login]
-    (println "restarts! login:" login)
+    ;; (println "restarts! login:" login)
     (let [ret (sql/insert!
                (ds-opt db)
                :restarts
                {:login login :created_at (java.util.Date.)}
                {:return-keys true})]
-      (println "ret:" (str ret))
+      ;;(println "ret:" (str ret))
       ret)))

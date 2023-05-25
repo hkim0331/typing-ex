@@ -243,7 +243,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
            "/restarts"
            {:form-params
             {:__anti-forgery-token (csrf-token)}})))
-  (js/alert "授業資料読んだか？ WIL 読んで 👍👎 した？"))
+  (js/alert
+   "授業資料読んだか？\nWIL 👍😐👎 した？\nスタート時刻記録してます。苦手も練習しなくちゃ。"))
 
 (defn start []
   (fetch-reset!)

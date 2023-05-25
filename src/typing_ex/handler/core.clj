@@ -15,8 +15,7 @@
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
-   [typing-ex.view.page :as view]
-   ))
+   [typing-ex.view.page :as view]))
 
 (comment
   (env :tp-dev)
@@ -222,14 +221,14 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result}]
-    (println "login " login)
+    ;; (println "login " login)
     (let [ret (restarts/restarts db login)]
-      [::response/ok (str ret)]
-      )))
+      (view/restarts-page login ret))))
 
 (defmethod ig/init-key :typing-ex.handler.core/restarts! [_ {:keys [db]}]
   (fn [req]
-    (let [ret (restarts/restarts! db (get-login req))]
+    (let [login (get-login req)
+        ret (restarts/restarts! db login)]
       (if ret
-        [::response/ok "posted"]
+        [::response/ok (str "/restarts! " login)]
         [::response/bad-request "restarts! errored"]))))
