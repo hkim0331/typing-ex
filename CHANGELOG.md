@@ -27,6 +27,9 @@
 - /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
+- リファラ見てアラート出すかどうか、決められないか？
+  グラフから戻ってGo! するときは記録しないでよい。
+
 
 ## 1.19.0 - 2023-05-25
 - created table restarts
