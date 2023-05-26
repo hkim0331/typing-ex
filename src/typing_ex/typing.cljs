@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.0-SNAPSHOT")
+(def ^:private version "1.19.1")
 
 (def ^:private timeout 60)
 ;; (def ^:private wil          4)
@@ -82,8 +82,10 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [args]
   (max 0 (pt-raw args)))
 
-(defn show-score [pt]
-  (let [login (get-login)
+(defn show-score
+  [pt]
+  (let [;; pt (:pt @app-state)
+        login (get-login)
         s1 (str login " さんのスコアは " pt " 点です。")
         s2 (condp <= pt
              100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -111,11 +113,11 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
-  []
+  [pt]
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
       (js/alert "タイプ、忘れた？"))
-    (let [pt (pt @app-state)]
+    (do
       (swap! app-state update :todays conj {:pt pt})
       (go (<! (http/post
                "/score"
@@ -128,7 +130,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                  {:form-params
                   {:__anti-forgery-token (csrf-token)
                    :pt pt}}))))
-      (show-score pt))))
+      #_(show-score pt))))
 
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-reset!
@@ -153,22 +155,25 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :words-max (count words)
                :pos 0
                :results []
-               ;; :todays の更新は send- に任せる。
-               ;; :todays scores
                )
         ;; (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
         (.focus (.getElementById js/document "drill")))))
 
-(defn send-fetch-reset!
+(defn show-send-fetch-display!
   "must exec sequentially"
   []
-  (send-)
-  (fetch-reset!))
+  (let [pt (pt @app-state)]
+    (show-score pt)
+    ;; (js/alert (str (:todays-trials @app-state)))
+    (if (= 1 (:todays-trials @app-state))
+      (js/alert "Go! と再読み込み直後の一回めは記録しません。")
+      (send- pt))
+    (fetch-reset!)))
 
 (defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    (send-fetch-reset!)))
+    (show-send-fetch-display!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
@@ -184,7 +189,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
     (when (<= (@app-state :words-max) (@app-state :pos))
-      (send-fetch-reset!))))
+      (show-send-fetch-display!))))
 
 (defn check-key [key]
   (case key
@@ -207,7 +212,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn ex-page []
   [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
-   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"}
+    "Go! と再読み込み直後の 1 回めは記録しません。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -225,7 +231,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              :class "btn btn-success btn-sm"
              :style {:font-family "monospace"}
              :value (:seconds @app-state)
-             :on-click #(do (send-fetch-reset!))}]
+             :on-click #(do (show-send-fetch-display!))}]
     " 🔚 全部タイプした後にスペースかエンターでボーナス"]
    [:p
     "todays:"
@@ -238,20 +244,25 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:hr]
    [:div "hkimura, " version]])
 
-(defn startup-message []
-  (go (<! (http/post
-           "/restarts"
-           {:form-params
-            {:__anti-forgery-token (csrf-token)}})))
-  (js/alert
-   "授業資料読んだか？\nWIL 👍😐👎 した？\nスタート時刻記録してます。苦手も練習しなくちゃ。"))
+;; deprecated
+;; (defn startup-message []
+;;   (let [last-go (go (-> (<! (http/get "/restarts"))
+;;                         :body
+;;                        ))
+;;         _ (go (<! (http/post
+;;                    "/restarts"
+;;                    {:form-params {:__anti-forgery-token (csrf-token)}})))]
+;;     (js/alert (str last-go))
+;;     (js/alert
+;;      (str "授業資料読んだか？\n"
+;;           "WIL 👍😐👎 した？\n"
+;;           "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
 
 (defn start []
   (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (startup-message)
-  )
+  #_(startup-message))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

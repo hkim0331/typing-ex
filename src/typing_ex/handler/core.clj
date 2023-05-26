@@ -219,16 +219,20 @@
         [::response/ok (str pt (get-login req) (java.util.Date.))]
         [::response/bad-request "rc! errored"]))))
 
-(defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
-  (fn [{[_ login] :ataraxy/result}]
-    ;; (println "login " login)
-    (let [ret (restarts/restarts db login)]
-      (view/restarts-page login ret))))
-
 (defmethod ig/init-key :typing-ex.handler.core/restarts! [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
-        ret (restarts/restarts! db login)]
+          ret (restarts/restarts! db login)]
       (if ret
         [::response/ok (str "/restarts! " login)]
         [::response/bad-request "restarts! errored"]))))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts-page [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (let [ret (restarts/restarts db login)]
+      (view/restarts-page login ret))))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (let [recent (last (restarts/restarts db login))]
+      [::response/ok (str recent)])))

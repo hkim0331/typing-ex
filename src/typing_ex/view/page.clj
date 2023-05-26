@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.19.0-SNAPSHOT")
+(def ^:private version "1.19.1")
 
 (defn page [& contents]
   [::response/ok
@@ -205,7 +205,7 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
         [:li "Exercises (today/total) " (count todays) "/" (count positives)]
-        [:li "Today's " [:a {:href (str "/restarts/" login)} "Launch times"]]
+        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -287,9 +287,9 @@
     (for [r ret]
       [:li r])]))
 
-(defn restarts-page [login ret]
+(defn restarts-page [_login ret]
   (page
-   [:h2 "Typing: リスタート時刻 " login]
+   [:h2 "Typing: Today's Go!"]
    [:p "苦手を流しちゃ練習にならんやろ。"]
    [:ol
     (for [r ret]
