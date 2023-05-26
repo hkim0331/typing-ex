@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.0")
+(def ^:private version "1.19.1")
 
 (def ^:private timeout 60)
 ;; (def ^:private wil          4)
@@ -212,7 +212,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn ex-page []
   [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
-   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
+   [:p {:class "red"}
+    "Go! と再読み込み直後の 1 回めは記録しません。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -243,18 +244,19 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:hr]
    [:div "hkimura, " version]])
 
-(defn startup-message []
-  (let [last-go (go (-> (<! (http/get "/restarts"))
-                        :body
-                       ))
-        _ (go (<! (http/post
-                   "/restarts"
-                   {:form-params {:__anti-forgery-token (csrf-token)}})))]
-    (js/alert (str last-go))
-    (js/alert
-     (str "授業資料読んだか？\n"
-          "WIL 👍😐👎 した？\n"
-          "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
+;; deprecated
+;; (defn startup-message []
+;;   (let [last-go (go (-> (<! (http/get "/restarts"))
+;;                         :body
+;;                        ))
+;;         _ (go (<! (http/post
+;;                    "/restarts"
+;;                    {:form-params {:__anti-forgery-token (csrf-token)}})))]
+;;     (js/alert (str last-go))
+;;     (js/alert
+;;      (str "授業資料読んだか？\n"
+;;           "WIL 👍😐👎 した？\n"
+;;           "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
 
 (defn start []
   (fetch-reset!)
