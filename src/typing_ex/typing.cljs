@@ -59,7 +59,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
-  (let [s1 (str/split text #"\s+")
+  (let [bonus 10
+        s1 (str/split text #"\s+")
         s2 (str/split answer #"\s+")
         s1<>s2 (map list s1 s2)
         all (count s1)
@@ -74,6 +75,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
            :all all :goods goods :bads bads :bs err :bonus seconds)
     (cond
       (< goods 10) 0
+      (= all goods) (+ score seconds bonus)
       (= all (+ goods bads)) (+ score seconds (- err))
       :else (+ score (- err)))))
 
@@ -165,9 +167,10 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   (let [pt (pt @app-state)]
     (show-score pt)
     ;; (js/alert (str (:todays-trials @app-state)))
-    (if (= 1 (:todays-trials @app-state))
-      (js/alert "Go! と再読み込み直後の一回めは記録しません。")
-      (send- pt))
+    ;; (if (= 1 (:todays-trials @app-state))
+    ;;   (js/alert "Go! と再読み込み直後の一回めは記録しません。")
+    ;;   (send- pt))
+    (send- pt)
     (fetch-reset!)))
 
 (defn countdown []
@@ -213,7 +216,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
    [:p {:class "red"}
-    "Go! と再読み込み直後の 1 回めは記録しません。単語間のスペースは一個で。"]
+    "ノーミス打ち切りでボーナス。単語間のスペースは一個でね。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -262,7 +265,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   (fetch-reset!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  #_(startup-message))
+  (go (<! (http/post
+           "/restarts"
+           {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads
