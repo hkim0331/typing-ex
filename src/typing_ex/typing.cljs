@@ -10,10 +10,9 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.1")
+(def ^:private version "1.9.2-SNAPSHOT")
 
-(def ^:private timeout 60)
-;; (def ^:private wil          4)
+(def ^:private timeout 20)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
@@ -59,9 +58,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 ;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
-  (let [bonus 10
-        s1 (str/split text #"\s+")
-        s2 (str/split answer #"\s+")
+  (let [s1 (str/split text #"\s+")
+        s2 (str/split answer #"\s")
         s1<>s2 (map list s1 s2)
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
@@ -72,10 +70,10 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :bs err :bonus seconds)
+           :all all :goods goods :bads bads :bs err :seconds seconds)
     (cond
       (< goods 10) 0
-      (= all goods) (+ score seconds bonus)
+      (= all goods) (+ score seconds 10) ;; bonus 10
       (= all (+ goods bads)) (+ score seconds (- err))
       :else (+ score (- err)))))
 
@@ -94,8 +92,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
              90  "がんばった。もう少しで 100 点だね。"
              60  "だいぶ上手です。この調子でがんばれ。"
              30  "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")
-        ]
+             "練習あるのみ。")]
     (if (empty? (:results @app-state))
       (js/alert (str "コピペはダメよ"))
       (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)"))
@@ -110,8 +107,9 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
     (swap! app-state update :todays-trials inc)
     (when (< todays-limit (:todays-trials @app-state))
       (js/alert
-       (str "連続 " todays-limit " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
-
+       (str "連続 "
+            (:todays-trials @app-state)
+            " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
 
 (defn send-
   "send- 中で (:todays @app-state) を更新する。"
@@ -131,15 +129,14 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                  "/rc"
                  {:form-params
                   {:__anti-forgery-token (csrf-token)
-                   :pt pt}}))))
-      #_(show-score pt))))
+                   :pt pt}})))))))
 
 ;; FIXME: ex-mode and normal-mode
-(defn fetch-reset!
+(defn fetch-display!
   []
   (go (let [stat (-> (<! (http/get "/stat"))
                      :body)
-            _ (.log js/console "fetch-reset! stat" stat)
+            ;; _ (.log js/console "fetch-display! stat" stat)
             drill (if (= stat "exam")
                     (do
                       (swap! mt-counter inc)
@@ -156,9 +153,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :words words
                :words-max (count words)
                :pos 0
-               :results []
-               )
-        ;; (.log js/console "(:todays @app-state)" (str (:todays @app-state)))
+               :results [])
         (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
@@ -166,39 +161,42 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   []
   (let [pt (pt @app-state)]
     (show-score pt)
-    ;; (js/alert (str (:todays-trials @app-state)))
     ;; (if (= 1 (:todays-trials @app-state))
     ;;   (js/alert "Go! と再読み込み直後の一回めは記録しません。")
     ;;   (send- pt))
     (send- pt)
-    (fetch-reset!)))
-
-(defn countdown []
-  (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
-    (show-send-fetch-display!)))
+    (fetch-display!)))
 
 ;; FIXME: when moving below block to top of this code,
 ;;        becomes not counting down even if declared.
 ;; (declare countdown)
 
-(defonce ^:private updater (js/setInterval countdown 1000))
-
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
-        typed  (last (str/split (@app-state :answer) #"\s+"))]
-    ;;(.log js/console target typed)
+        typed  (last (str/split (@app-state :answer) #"\s"))]
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
-    (when (<= (@app-state :words-max) (@app-state :pos))
+ ;; finished?
+    (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
+(defn countdown []
+  (swap! app-state update :seconds dec)
+  (when (zero? (:seconds @app-state))
+    (swap! app-state update :results conj "🔴") ;; no effect?
+    (show-send-fetch-display!)))
+
+(defonce ^:private updater (js/setInterval countdown 1000))
+
+;; Backspace でスペースを消した時
 (defn check-key [key]
   (case key
     " " (check-word)
     "Enter" (check-word)
-    "Backspace" (swap! app-state update :errors inc)
+    "Backspace" (do
+                  (swap! app-state update :errors inc)
+                  (swap! app-state update :results conj "🟡"))
     nil))
 
 (defn error-component []
@@ -206,17 +204,13 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
-  [:div.drill (apply str (@app-state :results))])
-
-(comment
-  (:stat @app-state)
-  :rcf)
+  [:div.drill (apply str (:results @app-state))])
 
 (defn ex-page []
   [:div {:class (:stat @app-state)}
    [:h2 "Typing: Challenge"]
    [:p {:class "red"}
-    "ノーミス打ち切りでボーナス。単語間のスペースは一個でね。"]
+    "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
    [:pre {:id "example"} (:text @app-state)]
    [:textarea {:name "answer"
                :id "drill"
@@ -226,7 +220,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                                   assoc
                                   :answer
                                   (-> % .-target .-value))}]
-   [error-component]
+   ;; [error-component]
    [results-component]
    [:p
     [:input {:type  "button"
@@ -262,7 +256,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 ;;           "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
 
 (defn start []
-  (fetch-reset!)
+  (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
   (go (<! (http/post
