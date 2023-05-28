@@ -33,7 +33,8 @@
 - space を超えるバックスペースは無効にする
 
 
-## 1.19.2-SNAPSHOT
+## 1.19.2 - 2023-05-28
+- error-component やめて🟡を (:results @app-state)に入れる
 
 ## 1.19.1 - 2023-05-26
 - Go! と reload 直後の 1 回目は記録しない。
