@@ -27,7 +27,27 @@
 - /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
+- リファラ見てアラート出すかどうか、決められないか？
+  グラフから戻ってGo! するときは記録しないでよい。
+- 前回のスタートからの時間を見てアラートするかどうかを決める。
+- space を超えるバックスペースは無効にする
 
+
+## 1.19.2 - 2023-05-28
+- error-component やめて🟡を (:results @app-state)に入れる
+
+## 1.19.1 - 2023-05-26
+- Go! と reload 直後の 1 回目は記録しない。
+
+## 1.19.0 - 2023-05-25
+- created table restarts
+- post /restarts
+- get /restarts shows today's restarted (launched) times
+
+## 1.18.10 - 2023-05-23
+- return to /todays page
+/total/7 だと、上位20位以外の人はスクロールしないと自分の行にたどりつかない。
+/todays だと一番上付近に見つかる。
 
 ## 1.18.9 - 2023-05-21
 - asking wil start time only

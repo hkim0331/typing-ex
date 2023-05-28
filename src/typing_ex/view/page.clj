@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.18.9")
+(def ^:private version "1.19.2")
 
 (defn page [& contents]
   [::response/ok
@@ -182,8 +182,6 @@
   (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
         avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)
-        ;; _ (def p positives)
-        ;; _ (def t todays)
         ]
     (page
      [:h2 "Typing: " login " Records"]
@@ -207,13 +205,9 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
         [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
-
-;; (comment
-;;   p
-;;   t
-;;   :rcf)
 
 ;; using?
 (defn active-users-page [ret]
@@ -292,3 +286,11 @@
    [:ul {:class "roll-call"}
     (for [r ret]
       [:li r])]))
+
+(defn restarts-page [_login ret]
+  (page
+   [:h2 "Typing: Today's Go!"]
+   [:p "苦手を流しちゃ練習にならんやろ。"]
+   [:ol
+    (for [r ret]
+      [:li (:login r) " " (:created_at r)])]))
