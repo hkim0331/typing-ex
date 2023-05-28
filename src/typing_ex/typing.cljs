@@ -10,9 +10,9 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.9.2-SNAPSHOT")
+(def ^:private version "1.19.2")
 
-(def ^:private timeout 20)
+(def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
