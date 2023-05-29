@@ -111,7 +111,7 @@
    (headline days)
    [:div {:style "margin-left:1rem;"}
     [:p "瞬間最大風速。" [:br]
-         "(タイプの正確さ) + (あまりの秒数)なので、理論的な最高得点は 159。"]
+         "[正確さ] + [残し秒数] + [ボーナス] なんでプログラム上、最高点は 169。"]
     (into [:ol
            (for [{:keys [max login]} max-pt]
              [:li
