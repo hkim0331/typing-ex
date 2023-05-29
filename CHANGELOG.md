@@ -31,8 +31,10 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - 前回のスタートからの時間を見てアラートするかどうかを決める。
 - space を超えるバックスペースは無効にする
-- duct は (java.util.Date.) を local-date-time に変えてストアする？
 
+## 1.19.3 - 2023-05-29
+- duct は (java.util.Date.) を local-date-time に変えてストアする？
+- 前回の記録から 20 秒以内の再読み込みはアラート。
 
 ## 1.19.2 - 2023-05-28
 - error-component やめて🟡を (:results @app-state)に入れる
