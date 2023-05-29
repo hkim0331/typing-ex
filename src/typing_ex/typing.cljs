@@ -255,14 +255,14 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                      js/parseInt)
             now (.now js/Date.)
             diff  (- now last)]
-        (<! (http/post
-             "/restarts"
-             {:form-params {:__anti-forgery-token (csrf-token)}}))
+        #_(<! (http/post
+               "/restarts"
+               {:form-params {:__anti-forgery-token (csrf-token)}}))
          ;; 20 seconds
         (when (< diff 20000)
           (js/alert (str "むずいのでも練習しなくちゃ。" diff))
           (busy-wait 10000))))
-  #_(go (<! (http/post
+  (go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
