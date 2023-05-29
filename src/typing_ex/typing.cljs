@@ -256,14 +256,10 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
-
 (defn start []
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  #_(go (<! (http/post
-           "/restarts"
-           {:form-params {:__anti-forgery-token (csrf-token)}})))
   (startup-message))
 
 (defn ^:export init []
