@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.2")
+(def ^:private version "1.19.4")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -241,27 +241,36 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:hr]
    [:div "hkimura, " version]])
 
-;; deprecated
-;; (defn startup-message []
-;;   (let [last-go (go (-> (<! (http/get "/restarts"))
-;;                         :body
-;;                        ))
-;;         _ (go (<! (http/post
-;;                    "/restarts"
-;;                    {:form-params {:__anti-forgery-token (csrf-token)}})))]
-;;     (js/alert (str last-go))
-;;     (js/alert
-;;      (str "授業資料読んだか？\n"
-;;           "WIL 👍😐👎 した？\n"
-;;           "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
+(defn busy-wait
+  [n]
+  (let [start (.now js/Date.)]
+    (loop [now (.now js/Date)]
+      (when (< (- now start) n)
+        (recur (.now js/Date.))))))
+
+(defn startup-message
+  []
+  (go (let [last (-> (<! (http/get (str "/restarts/" (get-login))))
+                     :body
+                     js/parseInt)
+            now (.now js/Date.)
+            diff  (- now last)]
+        (<! (http/post
+             "/restarts"
+             {:form-params {:__anti-forgery-token (csrf-token)}}))
+         ;; 20 seconds
+        (when (< diff 20000)
+          (js/alert (str "むずいのでも練習しなくちゃ。" diff))
+          (busy-wait 10000))))
+  #_(go (<! (http/post
+           "/restarts"
+           {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn start []
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (go (<! (http/post
-           "/restarts"
-           {:form-params {:__anti-forgery-token (csrf-token)}}))))
+  (startup-message))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

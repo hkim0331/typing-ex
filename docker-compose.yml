@@ -16,7 +16,7 @@ services:
       - infinity
 
   db:
-    image: postgres:14.7
+    image: postgres:14.8
     restart: always
     environment:
       POSTGRES_DB: typing_ex
