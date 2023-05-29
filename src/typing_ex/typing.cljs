@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.3")
+(def ^:private version "1.19.4")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -255,11 +255,14 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                      js/parseInt)
             now (.now js/Date.)
             diff  (- now last)]
+        (<! (http/post
+             "/restarts"
+             {:form-params {:__anti-forgery-token (csrf-token)}}))
          ;; 20 seconds
         (when (< diff 20000)
           (js/alert (str "むずいのでも練習しなくちゃ。" diff))
           (busy-wait 10000))))
-  (go (<! (http/post
+  #_(go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
