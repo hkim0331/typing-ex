@@ -8,6 +8,7 @@
    [hato.client :as hc]
    [integrant.core :as ig]
    #_[integrant.repl.state :refer [system]]
+   [java-time.api :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
    [typing-ex.boundary.drills  :as drills]
@@ -232,7 +233,21 @@
     (let [ret (restarts/restarts db login)]
       (view/restarts-page login ret))))
 
+;; returns millis
 (defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result}]
-    (let [recent (last (restarts/restarts db login))]
-      [::response/ok (str recent)])))
+    (let [created_at (-> (restarts/restarts db login)
+                         last
+                         :created_at
+                         jt/sql-timestamp
+                         jt/to-millis-from-epoch)]
+      [::response/ok (str created_at)])))
+
+(comment
+  (-> (jt/local-date-time)
+      jt/sql-timestamp ;; can not remove this!
+      jt/to-millis-from-epoch)
+
+  (-> (jt/instant)
+      jt/to-millis-from-epoch); => 1685318564122
+  )
