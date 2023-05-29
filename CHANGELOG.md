@@ -33,6 +33,8 @@
 - space を超えるバックスペースは無効にする
 - clojurescript で sleep
 
+## 1.19.4 - 2023-05-29
+- busy wait. wait するのはユーザのブラウザだ。
 
 ## 1.19.3 - 2023-05-29
 - duct は (java.util.Date.) を local-date-time に変えてストアする？

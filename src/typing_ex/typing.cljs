@@ -241,7 +241,13 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:hr]
    [:div "hkimura, " version]])
 
-;; deprecated
+(defn busy-wait
+  [n]
+  (let [start (.now js/Date.)]
+    (loop [now (.now js/Date)]
+      (when (< (- now start) n)
+        (recur (.now js/Date.))))))
+
 (defn startup-message
   []
   (go (let [last (-> (<! (http/get (str "/restarts/" (get-login))))
@@ -251,7 +257,8 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
             diff  (- now last)]
          ;; 20 seconds
         (when (< diff 20000)
-          (js/alert (str "問題文流してないか？" diff)))))
+          (js/alert (str "むずいのでも練習しなくちゃ。" diff))
+          (busy-wait 10000))))
   (go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
