@@ -242,26 +242,29 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
    [:div "hkimura, " version]])
 
 ;; deprecated
-;; (defn startup-message []
-;;   (let [last-go (go (-> (<! (http/get "/restarts"))
-;;                         :body
-;;                        ))
-;;         _ (go (<! (http/post
-;;                    "/restarts"
-;;                    {:form-params {:__anti-forgery-token (csrf-token)}})))]
-;;     (js/alert (str last-go))
-;;     (js/alert
-;;      (str "授業資料読んだか？\n"
-;;           "WIL 👍😐👎 した？\n"
-;;           "スタート時刻記録してます。苦手も練習しなくちゃ。"))))
+(defn startup-message
+  []
+  (go (let [last (-> (<! (http/get (str "/restarts/" (get-login))))
+                     :body
+                     js/parseInt)
+            now (.now js/Date.)
+            diff  (- now last)]
+         ;; 20 seconds
+        (when (< diff 20000)
+          (js/alert (str "問題文流してないか？" diff)))))
+  (go (<! (http/post
+           "/restarts"
+           {:form-params {:__anti-forgery-token (csrf-token)}}))))
+
 
 (defn start []
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (go (<! (http/post
+  #_(go (<! (http/post
            "/restarts"
-           {:form-params {:__anti-forgery-token (csrf-token)}}))))
+           {:form-params {:__anti-forgery-token (csrf-token)}})))
+  (startup-message))
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

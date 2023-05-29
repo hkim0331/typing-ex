@@ -1,5 +1,6 @@
 (ns typing-ex.boundary.restarts
   (:require
+   [java-time.api :as jt]
    [typing-ex.boundary.utils :refer [ds-opt]]
    ;; [next.jdbc :as jdbc]
    [next.jdbc.sql :as sql]
@@ -24,6 +25,7 @@
     (let [ret (sql/insert!
                (ds-opt db)
                :restarts
+               ;; java.util.Date. を使っても LocalDateTime で入っていく？
                {:login login :created_at (java.util.Date.)}
                {:return-keys true})]
       ret)))
