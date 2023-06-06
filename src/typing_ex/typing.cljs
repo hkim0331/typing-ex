@@ -53,7 +53,6 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;;; 1.12.x
 (def points-debug (atom {}))
 
 ;; FIXME: dirty.

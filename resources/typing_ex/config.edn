@@ -1,5 +1,8 @@
 {:duct.profile/base
+
  {:duct.core/project-ns typing-ex
+
+  :duct.server.http/jetty {:port 3002}
 
   :duct.router/ataraxy
   {:routes
@@ -68,8 +71,7 @@
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/total    {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/trials   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/typing   {:db #ig/ref :duct.database/sql}
-  }
+  :typing-ex.handler.core/typing   {:db #ig/ref :duct.database/sql}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"
