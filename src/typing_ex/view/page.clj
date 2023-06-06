@@ -10,7 +10,19 @@
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.19.4")
+(def ^:private version "1.19.5-SNAPSHOT")
+
+;--------------------------------
+;; FIXME
+(defn- ss
+  "shorten string"
+  [s]
+  (subs (str s) 0 16))
+
+(defn today? [ts]
+  (= (java-time/local-date)
+     (java-time/local-date ts)))
+;--------------------------------
 
 (defn page [& contents]
   [::response/ok
@@ -56,6 +68,10 @@
     [:div.row
      [:div.d-inline-
       [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+      "&nbsp;"
+      [:a {:href "https://rp.melt.kyutech.ac.jp/"
+           :class "btn btn-info btn-sm"}
+       "RP"]
       "&nbsp;"
       [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
       "&nbsp;"
@@ -111,7 +127,7 @@
    (headline days)
    [:div {:style "margin-left:1rem;"}
     [:p "瞬間最大風速。" [:br]
-         "[正確さ] + [残し秒数] + [ボーナス] なんでプログラム上、最高点は 169。"]
+         "[正確さ] + [残し秒数] + [ボーナス] でプログラム上の最高点は 169。"]
     (into [:ol
            (for [{:keys [max login]} max-pt]
              [:li
@@ -144,8 +160,7 @@
      [:h2 "Typing: Last " days " days Maxes"]
      (headline days)
      [:div {:style "margin-left:1rem;"}
-      [:p "「1 日 10 回未満はノーカウント」て言うと 10 回で終わる人いるからなあ。" [:br]
-       "そういうスタンスじゃ上手にならんやろ。"]
+      [:p "毎日ちょっとずつが伸びる秘訣。"]
       (into [:ol
              (for [[count login] data]
                [:li
@@ -156,15 +171,7 @@
                  login]])])]
      (headline days))))
 
-;; FIXME
-(defn- ss
-  "shorten string"
-  [s]
-  (subs (str s) 0 16))
 
-(defn today? [ts]
-  (= (java-time/local-date)
-     (java-time/local-date ts)))
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -226,15 +233,18 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-     "練習したフリはタメにならない。"]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
     (into [:ol]
           (for [r ret]
             [:li (ss (java-time/local-date-time (:timestamp r)))
              " "
              [:a {:href (str "/record/" (:login r))
                   :class (if (= login (:login r)) "yes" "other")}
-              (:login r)]]))]
+              (:login r)]
+             "&nbsp;"
+             [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
+                             (:login r))}
+              "(RP)"]]))]
    (headline 7)))
 
 (defn sums-page [ret user n]
@@ -242,7 +252,7 @@
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
+    [:p "毎日ちょっとずつが一番。一度にたくさんやっても身につかないよ。"]
     (into [:ol]
           (for [r ret]
             (let [login (:login r)
@@ -282,7 +292,7 @@
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"
-    [:a {:href "/stat-page"} "admin only"]]
+    [:a {:href "/stat-page"} "[admin only]"]]
    [:ul {:class "roll-call"}
     (for [r ret]
       [:li r])]))

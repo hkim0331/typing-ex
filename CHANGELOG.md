@@ -29,15 +29,15 @@
   devcontainer 時、(env :tp-dev) が解決できてない。
 - リファラ見てアラート出すかどうか、決められないか？
   グラフから戻ってGo! するときは記録しないでよい。
-- 前回のスタートからの時間を見てアラートするかどうかを決める。
 - space を超えるバックスペースは無効にする
-- clojurescript で sleep
+
+
 
 ## 1.19.5-SNAPSHOT
 - jetty port 3002
-
+```
   :duct.server.http/jetty {:port 3002}
-
+```
 ## 1.19.4 - 2023-05-29
 - busy wait. wait するのはユーザのブラウザだ。
 

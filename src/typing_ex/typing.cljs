@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.4")
+(def ^:private version "1.19.5-SNAPSHOT")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -49,11 +49,20 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defonce ^:private mt-counter (atom 0))
 
+(def points-debug (atom {}))
+
+;------------------------------------------
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
-(def points-debug (atom {}))
+(defn busy-wait
+  [n]
+  (let [start (.now js/Date.)]
+    (loop [now (.now js/Date)]
+      (when (< (- now start) n)
+        (recur (.now js/Date.))))))
+;------------------------------------------
 
 ;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -205,47 +214,42 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn results-component []
   [:div.drill (apply str (:results @app-state))])
 
-(defn ex-page []
-  [:div {:class (:stat @app-state)}
-   [:h2 "Typing: Challenge"]
-   [:p {:class "red"}
-    "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
-   [:pre {:id "example"} (:text @app-state)]
-   [:textarea {:name "answer"
-               :id "drill"
-               :value (:answer @app-state)
-               :on-key-up #(check-key (.-key %))
-               :on-change #(swap! app-state
-                                  assoc
-                                  :answer
-                                  (-> % .-target .-value))}]
-   ;; [error-component]
-   [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (show-send-fetch-display!))}]
-    " 🔚 全部タイプした後にスペースかエンターでボーナス"]
-   [:p
-    "todays:"
-    [:br]
-    (bar-chart 300 150 (map :pt (:todays @app-state)))]
-   [:p
-    [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
-   [:hr]
-   [:div "hkimura, " version]])
+(defn ex-page
+  []
+  (fn []
+    [:div {:class (:stat @app-state)}
+     [:h2 "Typing: Challenge"]
+     [:p {:class "red"}
+      "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
+     [:pre {:id "example"} (:text @app-state)]
+     [:textarea {:name "answer"
+                 :id "drill"
+                 :value (:answer @app-state)
+                 :on-key-up #(check-key (.-key %))
+                 :on-change #(swap! app-state
+                                    assoc
+                                    :answer
+                                    (-> % .-target .-value))}]
+     [results-component]
+     [:p
+      [:input {:type  "button"
+               :id    "seconds"
+               :class "btn btn-success btn-sm"
+               :style {:font-family "monospace"}
+               :value (:seconds @app-state)
+               :on-click #(do (show-send-fetch-display!))}]
+      " 🔚 全部タイプした後にスペースかエンターでボーナス"]
+     [:p
+      "todays:"
+      [:br]
+      (bar-chart 300 150 (map :pt (:todays @app-state)))]
+     [:p
+      [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+     [:hr]
+     [:div "hkimura, " version]]))
 
-(defn busy-wait
-  [n]
-  (let [start (.now js/Date.)]
-    (loop [now (.now js/Date)]
-      (when (< (- now start) n)
-        (recur (.now js/Date.))))))
 
 (defn startup-message
   []
