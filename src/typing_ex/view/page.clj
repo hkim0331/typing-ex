@@ -234,7 +234,7 @@
    (headline 7)
    [:div {:style "margin-left:1rem;"}
     [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" [:br]
-     "レポートも進めておくんだぞ。"]
+     "レポートも進めておくんだぞ。RP クリックでエラーだったらマズイって思わなくちゃ。"]
     (into [:ol]
           (for [r ret]
             [:li (ss (java-time/local-date-time (:timestamp r)))
