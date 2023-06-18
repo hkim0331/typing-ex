@@ -5,7 +5,7 @@
    #_[clojure.string :as str]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
-   [java-time]
+   [java-time :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
@@ -19,9 +19,7 @@
   [s]
   (subs (str s) 0 16))
 
-(defn today? [ts]
-  (= (java-time/local-date)
-     (java-time/local-date ts)))
+
 ;--------------------------------
 
 (defn page [& contents]
@@ -179,15 +177,45 @@
   [ret]
   (count (->> ret
               (map :timestamp)
-              (map java-time/local-date)
+              (map jt/local-date)
               (map str)
               (group-by identity))))
 
+(defn- today? [ts]
+  (= (jt/local-date)
+     (jt/local-date ts)))
+
+(defn- average [coll]
+  (/ (reduce + coll) (count coll)))
+
+(comment
+  (->> data
+       (map (fn [x] [(:pt x) (subs (str (:timestamp x)) 0 10)]))
+       (group-by second)
+       (map (fn [x] [(key x) (int (average (map first (val x))))]))
+       (into {}))
+  (str (jt/local-date))
+
+  (defn- day-by-day
+    ([ret] (day-by-day ret "2023-04-15" (str (jt/local-date))))
+    ([ret from to]
+     (let [data
+           (->> ret
+                (map (fn [x] [(:pt x) (subs (str (:timestamp x)) 0 10)]))
+                (group-by second)
+                (map (fn [x] [(key x) (int (average (map first (val x))))]))
+                (into {}))]
+       )))
+  :rcf)
+
+;; (defn- day-by-day
+;;   ([ret] (day-by-day ret "2023-04-15" "")
 ;; ret is a  lazySeq. should use mapv?
 (defn svg-self-records
   [login ret _me? _admin?]
-  (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
+  (def data ret)
+  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) ret)
+        avg (/ (reduce + (map :pt (take 10 (reverse ret)))) 10.0)
         todays (filter #(today? (:timestamp %)) ret)
         ]
     (page
@@ -195,7 +223,9 @@
      [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
      [:div.d-inline-flex
       [:div.px-2.mx-auto
-       (scatter 300 150 (map :pt positives))
+       ;; FIXME: これだと休んだ日がわからない。
+       ;;        最初の日から今日までの
+       (scatter 300 150 (map :pt ret))
        [:br]
        [:b "TOTAL"]]
       (when (< 9 (count todays))
@@ -208,10 +238,10 @@
      [:br]
      (when true ;; (or me? admin?)
        [:ul
-        [:li "Max " (apply max (map :pt positives))]
+        [:li "Max " (apply max (map :pt ret))]
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Exercises (today/total) " (count todays) "/" (count ret)]
         [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
@@ -237,7 +267,7 @@
      "レポートも進めておくんだぞ。RP クリックでエラーだったらマズイって思わなくちゃ。"]
     (into [:ol]
           (for [r ret]
-            [:li (ss (java-time/local-date-time (:timestamp r)))
+            [:li (ss (jt/local-date-time (:timestamp r)))
              " "
              [:a {:href (str "/record/" (:login r))
                   :class (if (= login (:login r)) "yes" "other")}
