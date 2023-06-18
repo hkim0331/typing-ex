@@ -261,7 +261,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
         #_(<! (http/post
                "/restarts"
                {:form-params {:__anti-forgery-token (csrf-token)}}))
-         ;; 20 seconds
+        ;; 20 seconds
         (when (< diff 20000)
           (js/alert (str "むずいのでも練習しなくちゃ。" diff))
           (busy-wait 10000))))
