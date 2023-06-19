@@ -22,7 +22,6 @@
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
-- VScode で cljs repl につながらなくなった。以前はどうだったか？
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。

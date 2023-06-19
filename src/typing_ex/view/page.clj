@@ -212,11 +212,11 @@
 ;;   ([ret] (day-by-day ret "2023-04-15" "")
 ;; ret is a  lazySeq. should use mapv?
 (defn svg-self-records
-  [login ret _me? _admin?]
-  (def data ret)
-  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse ret)))) 10.0)
-        todays (filter #(today? (:timestamp %)) ret)
+  [login scores _me? _admin?]
+  (def data scores)
+  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) scores)
+        avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
+        todays (filter #(today? (:timestamp %)) scores)
         ]
     (page
      [:h2 "Typing: " login " Records"]
@@ -224,8 +224,8 @@
      [:div.d-inline-flex
       [:div.px-2.mx-auto
        ;; FIXME: これだと休んだ日がわからない。
-       ;;        最初の日から今日までの
-       (scatter 300 150 (map :pt ret))
+       ;;        最初の日から今日までの日付を横軸とするグラフを（別に）書く。
+       (scatter 300 150 (map :pt scores))
        [:br]
        [:b "TOTAL"]]
       (when (< 9 (count todays))
@@ -238,12 +238,12 @@
      [:br]
      (when true ;; (or me? admin?)
        [:ul
-        [:li "Max " (apply max (map :pt ret))]
+        [:li "Max " (apply max (map :pt scores))]
         [:li "Average (last 10) " avg]
-        [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) " (count todays) "/" (count ret)]
+        [:li "Exercise days " (select-count-distinct scores)]
+        [:li "Exercises (today/total) " (count todays) "/" (count scores)]
         [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
-        [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
+        [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
 ;; using?
