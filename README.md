@@ -8,12 +8,17 @@ ClojureScript でフロントを書く練習。
     % lein new duct typing-ex +site +ataraxy +postgres
     % lein new shadow-cljs typing-ex :force +reagent
 
-## start
+## develop
 
+in shell,
     $ yarn watch
     $ lein repl
     user> (dev)
     user> (go)
+open http://localhost:3002
+
+or from VScode, choose  REPL -> Leiningen
+
 
 ## deploy
 

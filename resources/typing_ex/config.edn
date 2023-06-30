@@ -24,8 +24,9 @@
     ;; send typing score
     [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
 
-    ;; show page including svg plot
+    ;; show user info including svg plots
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
+
     ;; returns [{:pt n} {:pt m} {:pt k} ....]
     [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
 
