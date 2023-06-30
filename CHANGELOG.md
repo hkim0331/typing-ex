@@ -31,8 +31,9 @@
 - space を超えるバックスペースは無効にする
 
 
-## 1.19.6-SNAPSHOT
+## 1.19.6 - 2023-06-30
 - rename page.clj/svg-self-records to page.clj/display-records
+- day by day plot
 
 ## 1.19.5-SNAPSHOT
 - jetty port 3002
