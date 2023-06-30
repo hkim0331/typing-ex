@@ -160,7 +160,7 @@
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    (view/svg-self-records login
+    (view/display-records login
                            (results/fetch-records db login)
                            (= (get-login req) login)
                            (= (get-login req) "hkimura"))))
