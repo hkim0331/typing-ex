@@ -22,15 +22,26 @@
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
-- VScode で cljs repl につながらなくなった。以前はどうだったか？
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
 - リファラ見てアラート出すかどうか、決められないか？
   グラフから戻ってGo! するときは記録しないでよい。
-- 前回のスタートからの時間を見てアラートするかどうかを決める。
 - space を超えるバックスペースは無効にする
+
+
+## 1.19.6 - 2023-06-30
+- rename page.clj/svg-self-records to page.clj/display-records
+- day by day plot
+
+## 1.19.5-SNAPSHOT
+- jetty port 3002
+```
+  :duct.server.http/jetty {:port 3002}
+```
+## 1.19.4 - 2023-05-29
+- busy wait. wait するのはユーザのブラウザだ。
 
 ## 1.19.3 - 2023-05-29
 - duct は (java.util.Date.) を local-date-time に変えてストアする？

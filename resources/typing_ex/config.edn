@@ -1,5 +1,8 @@
 {:duct.profile/base
+
  {:duct.core/project-ns typing-ex
+
+  :duct.server.http/jetty {:port 3002}
 
   :duct.router/ataraxy
   {:routes
@@ -21,8 +24,9 @@
     ;; send typing score
     [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
 
-    ;; show page including svg plot
+    ;; show user info including svg plots
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
+
     ;; returns [{:pt n} {:pt m} {:pt k} ....]
     [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
 
@@ -68,8 +72,7 @@
   :typing-ex.handler.core/todays-act {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/total    {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/trials   {:db #ig/ref :duct.database/sql}
-  :typing-ex.handler.core/typing   {:db #ig/ref :duct.database/sql}
-  }
+  :typing-ex.handler.core/typing   {:db #ig/ref :duct.database/sql}}
 
  :duct.profile/dev   #duct/include "dev"
  :duct.profile/local #duct/include "local"

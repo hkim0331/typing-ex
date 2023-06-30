@@ -47,7 +47,7 @@
         body (:body (hc/get url {:as :json}))]
     body))
 
-;; FIXME: env 以外、system をみてスイッチしたい
+;; FIXME: 環境変数以外の方法は？
 (defn auth? [login password]
   (or
    (= "true" (env :tp-dev))
@@ -74,7 +74,8 @@
                #"xxx"
                login))
 
-;; index. anti-forgery-field と login を埋め込む。
+;; index.
+;; DON't FORGET: anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -89,8 +90,10 @@
     <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
   </head>
   <body>"
+      ;; DON'T FORGET
       (anti-forgery-field)
       (login-field (get-login req))
+      ;;
       "<div class='container'>
     <div id='app'>
       Shadow-cljs rocks!
@@ -157,7 +160,7 @@
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    (view/svg-self-records login
+    (view/display-records login
                            (results/fetch-records db login)
                            (= (get-login req) login)
                            (= (get-login req) "hkimura"))))
@@ -244,10 +247,11 @@
       [::response/ok (str created_at)])))
 
 (comment
+  ;; jit を得る。
   (-> (jt/local-date-time)
       jt/sql-timestamp ;; can not remove this!
       jt/to-millis-from-epoch)
-
+  ;; 現在時間なら、
   (-> (jt/instant)
       jt/to-millis-from-epoch); => 1685318564122
   )

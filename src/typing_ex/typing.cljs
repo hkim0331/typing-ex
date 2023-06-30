@@ -10,7 +10,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.19.3")
+(def ^:private version "0.19.6")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -49,12 +49,20 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 
 (defonce ^:private mt-counter (atom 0))
 
+(def points-debug (atom {}))
+
+;------------------------------------------
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;;; 1.12.x
-(def points-debug (atom {}))
+(defn busy-wait
+  [n]
+  (let [start (.now js/Date.)]
+    (loop [now (.now js/Date)]
+      (when (< (- now start) n)
+        (recur (.now js/Date.))))))
+;------------------------------------------
 
 ;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
@@ -206,42 +214,43 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 (defn results-component []
   [:div.drill (apply str (:results @app-state))])
 
-(defn ex-page []
-  [:div {:class (:stat @app-state)}
-   [:h2 "Typing: Challenge"]
-   [:p {:class "red"}
-    "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
-   [:pre {:id "example"} (:text @app-state)]
-   [:textarea {:name "answer"
-               :id "drill"
-               :value (:answer @app-state)
-               :on-key-up #(check-key (.-key %))
-               :on-change #(swap! app-state
-                                  assoc
-                                  :answer
-                                  (-> % .-target .-value))}]
-   ;; [error-component]
-   [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (show-send-fetch-display!))}]
-    " 🔚 全部タイプした後にスペースかエンターでボーナス"]
-   [:p
-    "todays:"
-    [:br]
-    (bar-chart 300 150 (map :pt (:todays @app-state)))]
-   [:p
-    [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
-   [:hr]
-   [:div "hkimura, " version]])
+(defn ex-page
+  []
+  (fn []
+    [:div {:class (:stat @app-state)}
+     [:h2 "Typing: Challenge"]
+     [:p {:class "red"}
+      "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
+     [:pre {:id "example"} (:text @app-state)]
+     [:textarea {:name "answer"
+                 :id "drill"
+                 :value (:answer @app-state)
+                 :on-key-up #(check-key (.-key %))
+                 :on-change #(swap! app-state
+                                    assoc
+                                    :answer
+                                    (-> % .-target .-value))}]
+     [results-component]
+     [:p
+      [:input {:type  "button"
+               :id    "seconds"
+               :class "btn btn-success btn-sm"
+               :style {:font-family "monospace"}
+               :value (:seconds @app-state)
+               :on-click #(do (show-send-fetch-display!))}]
+      " 🔚 全部タイプした後にスペースかエンターでボーナス"]
+     [:p
+      "todays:"
+      [:br]
+      (bar-chart 300 150 (map :pt (:todays @app-state)))]
+     [:p
+      [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+     [:hr]
+     [:div "hkimura, " version]]))
 
-;; deprecated
+
 (defn startup-message
   []
   (go (let [last (-> (<! (http/get (str "/restarts/" (get-login))))
@@ -249,21 +258,21 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                      js/parseInt)
             now (.now js/Date.)
             diff  (- now last)]
-         ;; 20 seconds
+        #_(<! (http/post
+               "/restarts"
+               {:form-params {:__anti-forgery-token (csrf-token)}}))
+        ;; 20 seconds
         (when (< diff 20000)
-          (js/alert (str "問題文流してないか？" diff)))))
+          (js/alert (str "むずいのでも練習しなくちゃ。" diff))
+          (busy-wait 10000))))
   (go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
-
 
 (defn start []
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  #_(go (<! (http/post
-           "/restarts"
-           {:form-params {:__anti-forgery-token (csrf-token)}})))
   (startup-message))
 
 (defn ^:export init []

@@ -5,12 +5,32 @@
    #_[clojure.string :as str]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
-   [java-time]
+   [java-time :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]
    [clojure.test :as t]))
 
-(def ^:private version "1.19.3")
+
+(def ^:private version "0.19.6")
+
+;--------------------------------
+;; FIXME
+(defn- ss
+  "shorten string"
+  [s]
+  (subs (str s) 0 16))
+
+(defn- db-aux [from to ret]
+  (if (pos? (.compareTo from to))
+    ret
+    (db-aux (-> (jt/plus (jt/local-date from) (jt/days 1)) str)
+            to
+            (conj ret from))))
+
+(defn days-between [from to]
+  (db-aux from to []))
+
+;--------------------------------
 
 (defn page [& contents]
   [::response/ok
@@ -53,52 +73,56 @@
   "scores-page の上下から呼ぶ。ボタンの並び。他ページで使ってもよい。"
   [n]
   [:div {:style "margin-left:1rem;"}
-    [:div.row
-     [:div.d-inline-
-      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+   [:div.row
+    [:div.d-inline-
+     [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
+     "&nbsp;"
+     [:a {:href "https://rp.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "RP"]
+     "&nbsp;"
+     [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
+     "&nbsp;"
+     [:a {:href "https://wil.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "WIL"]
+     "&nbsp;"
+     [:a {:href "http://qa.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "QA"]
+     "&nbsp;"
+     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "MT"]
+     "&nbsp;"
+     [:a {:href "http://l22.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "L22"]
+     "&nbsp;"
+     [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
+   [:div.row
+    [:div.d-inline-flex
+     [:a {:href "/todays" :class "btn btn-danger btn-sm"}
+      "todays"]
+     "&nbsp;"
+     (form-to
+      [:get "/recent"]
+      (text-field {:size 2
+                   :value n
+                   :style "text-align:right"}
+                  "n")
+      " days → "
+      (submit-button {:class "btn btn-primary btn-sm"
+                      :name "kind"}
+                     "total")
       "&nbsp;"
-      [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
+      (submit-button {:class "btn btn-primary btn-sm"
+                      :name "kind"}
+                     "days")
       "&nbsp;"
-      [:a {:href "https://wil.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "WIL"]
-      "&nbsp;"
-      [:a {:href "http://qa.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "QA"]
-      "&nbsp;"
-      [:a {:href "http://mt.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "MT"]
-      "&nbsp;"
-      [:a {:href "http://l22.melt.kyutech.ac.jp/"
-           :class "btn btn-info btn-sm"}
-       "L22"]
-      "&nbsp;"
-      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
-     [:div.row
-      [:div.d-inline-flex
-       [:a {:href "/todays" :class "btn btn-danger btn-sm"}
-        "todays"]
-       "&nbsp;"
-       (form-to
-        [:get "/recent"]
-        (text-field {:size 2
-                     :value n
-                     :style "text-align:right"}
-                    "n")
-        " days → "
-        (submit-button {:class "btn btn-primary btn-sm"
-                        :name "kind"}
-                       "total")
-        "&nbsp;"
-        (submit-button {:class "btn btn-primary btn-sm"
-                        :name "kind"}
-                       "days")
-        "&nbsp;"
-        (submit-button {:class "btn btn-primary btn-sm"
-                        :name "kind"}
-                       "max"))]]])
+      (submit-button {:class "btn btn-primary btn-sm"
+                      :name "kind"}
+                     "max"))]]])
 
 (defn scores-page
   "maxpt: 最高点
@@ -111,7 +135,7 @@
    (headline days)
    [:div {:style "margin-left:1rem;"}
     [:p "瞬間最大風速。" [:br]
-         "(タイプの正確さ) + (あまりの秒数)なので、理論的な最高得点は 159。"]
+     "[正確さ] + [残し秒数] + [ボーナス] でプログラム上の最高点は 169。"]
     (into [:ol
            (for [{:keys [max login]} max-pt]
              [:li
@@ -144,8 +168,7 @@
      [:h2 "Typing: Last " days " days Maxes"]
      (headline days)
      [:div {:style "margin-left:1rem;"}
-      [:p "「1 日 10 回未満はノーカウント」て言うと 10 回で終わる人いるからなあ。" [:br]
-       "そういうスタンスじゃ上手にならんやろ。"]
+      [:p "毎日ちょっとずつが伸びる秘訣。"]
       (into [:ol
              (for [[count login] data]
                [:li
@@ -156,39 +179,48 @@
                  login]])])]
      (headline days))))
 
-;; FIXME
-(defn- ss
-  "shorten string"
-  [s]
-  (subs (str s) 0 16))
-
-(defn today? [ts]
-  (= (java-time/local-date)
-     (java-time/local-date ts)))
-
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
   where login='hkimura'; を clojure で。"
   [ret]
   (count (->> ret
               (map :timestamp)
-              (map java-time/local-date)
+              (map jt/local-date)
               (map str)
               (group-by identity))))
 
-;; ret is a  lazySeq. should use mapv?
-(defn svg-self-records
-  [login ret _me? _admin?]
-  (let [positives (map #(assoc % :pt (max 0 (:pt %))) ret)
-        avg (/ (reduce + (map :pt (take 10 (reverse positives)))) 10.0)
-        todays (filter #(today? (:timestamp %)) ret)
-        ]
+(defn- today? [ts]
+  (= (jt/local-date)
+     (jt/local-date ts)))
+
+(defn- average [coll]
+  (/ (reduce + coll) (count coll)))
+
+(defn- average-day-by-day
+  [from to scores]
+  (let [averages (->> scores
+                      (map (fn [x] [(:pt x) (subs (str (:timestamp x)) 0 10)]))
+                      (group-by second)
+                      (map (fn [x] [(key x) (int (average (map first (val x))))]))
+                      (into {}))]
+    (map #(averages % 0) (days-between from to))))
+
+(defn display-records
+  [login scores _me? _admin?]
+  ;;(def data scores)
+  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) scores)
+        avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
+        todays (filter #(today? (:timestamp %)) scores)]
     (page
      [:h2 "Typing: " login " Records"]
-     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"]
+     [:p "付け焼き刃はもろい。毎日 10 分 x 3 セット。"
+      [:br]
+      "TOTAL は全スコア、TODAYS は本日分（10回以上練習）、
+          DAY BY DAY は一日平均。"]
      [:div.d-inline-flex
       [:div.px-2.mx-auto
-       (scatter 300 150 (map :pt positives))
+       ;; FIXME: これだと休んだ日がわからない。
+       (scatter 300 150 (map :pt scores))
        [:br]
        [:b "TOTAL"]]
       (when (< 9 (count todays))
@@ -197,16 +229,24 @@
          [:br]
          [:b "TODAYS"]])
       [:div.px-2]]
+     [:div.px-2
+      ;; 最初の日から今日までの日付を横軸とするグラフを（別に）書く。
+      (scatter 300 150 (average-day-by-day
+                        "2023-04-13"
+                        (str (jt/local-date))
+                        scores))
+      [:br]
+      [:b "DAY BY DAY"]]
      [:br]
      [:br]
      (when true ;; (or me? admin?)
        [:ul
-        [:li "Max " (apply max (map :pt positives))]
+        [:li "Max " (apply max (map :pt scores))]
         [:li "Average (last 10) " avg]
-        [:li "Exercise days " (select-count-distinct ret)]
-        [:li "Exercises (today/total) " (count todays) "/" (count positives)]
+        [:li "Exercise days " (select-count-distinct scores)]
+        [:li "Exercises (today/total) " (count todays) "/" (count scores)]
         [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
-        [:li "Last Exercise " (ss (str (:timestamp (last ret))))]])
+        [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
 ;; using?
@@ -226,15 +266,19 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "平常点が必要な人は見せかけじゃなく、実質的に平常から回数を重ねないと。" [:br]
-     "練習したフリはタメにならない。"]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" [:br]
+     "レポートも進めておくんだぞ。RP クリックでエラーだったらマズイって思わなくちゃ。"]
     (into [:ol]
           (for [r ret]
-            [:li (ss (java-time/local-date-time (:timestamp r)))
+            [:li (ss (jt/local-date-time (:timestamp r)))
              " "
              [:a {:href (str "/record/" (:login r))
                   :class (if (= login (:login r)) "yes" "other")}
-              (:login r)]]))]
+              (:login r)]
+             "&nbsp;"
+             [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
+                             (:login r))}
+              "(RP)"]]))]
    (headline 7)))
 
 (defn sums-page [ret user n]
@@ -242,7 +286,7 @@
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつ点数アップが一番。一度にたくさんやっても身につかないよ。"]
+    [:p "毎日ちょっとずつが一番。一度にたくさんやっても身につかないよ。"]
     (into [:ol]
           (for [r ret]
             (let [login (:login r)
@@ -267,11 +311,11 @@
     (anti-forgery-field)
     (for [val ["normal" "roll-call" "exam"]]
       [:div
-        [:input
-         (if (= stat val)
-           {:type "radio" :name "stat" :value val :checked "checked"}
-           {:type "radio" :name "stat" :value val})
-         val]])
+       [:input
+        (if (= stat val)
+          {:type "radio" :name "stat" :value val :checked "checked"}
+          {:type "radio" :name "stat" :value val})
+        val]])
     [:input.btn.btn-primary.btn-sm {:type "submit" :value "change"}])))
 
 ;; roll-call
@@ -282,7 +326,7 @@
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"
-    [:a {:href "/stat-page"} "admin only"]]
+    [:a {:href "/stat-page"} "[admin only]"]]
    [:ul {:class "roll-call"}
     (for [r ret]
       [:li r])]))
