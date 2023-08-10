@@ -32,20 +32,36 @@
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
 ;; midterm exam
+;; (def mt
+;;   ["An aviator whose plane is forced down in the Sahara Desert
+;; encounters a little prince from a small planet who relates
+;; his adventures in seeking the secret of what is important
+;; in life."
+;;    "Once when I was six years old I saw a beautiful picture in
+;; a book about the primeval forest called 'True Stories'.
+;; It showed a boa constrictor swallowing an animal.
+;; Here is a copy of the drawing."
+;;    "I showed my masterpiece to the grown-ups and asked them if
+;; my drawing frightened them. They answered: 'Why should
+;; anyone be frightened by a hat?' My drawing did not represent
+;; a hat. It was supposed to be a boa constrictor digesting elephant.
+;; "])
+
+;; from Moby-Dick
+;; no heading spaces!
 (def mt
-  ["An aviator whose plane is forced down in the Sahara Desert
-encounters a little prince from a small planet who relates
-his adventures in seeking the secret of what is important
-in life."
-   "Once when I was six years old I saw a beautiful picture in
-a book about the primeval forest called 'True Stories'.
-It showed a boa constrictor swallowing an animal.
-Here is a copy of the drawing."
-   "I showed my masterpiece to the grown-ups and asked them if
-my drawing frightened them. They answered: 'Why should
-anyone be frightened by a hat?' My drawing did not represent
-a hat. It was supposed to be a boa constrictor digesting elephant.
-"])
+  ["Call me Ishmael. Some years ago—never mind how long precisely
+having little or no money in my purse, and nothing particular to
+interest me on shore, I thought I would sail about a little
+and see the watery part of the world."
+   "There now is your insular city of the Manhattoes, belted round
+by wharves as Indian isles by coral reefs commerce surrounds it
+with her surf. Right and left, the streets take you waterward.
+Its extreme downtown is the battery, where that noble mole is washed"
+   "But look! here come more crowds, pacing straight for the water,
+and seemingly bound for a dive. Strange! Nothing will content them
+but the extremest limit of the land; loitering under the shady lee
+of yonder warehouses will not suffice."])
 
 (defonce ^:private mt-counter (atom 0))
 
