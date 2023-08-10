@@ -30,6 +30,8 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
 
+## 1.20.0 - 2023-08-10
+- moby dick.
 
 ## 1.19.6 - 2023-06-30
 - rename page.clj/svg-self-records to page.clj/display-records
