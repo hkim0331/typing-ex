@@ -254,4 +254,4 @@
   ;; 現在時間なら、
   (-> (jt/instant)
       jt/to-millis-from-epoch); => 1685318564122
-  )
+  :rcf)

@@ -1,5 +1,8 @@
 FROM clojure:lein
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NOWARNINGS=yes
+
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install --no-install-recommends \
@@ -18,5 +21,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 
+# https://qiita.com/kino-ma/items/eae3dac942e899f9a77b
+WORKDIR /usr/src/app
+COPY package.json ./
+RUN npm install
+
 ENTRYPOINT [ "lein", "repl", ":headless" ]
-#ENTRYPOINT [ "sleep", "infinity" ]
