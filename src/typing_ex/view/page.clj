@@ -11,7 +11,7 @@
    [clojure.test :as t]))
 
 
-(def ^:private version "0.19.6")
+(def ^:private version "1.20.0")
 
 ;--------------------------------
 ;; FIXME
