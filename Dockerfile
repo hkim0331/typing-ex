@@ -18,5 +18,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 USER $USERNAME
 
+WORKDIR /usr/src/app
+COPY package.json ./
+RUN npm install
+
 ENTRYPOINT [ "lein", "repl", ":headless" ]
 #ENTRYPOINT [ "sleep", "infinity" ]

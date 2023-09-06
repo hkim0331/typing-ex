@@ -2,14 +2,15 @@ version: "3"
 
 services:
   typing-ex:
-    image: hkim0331/typing-ex:0.1
-    # user: vscode
+    image: hkim0331/typing-ex:0.2
+    user: vscode
     ports:
       - "3002:3002"
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
+      # これができない。
+      # - node_modules:/usr/src/app/node_modules
       - m2:/root/.m2
       - gitlibs:/root/.gitlibs
     entrypoint:
@@ -37,5 +38,5 @@ volumes:
     external: true
   m2:
     external: true
-  node_modules:
-    external: true
+  # node_modules:
+  #   external: true
