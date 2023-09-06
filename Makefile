@@ -1,8 +1,9 @@
 SERV=app.melt
 DEST=${SERV}:typing-ex/tp.jar
+TAG=hkim0331/typing-ex:0.1
 
 build:
-	docker build -t hkim0331/typing-ex .
+	docker build -t ${TAG} .
 
 clean:
 	${RM} -r target

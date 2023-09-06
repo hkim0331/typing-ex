@@ -1,16 +1,17 @@
-version: "3.3"
+version: "3"
 
 services:
   typing-ex:
-    image: hkim0331/typing-ex
-    user: vscode
+    image: hkim0331/typing-ex:0.1
+    # user: vscode
     ports:
-      - "3002:3000"
+      - "3002:3002"
+    working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
-      # - m2:/home/vscode/.m2
-      # - gitlibs:/home/vscode/.gitlibs
-    working_dir: /usr/src/app
+      - node_modules:/usr/src/app/node_modules
+      - m2:/root/.m2
+      - gitlibs:/root/.gitlibs
     entrypoint:
       - sleep
       - infinity
@@ -35,4 +36,6 @@ volumes:
   gitlibs:
     external: true
   m2:
+    external: true
+  node_modules:
     external: true
