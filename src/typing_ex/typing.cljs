@@ -10,21 +10,21 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.20.0")
+(def ^:private version "1.21.0")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
-  (r/atom  {:text "App is starting..."
-            :answer ""
-            :seconds timeout
-            :errors 0
-            :words ""
+  (r/atom  {:text      "App is starting..."
+            :answer    ""
+            :seconds   timeout
+            :errors    0
+            :words     ""
             :words-max 0
-            :pos 0
-            :results []
-            :todays []
+            :pos       0
+            :results   []
+            :todays    []
             :todays-trials 0
             :stat "normal"}))
 
@@ -211,7 +211,7 @@ of yonder warehouses will not suffice."])
     (swap! app-state update :results conj "🔴") ;; no effect?
     (show-send-fetch-display!)))
 
-(defonce ^:private updater (js/setInterval countdown 1000))
+;; (defonce ^:private updater (js/setInterval countdown 1000))
 
 ;; Backspace でスペースを消した時
 (defn check-key [key]
@@ -223,9 +223,9 @@ of yonder warehouses will not suffice."])
                   (swap! app-state update :results conj "🟡"))
     nil))
 
-(defn error-component []
-  ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
+;; (defn error-component []
+;;   ;;(.log js/console "errors" (:errors @app-state))
+;;   [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
   [:div.drill (apply str (:results @app-state))])

@@ -1,22 +1,25 @@
-version: "3.3"
+version: "3"
 
 services:
   typing-ex:
-    image: hkim0331/typing-ex
+    image: hkim0331/typing-ex:0.3
     user: vscode
     ports:
-      - "3002:3000"
-    volumes:
-      - .:/usr/src/app
-      # - m2:/home/vscode/.m2
-      # - gitlibs:/home/vscode/.gitlibs
+      - "3002:3002"
     working_dir: /usr/src/app
+    volumes:
+      # https://gotohayato.com/content/544/
+      # https://qiita.com/kino-ma/items/eae3dac942e899f9a77b
+      - node_modules:/usr/src/app/node_modules
+      - .:/usr/src/app
+      - m2:/root/.m2
+      - gitlibs:/root/.gitlibs
     entrypoint:
       - sleep
       - infinity
 
   db:
-    image: postgres:14.8
+    image: postgres:14.9
     restart: always
     environment:
       POSTGRES_DB: typing_ex
@@ -35,4 +38,6 @@ volumes:
   gitlibs:
     external: true
   m2:
+    external: true
+  node_modules:
     external: true

@@ -11,7 +11,7 @@
    [clojure.test :as t]))
 
 
-(def ^:private version "1.20.0")
+(def ^:private version "1.21.0")
 
 ;--------------------------------
 ;; FIXME
@@ -266,8 +266,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" [:br]
-     "レポートも進めておくんだぞ。RP クリックでエラーだったらマズイって思わなくちゃ。"]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" ]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))
@@ -276,9 +275,10 @@
                   :class (if (= login (:login r)) "yes" "other")}
               (:login r)]
              "&nbsp;"
-             [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
+             #_[:a {:href (str "https://hp.melt.kyutech.ac.jp/"
                              (:login r))}
-              "(RP)"]]))]
+              "(RP)"]
+             ]))]
    (headline 7)))
 
 (defn sums-page [ret user n]

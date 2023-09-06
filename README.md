@@ -22,7 +22,7 @@ or from VScode, choose  REPL -> Leiningen
 
 ## deploy
 
-    $ make deplpy
+    $ make deploy
 
 ## License
 
