@@ -3,13 +3,13 @@
   (:require
    [ataraxy.response :as response]
    #_[clojure.string :as str]
+   [environ.core :refer [env]]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
    [java-time :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]
-   [clojure.test :as t]))
-
+   #_[clojure.test :as t]))
 
 (def ^:private version "1.22.0")
 
@@ -200,7 +200,7 @@
 ;;        データがない日もあるので、[from to] は外から与えないといけない。
 (defn- average-day-by-day
   [from to scores]
-  (prn "page/averagge-day-by-day" from to (str scores))
+  ;; (prn "page/averagge-day-by-day" from to (str scores))
   (let [averages (->> scores
                       (map (fn [x] [(:pt x) (subs (str (:timestamp x)) 0 10)]))
                       (group-by second)
@@ -239,7 +239,7 @@
      ;;        欠測の日もあるので、scores からは start-day を出せない。
      [:div.px-2
       (scatter 300 150 (average-day-by-day
-                        "2023-09-05"
+                        (or (env :tp-start) "2023-04-01")
                         (str (jt/local-date))
                         scores))
       [:br]

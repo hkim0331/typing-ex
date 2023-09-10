@@ -22,6 +22,10 @@
   (env :tp-dev)
   :rcf)
 
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
+(def typing-start (or (env :tp-start) "2023-04-01"))
+
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -39,8 +43,6 @@
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
   (fn [req]
     (view/login-page req)))
-
-(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
 (defn- find-user [login]
   (let [url (str l22 login)
@@ -161,9 +163,10 @@
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
     (view/display-records login
-                           (results/fetch-records db login)
-                           (= (get-login req) login)
-                           (= (get-login req) "hkimura"))))
+                          ;; (results/fetch-records db login)
+                          (results/fetch-records-since db login typing-start)
+                          (= (get-login req) login)
+                          (= (get-login req) "hkimura"))))
 
 ;; req から login をとるのはどうかな。
 (defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
