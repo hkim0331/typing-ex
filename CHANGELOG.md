@@ -30,7 +30,18 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
 - docker: yarn watch のたびにインストールが走ってしまう。
+- DAY BY DAY プロット、バグってね？2023-09-10
 
+## 1.22.0-snapshot
+- clojure -Tantq outdated :upgrade true
+```
+| :file       | :name                               | :current | :latest |
+|-------------+-------------------------------------+----------+---------|
+| project.clj | buddy/buddy-hashers                 | 1.8.158  | 2.0.167 |
+|             | clojure.java-time/clojure.java-time | 1.2.0    | 1.3.0   |
+|             | com.github.seancorfield/next.jdbc   | 1.3.874  | 1.3.883 |
+|             | integrant/repl                      | 0.3.2    | 0.3.3   |
+```
 
 ## 1.21.0 - 2023-09-06
 - hkim0331/typing-ex:0.3

@@ -13,6 +13,7 @@
   (sum [db n])
   (find-max-pt [db n])
   (fetch-records [db login])
+  (fetch-records-since [db login date])
   (todays-score [db login])
   (active-users [db n])
   ;; (find-ex-days-thres [db days thres])
@@ -50,6 +51,15 @@
      ["select pt, timestamp from results
                  where login=?
                  order by id asc" login]))
+
+  (fetch-records-since
+   [db login date]
+   (prn "date:" date)
+   (sql/query
+    (ds-opt db)
+    ["select pt, timestamp from results
+       where login=? and timestamp > date(?)
+       order by id asc" login date]))
 
   (todays-score [db login]
     (sql/query
