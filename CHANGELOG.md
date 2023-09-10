@@ -30,9 +30,10 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
 - docker: yarn watch のたびにインストールが走ってしまう。
-- DAY BY DAY プロット、バグってね？2023-09-10
 
-## 1.22.0-snapshot
+## 1.22.0 - 2023-09-10
+- fixed: DAY BY DAY プロット
+  環境変数 TP_START で集計スタートを与えるように変更した。
 - clojure -Tantq outdated :upgrade true
 ```
 | :file       | :name                               | :current | :latest |

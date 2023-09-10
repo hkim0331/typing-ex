@@ -6,7 +6,7 @@
    [environ.core :refer [env]]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
-   [java-time :as jt]
+   [java-time.api :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
@@ -77,10 +77,16 @@
     [:div.d-inline-
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      "&nbsp;"
-     [:a {:href "https://rp.melt.kyutech.ac.jp/"
+     ;;py99
+     [:a {:href "https://py99.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
-      "RP"]
+      "Py99"]
      "&nbsp;"
+     ;; literacy reports
+     ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
+     ;;       :class "btn btn-info btn-sm"}
+     ;;   "RP"]
+     ;;  "&nbsp;"
      [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
@@ -196,8 +202,7 @@
 (defn- average [coll]
   (/ (reduce + coll) (count coll)))
 
-;; FIXME: from, to を scores から割り出せないか？
-;;        データがない日もあるので、[from to] は外から与えないといけない。
+;; データがない日もあるので、from は外から与えないといけない。
 (defn- average-day-by-day
   [from to scores]
   ;; (prn "page/averagge-day-by-day" from to (str scores))
@@ -286,7 +291,8 @@
                              (:login r))}
               "(RP)"]
              ]))]
-   (headline 7)))
+   #_(headline 7)
+   ))
 
 (defn sums-page [ret user n]
   (page
@@ -304,7 +310,9 @@
                  [:a {:href (str "/record/" login)
                       :class (if (= user login) "yes" "other")}
                   login]]))))]
-   (headline n)))
+   ;; [:p "from " (env :tp-start)]
+   ;;(headline n)
+   ))
 
 (defn stat-page
   "stat は現在値が渡ってくる。
