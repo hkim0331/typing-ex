@@ -10,7 +10,8 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.21.0")
+
+(def ^:private version "1.22.0")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -201,7 +202,6 @@ of yonder warehouses will not suffice."])
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
- ;; finished?
     (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
@@ -211,7 +211,7 @@ of yonder warehouses will not suffice."])
     (swap! app-state update :results conj "🔴") ;; no effect?
     (show-send-fetch-display!)))
 
-;; (defonce ^:private updater (js/setInterval countdown 1000))
+(defonce ^:private updater (js/setInterval countdown 1000))
 
 ;; Backspace でスペースを消した時
 (defn check-key [key]
@@ -279,8 +279,8 @@ of yonder warehouses will not suffice."])
                {:form-params {:__anti-forgery-token (csrf-token)}}))
         ;; 20 seconds
         (when (< diff 20000)
-          (js/alert (str "むずいのでも練習しなくちゃ。" diff))
-          (busy-wait 10000))))
+          (js/alert (str "むずいのでも練習しなくちゃ。"))
+          (busy-wait 1000))))
   (go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))

@@ -10,15 +10,16 @@ ClojureScript でフロントを書く練習。
 
 ## develop
 
-in shell,
-    $ yarn watch
-    $ lein repl
-    user> (dev)
-    user> (go)
-open http://localhost:3002
+```shell
+$ yarn watch
+$ lein repl
+user> (dev)
+user> (go)
+
+$ open http://localhost:3002
+```
 
 or from VScode, choose  REPL -> Leiningen
-
 
 ## deploy
 
