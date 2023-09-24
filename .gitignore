@@ -32,7 +32,9 @@ pom.xml.asc
 /utils/excerpt/out/*
 !/utils/excerpt/out/.placeholder
 /start-stop/
-*.sql
+/db-dumps/*
+!/db-dumps/*.sh
+!/resources/migrations/*.sql
 
 # not depend on global gitignore
 .DS_Store
