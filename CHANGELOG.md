@@ -30,10 +30,12 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
 - docker: yarn watch のたびにインストールが走ってしまう。
+- JS がシングルスレッドなので、CLJS もシングルスレッド。!! なライブラリは提供されてない。
+
 
 ## 1.22.0 - 2023-09-10
 - fixed: DAY BY DAY プロット
-  環境変数 TP_START で集計スタートを与えるように変更した。
+  環境変数 TP_START で集計スタート日を与えるよう変更した。
 - clojure -Tantq outdated :upgrade true
 ```
 | :file       | :name                               | :current | :latest |

@@ -4,7 +4,7 @@
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<!]]
+   [cljs.core.async :refer [<! <!!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
@@ -159,27 +159,27 @@ of yonder warehouses will not suffice."])
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (go (let [stat (-> (<! (http/get "/stat"))
-                     :body)
+  (let [stat (-> (<!! (http/get "/stat"))
+                 :body)
             ;; _ (.log js/console "fetch-display! stat" stat)
-            drill (if (= stat "exam")
-                    (do
-                      (swap! mt-counter inc)
-                      (get mt (mod @mt-counter 3)))
-                    (-> (<! (http/get "/drill"))
-                        :body))
-            words (str/split drill #"\s+")]
-        (swap! app-state assoc
-               :stat stat
-               :text drill
-               :answer ""
-               :seconds timeout
-               :errors 0
-               :words words
-               :words-max (count words)
-               :pos 0
-               :results [])
-        (.focus (.getElementById js/document "drill")))))
+        drill (if (= stat "exam")
+                (do
+                  (swap! mt-counter inc)
+                  (get mt (mod @mt-counter 3)))
+                (-> (<! (http/get "/drill"))
+                    :body))
+        words (str/split drill #"\s+")]
+    (swap! app-state assoc
+           :stat stat
+           :text drill
+           :answer ""
+           :seconds timeout
+           :errors 0
+           :words words
+           :words-max (count words)
+           :pos 0
+           :results [])
+    (.focus (.getElementById js/document "drill"))))
 
 (defn show-send-fetch-display!
   "must exec sequentially"
