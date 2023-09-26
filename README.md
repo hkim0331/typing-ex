@@ -19,7 +19,7 @@ user> (go)
 $ open http://localhost:3002
 ```
 
-or from VScode, choose  REPL -> Leiningen
+or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
 ## deploy
 

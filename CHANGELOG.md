@@ -18,7 +18,6 @@
 - 自分データを csv でダウンロードできるように。
 - D.P. up/down/even を表示できるか？
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- 例文を足す moby-dick
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
@@ -30,10 +29,14 @@
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
 - docker: yarn watch のたびにインストールが走ってしまう。
+- JS がシングルスレッドなので、CLJS もシングルスレッド。!! なライブラリは提供されてない。
+- @app-state を廃止したい。
+- drills 一括ダウンロード。
+
 
 ## 1.22.0 - 2023-09-10
 - fixed: DAY BY DAY プロット
-  環境変数 TP_START で集計スタートを与えるように変更した。
+  環境変数 TP_START で集計スタート日を与えるよう変更した。
 - clojure -Tantq outdated :upgrade true
 ```
 | :file       | :name                               | :current | :latest |
