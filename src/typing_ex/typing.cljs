@@ -73,6 +73,7 @@ of yonder warehouses will not suffice."])
   (-> (.getElementById js/document "login")
       (.-value)))
 
+;; FIXME!
 (defn busy-wait
   [n]
   (let [start (.now js/Date.)]
