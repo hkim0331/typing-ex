@@ -6,12 +6,12 @@
    [environ.core :refer [env]]
    [hiccup.page :refer [html5]]
    [hiccup.form :refer [form-to text-field password-field submit-button]]
-   [java-time :as jt]
+   [java-time.api :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "1.22.0")
+(def ^:private version "1.23.778")
 
 ;--------------------------------
 ;; FIXME
@@ -77,10 +77,16 @@
     [:div.d-inline-
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      "&nbsp;"
-     [:a {:href "https://rp.melt.kyutech.ac.jp/"
+     ;;py99
+     [:a {:href "https://py99.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
-      "RP"]
+      "Py99"]
      "&nbsp;"
+     ;; literacy reports
+     ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
+     ;;       :class "btn btn-info btn-sm"}
+     ;;   "RP"]
+     ;;  "&nbsp;"
      [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
@@ -144,7 +150,8 @@
               [:a {:href (str "/record/" login)
                    :class (if (= login user) "yes" "other")}
                login]])])]
-   (headline days)))
+  ;;  (headline days)
+   ))
 
 (defn- count-ex-days
   [days login]
@@ -177,7 +184,8 @@
                 [:a {:href (str "/record/" login)
                      :class (if (= login user) "yes" "other")}
                  login]])])]
-     (headline days))))
+     ;; (headline days)
+     )))
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -196,8 +204,7 @@
 (defn- average [coll]
   (/ (reduce + coll) (count coll)))
 
-;; FIXME: from, to を scores から割り出せないか？
-;;        データがない日もあるので、[from to] は外から与えないといけない。
+;; データがない日もあるので、from は外から与えないといけない。
 (defn- average-day-by-day
   [from to scores]
   ;; (prn "page/averagge-day-by-day" from to (str scores))
@@ -273,7 +280,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" ]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))
@@ -283,10 +290,9 @@
               (:login r)]
              "&nbsp;"
              #_[:a {:href (str "https://hp.melt.kyutech.ac.jp/"
-                             (:login r))}
-              "(RP)"]
-             ]))]
-   (headline 7)))
+                               (:login r))}
+                "(RP)"]]))]
+   #_(headline 7)))
 
 (defn sums-page [ret user n]
   (page
@@ -304,7 +310,9 @@
                  [:a {:href (str "/record/" login)
                       :class (if (= user login) "yes" "other")}
                   login]]))))]
-   (headline n)))
+   ;; [:p "from " (env :tp-start)]
+   ;;(headline n)
+   ))
 
 (defn stat-page
   "stat は現在値が渡ってくる。
