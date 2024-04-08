@@ -32,7 +32,12 @@
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
 
-## 1.23-SHAPSHOT
+## 1.24-SNAPSHOT
+- dependency l22, env-var で．
+- last word issue.
+
+
+## 1.23-778 / 2024-04-09
 - タイプはじめの1文字待ち．
 - 最後の1ワード
 - 少数タイプでの点数
@@ -47,8 +52,6 @@
 |                 | org.clojure/clojure                 | 1.11.1   | 1.11.2  |
 |                 | org.postgresql/postgresql           | 42.6.0   | 42.7.3  |
 | shadow-cljs.edn | cljs-http                           | 0.1.46   | 0.1.48  |
-
-
 
 
 ## 1.22.0 - 2023-09-10
