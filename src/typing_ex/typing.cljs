@@ -13,6 +13,7 @@
 
 (def ^:private version "1.22.0")
 
+;;(js/setInterval countdown 1000)
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -158,12 +159,9 @@ of yonder warehouses will not suffice."])
                   {:__anti-forgery-token (csrf-token)
                    :pt pt}})))))))
 
-;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (go (let [stat (-> (<! (http/get "/stat"))
-                     :body)
-            ;; _ (.log js/console "fetch-display! stat" stat)
+  (go (let [stat (-> (<! (http/get "/stat")) :body)
             drill (if (= stat "exam")
                     (do
                       (swap! mt-counter inc)
@@ -184,7 +182,6 @@ of yonder warehouses will not suffice."])
         (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
-  "must exec sequentially"
   []
   (let [pt (pt @app-state)]
     (show-score pt)
@@ -210,10 +207,8 @@ of yonder warehouses will not suffice."])
 (defn countdown []
   (swap! app-state update :seconds dec)
   (when (zero? (:seconds @app-state))
-    (swap! app-state update :results conj "🔴") ;; no effect?
+    ;; (swap! app-state update :results conj "🔴") ;; no effect?
     (show-send-fetch-display!)))
-
-(defonce ^:private updater (js/setInterval countdown 1000))
 
 ;; Backspace でスペースを消した時
 (defn check-key [key]
@@ -288,10 +283,12 @@ of yonder warehouses will not suffice."])
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn start []
+  (js/setInterval countdown 1000)
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (startup-message))
+  ;; (startup-message)
+  )
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

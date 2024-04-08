@@ -150,7 +150,8 @@
               [:a {:href (str "/record/" login)
                    :class (if (= login user) "yes" "other")}
                login]])])]
-   (headline days)))
+  ;;  (headline days)
+   ))
 
 (defn- count-ex-days
   [days login]
@@ -183,7 +184,8 @@
                 [:a {:href (str "/record/" login)
                      :class (if (= login user) "yes" "other")}
                  login]])])]
-     (headline days))))
+     ;; (headline days)
+     )))
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -278,7 +280,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" ]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))
@@ -288,11 +290,9 @@
               (:login r)]
              "&nbsp;"
              #_[:a {:href (str "https://hp.melt.kyutech.ac.jp/"
-                             (:login r))}
-              "(RP)"]
-             ]))]
-   #_(headline 7)
-   ))
+                               (:login r))}
+                "(RP)"]]))]
+   #_(headline 7)))
 
 (defn sums-page [ret user n]
   (page
