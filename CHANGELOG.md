@@ -36,20 +36,33 @@
 - タイプはじめの1文字待ち．
 - 最後の1ワード
 - 少数タイプでの点数
+- updated libraries
+
+| :file           | :name                               | :current | :latest |
+|---------------- | ----------------------------------- | -------- | --------|
+| project.clj     | cheshire/cheshire                   | 5.11.0   | 5.13.0  |
+|                 | clojure.java-time/clojure.java-time | 1.3.0    | 1.4.2   |
+|                 | com.github.seancorfield/next.jdbc   | 1.3.883  | 1.3.925 |
+|                 | duct/core                           | 0.8.0    | 0.8.1   |
+|                 | org.clojure/clojure                 | 1.11.1   | 1.11.2  |
+|                 | org.postgresql/postgresql           | 42.6.0   | 42.7.3  |
+| shadow-cljs.edn | cljs-http                           | 0.1.46   | 0.1.48  |
+
+
 
 
 ## 1.22.0 - 2023-09-10
 - fixed: DAY BY DAY プロット
   環境変数 TP_START で集計スタート日を与えるよう変更した。
 - clojure -Tantq outdated :upgrade true
-```
+
 | :file       | :name                               | :current | :latest |
-|-------------+-------------------------------------+----------+---------|
+|------------ | ----------------------------------- | -------- | --------|
 | project.clj | buddy/buddy-hashers                 | 1.8.158  | 2.0.167 |
 |             | clojure.java-time/clojure.java-time | 1.2.0    | 1.3.0   |
 |             | com.github.seancorfield/next.jdbc   | 1.3.874  | 1.3.883 |
 |             | integrant/repl                      | 0.3.2    | 0.3.3   |
-```
+
 
 ## 1.21.0 - 2023-09-06
 - hkim0331/typing-ex:0.3
