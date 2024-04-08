@@ -4,7 +4,7 @@
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<! <!!]]
+   [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
@@ -160,7 +160,7 @@ of yonder warehouses will not suffice."])
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (let [stat (-> (<!! (http/get "/stat"))
+  (let [stat (-> (<! (http/get "/stat"))
                  :body)
             ;; _ (.log js/console "fetch-display! stat" stat)
         drill (if (= stat "exam")
