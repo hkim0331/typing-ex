@@ -13,6 +13,7 @@
 
 (def ^:private version "1.22.0")
 
+;;(js/setInterval countdown 1000)
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -93,16 +94,16 @@ of yonder warehouses will not suffice."])
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         ;; 二乗で減点するのをやめる。2023-04-12
         ;; err   (* errors errors)
-        err errors
+        bs errors ;; backspace key
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :bs err :seconds seconds)
+           :all all :goods goods :bads bads :bs bs :seconds seconds)
     (cond
       (< goods 10) 0
       (= all goods) (+ score seconds 10) ;; bonus 10
-      (= all (+ goods bads)) (+ score seconds (- err))
-      :else (+ score (- err)))))
+      (= all (+ goods bads)) (+ score seconds (- bs))
+      :else (- score bs))))
 
 (defn pt
   "スコアをマイナスにしない"
@@ -111,18 +112,19 @@ of yonder warehouses will not suffice."])
 
 (defn show-score
   [pt]
-  (let [;; pt (:pt @app-state)
-        login (get-login)
-        s1 (str login " さんのスコアは " pt " 点です。")
-        s2 (condp <= pt
-             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90  "がんばった。もう少しで 100 点だね。"
-             60  "だいぶ上手です。この調子でがんばれ。"
-             30  "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")]
-    (if (empty? (:results @app-state))
-      (js/alert (str "コピペはダメよ"))
-      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)"))
+  (if (empty? (:results @app-state))
+    (js/alert (str "コピペはダメよ"))
+    (let [;; pt (:pt @app-state)
+          login (get-login)
+          s1 (str login " さんのスコアは " pt " 点です。")
+          s2 (condp <= pt
+               100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
+               90  "がんばった。もう少しで 100 点だね。"
+               60  "だいぶ上手です。この調子でがんばれ。"
+               30  "指先を見ずに、ゆっくり、ミスを少なく。"
+               "練習あるのみ。")
+          msg (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)")]
+      (when-not (js/confirm msg)
         (js/alert (str
                    (str @points-debug) " => " pt
                    "\n\n"
@@ -130,16 +132,16 @@ of yonder warehouses will not suffice."])
                    "\n\n"
                    (apply str (:results @app-state))
                    "\n\n"
-                   (:text  @app-state)))))
-    (swap! app-state update :todays-trials inc)
-    (when (< todays-limit (:todays-trials @app-state))
-      (js/alert
-       (str "連続 "
-            (:todays-trials @app-state)
-            " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
+                   (:text  @app-state))))))
+  (swap! app-state update :todays-trials inc)
+  (when (< todays-limit (:todays-trials @app-state))
+    (js/alert
+     (str "連続 "
+          (:todays-trials @app-state)
+          " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn send-
-  "send- 中で (:todays @app-state) を更新する。"
+(defn send-point
+  "send-point 中で (:todays @app-state) を更新する。"
   [pt]
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
@@ -158,12 +160,9 @@ of yonder warehouses will not suffice."])
                   {:__anti-forgery-token (csrf-token)
                    :pt pt}})))))))
 
-;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (go (let [stat (-> (<! (http/get "/stat"))
-                     :body)
-            ;; _ (.log js/console "fetch-display! stat" stat)
+  (go (let [stat (-> (<! (http/get "/stat")) :body)
             drill (if (= stat "exam")
                     (do
                       (swap! mt-counter inc)
@@ -184,14 +183,10 @@ of yonder warehouses will not suffice."])
         (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
-  "must exec sequentially"
   []
   (let [pt (pt @app-state)]
     (show-score pt)
-    ;; (if (= 1 (:todays-trials @app-state))
-    ;;   (js/alert "Go! と再読み込み直後の一回めは記録しません。")
-    ;;   (send- pt))
-    (send- pt)
+    (send-point pt)
     (fetch-display!)))
 
 ;; FIXME: when moving below block to top of this code,
@@ -207,15 +202,14 @@ of yonder warehouses will not suffice."])
     (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
-(defn countdown []
-  (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
-    (swap! app-state update :results conj "🔴") ;; no effect?
-    (show-send-fetch-display!)))
+(defn countdown
+  "最初のキーが打たれるまで待つ"
+  []
+  (when-not (empty? (:answer @app-state))
+    (swap! app-state update :seconds dec)
+    (when (zero? (:seconds @app-state))
+      (show-send-fetch-display!))))
 
-(defonce ^:private updater (js/setInterval countdown 1000))
-
-;; Backspace でスペースを消した時
 (defn check-key [key]
   (case key
     " " (check-word)
@@ -288,10 +282,12 @@ of yonder warehouses will not suffice."])
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn start []
+  (js/setInterval countdown 1000)
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (startup-message))
+  ;; (startup-message)
+  )
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads
