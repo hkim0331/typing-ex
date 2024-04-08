@@ -75,7 +75,7 @@
 - rename page.clj/svg-self-records to page.clj/display-records
 - day by day plot
 
-## 1.19.5-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - jetty port 3002
 ```
   :duct.server.http/jetty {:port 3002}
@@ -311,7 +311,7 @@ Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or i
 ## 1.13.0 - 2022-08-06
 - ペーストを (< goods 10) で判定する。
 
-## 1.13.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - add more examples(drills)
 - fix asnync get
 
@@ -342,7 +342,7 @@ Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or i
 ## 1.9.1 - 2022-06-08
 - bump-version.sh updates js version number in `index.html`.
 
-## 1.9.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 中間試験モード
 
 ## 1.8.4
@@ -375,7 +375,7 @@ code polish up
 - timeout 6 sec
 - counter does not stop at 0
 
-## 1.7.1-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - go ブロックは呼んだ順に実行されるとは限らない。
 - reset! を swap! に戻す。
 - defonce を１つに。除く setInterval.
@@ -397,7 +397,7 @@ code polish up. not improved.
 - reset-todays! を独立させた
 
 ## 1.6.4 - 2022-05-07
-- app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
+## 1.23.778 / 2024-04-08
 
 ## 1.6.3 - 2022-05-07
 - 時々、「今日の練習グラフ」がアップデートされない。`get` の順番で改善できるか？
@@ -721,7 +721,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 ### added
 - link to ul.melt
 
-## 0.9.18-SNAPSHOT
+## 1.23.778 / 2024-04-08
 ### Changed
 - hkimura のバックグラウンドカラーを blue に。
 
@@ -828,7 +828,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - ちょっとましな評価関数
 - display self record
 
-## 0.5.3-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - typing-ex.boundary.utils ネームスペース。
 - 評価関数 残り時間を足す。
   v = (g/a - b/g)*100 + c
@@ -845,7 +845,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - counter=0 で発射。
 - テキストエリアのサイズ調整。
 
-## 0.5.0-SNAPSHOT - 2021-06-01
+## 1.23.778 / 2024-04-08
 - テストを採点する。(+ (- goods bads) (quot counter 2)) じゃあんまりか。
 - Fix: js/setInterval instead of js/setTimeout.
 - babashka のインストールはターミナルで１行。app.melt でやってしまう。
@@ -907,7 +907,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
   auth に通ったら / に行き、cljs のページを表示できる。
   勇気づけのための 0.1.0. まだ typing-ex の動作はしない。
 
-## 0.1.0-SNAPSHOT - 2021-05-30
+## 1.23.778 / 2024-04-08
 - duct から shadow-cljs で作成したページを読めるようになった。
 - docker compose
 - basic routing. login/logout, /typing, score/:id, scores.
