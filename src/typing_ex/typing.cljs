@@ -112,18 +112,19 @@ of yonder warehouses will not suffice."])
 
 (defn show-score
   [pt]
-  (let [;; pt (:pt @app-state)
-        login (get-login)
-        s1 (str login " さんのスコアは " pt " 点です。")
-        s2 (condp <= pt
-             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90  "がんばった。もう少しで 100 点だね。"
-             60  "だいぶ上手です。この調子でがんばれ。"
-             30  "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")]
-    (if (empty? (:results @app-state))
-      (js/alert (str "コピペはダメよ"))
-      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)"))
+  (if (empty? (:results @app-state))
+    (js/alert (str "コピペはダメよ"))
+    (let [;; pt (:pt @app-state)
+          login (get-login)
+          s1 (str login " さんのスコアは " pt " 点です。")
+          s2 (condp <= pt
+               100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
+               90  "がんばった。もう少しで 100 点だね。"
+               60  "だいぶ上手です。この調子でがんばれ。"
+               30  "指先を見ずに、ゆっくり、ミスを少なく。"
+               "練習あるのみ。")
+          msg (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)")]
+      (when-not (js/confirm msg)
         (js/alert (str
                    (str @points-debug) " => " pt
                    "\n\n"
@@ -131,16 +132,16 @@ of yonder warehouses will not suffice."])
                    "\n\n"
                    (apply str (:results @app-state))
                    "\n\n"
-                   (:text  @app-state)))))
-    (swap! app-state update :todays-trials inc)
-    (when (< todays-limit (:todays-trials @app-state))
-      (js/alert
-       (str "連続 "
-            (:todays-trials @app-state)
-            " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
+                   (:text  @app-state))))))
+  (swap! app-state update :todays-trials inc)
+  (when (< todays-limit (:todays-trials @app-state))
+    (js/alert
+     (str "連続 "
+          (:todays-trials @app-state)
+          " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn send-
-  "send- 中で (:todays @app-state) を更新する。"
+(defn send-point
+  "send-point 中で (:todays @app-state) を更新する。"
   [pt]
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
@@ -185,10 +186,7 @@ of yonder warehouses will not suffice."])
   []
   (let [pt (pt @app-state)]
     (show-score pt)
-    ;; (if (= 1 (:todays-trials @app-state))
-    ;;   (js/alert "Go! と再読み込み直後の一回めは記録しません。")
-    ;;   (send- pt))
-    (send- pt)
+    (send-point pt)
     (fetch-display!)))
 
 ;; FIXME: when moving below block to top of this code,
@@ -204,13 +202,14 @@ of yonder warehouses will not suffice."])
     (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
-(defn countdown []
-  (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
-    ;; (swap! app-state update :results conj "🔴") ;; no effect?
-    (show-send-fetch-display!)))
+(defn countdown
+  "最初のキーが打たれるまで待つ"
+  []
+  (when-not (empty? (:answer @app-state))
+    (swap! app-state update :seconds dec)
+    (when (zero? (:seconds @app-state))
+      (show-send-fetch-display!))))
 
-;; Backspace でスペースを消した時
 (defn check-key [key]
   (case key
     " " (check-word)
