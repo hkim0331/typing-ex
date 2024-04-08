@@ -4,7 +4,7 @@
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<! <!!]]
+   [cljs.core.async :refer [<!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
@@ -32,25 +32,24 @@
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
-;; midterm exam
-;; (def mt
-;;   ["An aviator whose plane is forced down in the Sahara Desert
-;; encounters a little prince from a small planet who relates
-;; his adventures in seeking the secret of what is important
-;; in life."
-;;    "Once when I was six years old I saw a beautiful picture in
-;; a book about the primeval forest called 'True Stories'.
-;; It showed a boa constrictor swallowing an animal.
-;; Here is a copy of the drawing."
-;;    "I showed my masterpiece to the grown-ups and asked them if
-;; my drawing frightened them. They answered: 'Why should
-;; anyone be frightened by a hat?' My drawing did not represent
-;; a hat. It was supposed to be a boa constrictor digesting elephant.
-;; "])
+
+(def little-prince
+  ["An aviator whose plane is forced down in the Sahara Desert
+encounters a little prince from a small planet who relates
+his adventures in seeking the secret of what is important
+in life."
+   "Once when I was six years old I saw a beautiful picture in
+a book about the primeval forest called 'True Stories'.
+It showed a boa constrictor swallowing an animal.
+Here is a copy of the drawing."
+   "I showed my masterpiece to the grown-ups and asked them if
+my drawing frightened them. They answered: 'Why should
+anyone be frightened by a hat?' My drawing did not represent
+a hat. It was supposed to be a boa constrictor digesting elephant.
+"])
 
 ;; from Moby-Dick
-;; no heading spaces!
-(def mt
+(def moby-dick
   ["Call me Ishmael. Some years ago—never mind how long precisely
 having little or no money in my purse, and nothing particular to
 interest me on shore, I thought I would sail about a little
@@ -64,6 +63,8 @@ and seemingly bound for a dive. Strange! Nothing will content them
 but the extremest limit of the land; loitering under the shady lee
 of yonder warehouses will not suffice."])
 
+(def mt little-prince)
+
 (defonce ^:private mt-counter (atom 0))
 
 (def points-debug (atom {}))
@@ -74,6 +75,7 @@ of yonder warehouses will not suffice."])
       (.-value)))
 
 ;; FIXME!
+;; how about call /sleep/:n?
 (defn busy-wait
   [n]
   (let [start (.now js/Date.)]
@@ -160,27 +162,27 @@ of yonder warehouses will not suffice."])
 ;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (let [stat (-> (<!! (http/get "/stat"))
-                 :body)
+  (go (let [stat (-> (<! (http/get "/stat"))
+                     :body)
             ;; _ (.log js/console "fetch-display! stat" stat)
-        drill (if (= stat "exam")
-                (do
-                  (swap! mt-counter inc)
-                  (get mt (mod @mt-counter 3)))
-                (-> (<! (http/get "/drill"))
-                    :body))
-        words (str/split drill #"\s+")]
-    (swap! app-state assoc
-           :stat stat
-           :text drill
-           :answer ""
-           :seconds timeout
-           :errors 0
-           :words words
-           :words-max (count words)
-           :pos 0
-           :results [])
-    (.focus (.getElementById js/document "drill"))))
+            drill (if (= stat "exam")
+                    (do
+                      (swap! mt-counter inc)
+                      (get mt (mod @mt-counter 3)))
+                    (-> (<! (http/get "/drill"))
+                        :body))
+            words (str/split drill #"\s+")]
+        (swap! app-state assoc
+               :stat stat
+               :text drill
+               :answer ""
+               :seconds timeout
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :results [])
+        (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
   "must exec sequentially"
