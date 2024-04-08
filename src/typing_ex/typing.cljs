@@ -94,16 +94,16 @@ of yonder warehouses will not suffice."])
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         ;; 二乗で減点するのをやめる。2023-04-12
         ;; err   (* errors errors)
-        err errors
+        bs errors ;; backspace key
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :bs err :seconds seconds)
+           :all all :goods goods :bads bads :bs bs :seconds seconds)
     (cond
       (< goods 10) 0
       (= all goods) (+ score seconds 10) ;; bonus 10
-      (= all (+ goods bads)) (+ score seconds (- err))
-      :else (+ score (- err)))))
+      (= all (+ goods bads)) (+ score seconds (- bs))
+      :else (- score bs))))
 
 (defn pt
   "スコアをマイナスにしない"
