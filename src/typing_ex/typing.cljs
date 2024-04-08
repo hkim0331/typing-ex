@@ -1,10 +1,10 @@
 (ns typing-ex.typing
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
+  ;; (:require-macros
+  ;;  [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<!]]
+   [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
@@ -31,7 +31,6 @@
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
-
 
 (def little-prince
   ["An aviator whose plane is forced down in the Sahara Desert
@@ -282,7 +281,7 @@ of yonder warehouses will not suffice."])
                {:form-params {:__anti-forgery-token (csrf-token)}}))
         ;; 20 seconds
         (when (< diff 20000)
-          (js/alert (str "むずいのでも練習しなくちゃ。"))
+          (js/alert (str "めんどくさいのも練習しなくちゃ。"))
           (busy-wait 1000))))
   (go (<! (http/post
            "/restarts"
