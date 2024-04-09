@@ -6,9 +6,9 @@ ENV DEBCONF_NOWARNINGS=yes
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install --no-install-recommends \
-           sudo git npm postgresql-client-14 2>&1
+    sudo git npm postgresql-client-14 2>&1
 
-RUN npm install -g yarn
+# RUN npm install -g yarn
 
 ARG USERNAME=vscode
 ARG USER_UID=1000
