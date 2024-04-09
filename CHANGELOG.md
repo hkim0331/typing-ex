@@ -32,8 +32,9 @@
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
 
+
 ## 1.24-SNAPSHOT
-- dependency l22, env-var で．
+- dependency l22, env-var で．TP_DEV=true で
 - last word issue.
 
 
