@@ -10,6 +10,8 @@ ClojureScript でフロントを書く練習。
 
 ## develop
 
+check postgres alive,
+
 ```shell
 $ yarn watch
 $ lein repl
@@ -19,7 +21,7 @@ user> (go)
 $ open http://localhost:3002
 ```
 
-or from VScode, choose  REPL -> Leiningen
+or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
 ## deploy
 

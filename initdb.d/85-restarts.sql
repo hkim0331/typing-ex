@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS restarts;
+CREATE TABLE restarts (
+  id SERIAL PRIMARY KEY,
+  login varchar(32),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
