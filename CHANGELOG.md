@@ -35,7 +35,7 @@
   mount しているのは /root，しかし，lein で入れるのは/home/vscode
 
 
-## 1.24-SNAPSHOT
+## 2.0.781 / 2024-04-09
 - dependency l22, env-var で．
 - last word issue.
 - found a miss to update libaries.
