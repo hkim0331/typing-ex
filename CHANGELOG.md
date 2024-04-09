@@ -31,11 +31,17 @@
 - docker: yarn watch のたびにインストールが走ってしまう。
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
+- .m2, .gitlibs の位置の調整ができてない．
+  mount しているのは /root，しかし，lein で入れるのは/home/vscode
 
 
-## 1.24-SNAPSHOT
-- dependency l22, env-var で．TP_DEV=true で
+## 2.0.781 / 2024-04-09
+- dependency l22, env-var で．
 - last word issue.
+- found a miss to update libaries.
+  ```
+  clojure -Tantq outdated :upgrade true :force true
+  ```
 
 
 ## 1.23-778 / 2024-04-09
