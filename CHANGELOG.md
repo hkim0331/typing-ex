@@ -33,16 +33,21 @@
 - drills 一括ダウンロード。
 - .m2, .gitlibs の位置の調整ができてない．
   mount しているのは /root，しかし，lein で入れるのは/home/vscode
+- java -jar で立ち上がり完了の合図を出す．
+- an issue on checking good/bad last word typing.
+
+
+## 2.1-SNAPSHOT
+- fix: korosuke で Internal Server Error
 
 
 ## 2.0.781 / 2024-04-09
 - dependency l22, env-var で．
-- last word issue.
+
 - found a miss to update libaries.
   ```
   clojure -Tantq outdated :upgrade true :force true
   ```
-
 
 ## 1.23-778 / 2024-04-09
 - タイプはじめの1文字待ち．
