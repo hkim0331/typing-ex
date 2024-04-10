@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "1.23.778")
+(def ^:private version "2.1.794")
 
 ;;(js/setInterval countdown 1000)
 (def ^:private timeout 60)

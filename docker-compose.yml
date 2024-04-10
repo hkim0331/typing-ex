@@ -2,15 +2,15 @@ version: "3"
 
 services:
   typing-ex:
-    image: hkim0331/typing-ex:0.3
-    user: vscode
+    image: hkim0331/duct:0.2.1
+    # user: vscode
     ports:
       - "3002:3002"
     working_dir: /usr/src/app
     volumes:
       # https://gotohayato.com/content/544/
       # https://qiita.com/kino-ma/items/eae3dac942e899f9a77b
-      - node_modules:/usr/src/app/node_modules
+      # - node_modules:/usr/src/app/node_modules
       - .:/usr/src/app
       - m2:/root/.m2
       - gitlibs:/root/.gitlibs
@@ -19,7 +19,7 @@ services:
       - infinity
 
   db:
-    image: postgres:14.9
+    image: postgres:14.11
     restart: always
     environment:
       POSTGRES_DB: typing_ex
@@ -39,5 +39,5 @@ volumes:
     external: true
   m2:
     external: true
-  node_modules:
-    external: true
+  # node_modules:
+  #   external: true

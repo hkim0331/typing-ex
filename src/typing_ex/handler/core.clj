@@ -24,7 +24,7 @@
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
-(def typing-start (or (env :tp-start) "2023-04-01"))
+(def typing-start (or (env :tp-start) "2024-04-01"))
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
@@ -63,8 +63,8 @@
       (-> (redirect "/total/7")
           (assoc-in [:session :identity] (keyword login)))
       (-> (redirect "/login")
-        (dissoc :session)
-        (assoc :flash "login failure")))))
+          (dissoc :session)
+          (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -126,16 +126,14 @@
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ;;ex-days (results/find-ex-days db days)
-          ex-days "dummy"
-          ]
+          ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [days (Integer/parseInt n)
           login (get-login req)
-          ex-days (results/find-ex-days db days)
-          ]
+          ex-days (results/find-ex-days db days)]
       (view/ex-days-page ex-days login days))))
 
 ;; meta endpoint, dispatches to /total, /days and /max.
@@ -183,12 +181,12 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
-   (let [ret (->> (results/todays-act db)
-                  (partition-by :login)
-                  (map first)
-                  (sort-by :timestamp)
-                  reverse)]
-     (view/todays-act-page ret (get-login req)))))
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret (get-login req)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]

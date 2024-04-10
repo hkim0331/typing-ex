@@ -10,6 +10,8 @@ ClojureScript でフロントを書く練習。
 
 ## develop
 
+check postgres alive,
+
 ```shell
 $ yarn watch
 $ lein repl

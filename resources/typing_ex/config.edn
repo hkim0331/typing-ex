@@ -2,7 +2,8 @@
 
  {:duct.core/project-ns typing-ex
 
-  :duct.server.http/jetty {:port 3002}
+  ;; dev/resources/
+  ;; :duct.server.http/jetty {:port 3002}
 
   :duct.router/ataraxy
   {:routes

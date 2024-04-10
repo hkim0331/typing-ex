@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "1.23.778")
+(def ^:private version "2.1.794")
 
 ;--------------------------------
 ;; FIXME
@@ -217,9 +217,7 @@
 
 (defn display-records
   [login scores _me? _admin?]
-  ;;(def data scores)
-  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) scores)
-        avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
+  (let [avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
         todays (filter #(today? (:timestamp %)) scores)]
     (page
      [:h2 "Typing: " login " Records"]
@@ -227,7 +225,6 @@
       [:br]
       "TOTAL は全スコア、TODAYS は本日分（10回以上練習）、
           DAY BY DAY は一日平均。"]
-
      ;; FIXME: start date
      [:div.d-inline-flex
       [:div.px-2.mx-auto
