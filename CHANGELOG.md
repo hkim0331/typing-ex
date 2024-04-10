@@ -37,7 +37,7 @@
 - an issue on checking good/bad last word typing.
 
 
-## 2.1-SNAPSHOT
+## 2.1.794 / 2024-04-10
 - fix: korosuke で Internal Server Error
 
 
