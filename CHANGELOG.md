@@ -35,6 +35,9 @@
   mount しているのは /root，しかし，lein で入れるのは/home/vscode
 - java -jar で立ち上がり完了の合図を出す．
 - an issue on checking good/bad last word typing.
+- スコアが二度提出されることがある。
+
+## 2.2-SNAPSHOT
 
 
 ## 2.1.794 / 2024-04-10

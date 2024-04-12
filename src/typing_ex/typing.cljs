@@ -189,9 +189,6 @@ of yonder warehouses will not suffice."])
     (send-point pt)
     (fetch-display!)))
 
-;; FIXME: when moving below block to top of this code,
-;;        becomes not counting down even if declared.
-;; (declare countdown)
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
