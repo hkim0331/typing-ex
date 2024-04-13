@@ -31,9 +31,12 @@
 - java -jar で立ち上がり完了の合図を出す．
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
+- delete した影響で空のdrill.textを作ってしまった。
+
 
 ## 2.2-SNAPSHOT
-- display next word.
+- typing.clls: display next word.
+- core.clj: defined `non-empty-text`.
 
 ## 2.1.794 / 2024-04-10
 - fix: korosuke で Internal Server Error
