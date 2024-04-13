@@ -154,7 +154,7 @@
 
 (defn non-empty-text [db]
   (let [ret (drills/fetch-drill db)]
-    (if (re-matches #"[^\s]" ret)
+    (if (re-find #"\S" ret)
       ret
       (non-empty-text db))))
 

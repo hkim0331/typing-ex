@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "2.1.794")
+(def ^:private version "2.2.803")
 
 ;--------------------------------
 ;; FIXME
@@ -260,15 +260,15 @@
         [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
-;; using?
-;; (defn active-users-page [ret]
-;;   (page
-;;    [:h2 "Typing: Last 40 trials"]
-;;    [:p "最近の Typing ユーザ 40 件。連続するセッションを１つとカウントするが、
-;;         セッションの間に別ユーザが割り込むと別セッションに。改良するか？"]
-;;    (into [:ol]
-;;          (for [[u & _] ret]
-;;            [:li (ss (:timestamp u)) " " (:login u)]))))
+;; use in core.clj.
+(defn active-users-page [ret]
+  (page
+   [:h2 "Typing: Last 40 trials"]
+   [:p "最近の Typing ユーザ 40 件。連続するセッションを１つとカウントするが、
+        セッションの間に別ユーザが割り込むと別セッションに。改良するか？"]
+   (into [:ol]
+         (for [[u & _] ret]
+           [:li (ss (:timestamp u)) " " (:login u)]))))
 
 ;; view of /todays
 (defn todays-act-page [ret login]

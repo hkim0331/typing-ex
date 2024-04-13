@@ -34,7 +34,7 @@
 - delete した影響で空のdrill.textを作ってしまった。
 
 
-## 2.2-SNAPSHOT
+## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
 - core.clj: defined `non-empty-text`.
 
