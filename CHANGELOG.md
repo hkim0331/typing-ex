@@ -32,6 +32,10 @@
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
 - delete した影響で空のdrill.textを作ってしまった。
+- Today's GO が表示されない。/restarts-page/:login
+
+
+## 2.3-SNAPSHOT
 
 
 ## 2.2.803 / 2024-04-13
