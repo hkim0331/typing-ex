@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "2.1.794")
+(def ^:private version "2.2.803")
 
 ;--------------------------------
 ;; FIXME
@@ -260,7 +260,7 @@
         [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
-;; using?
+;; use in core.clj.
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]

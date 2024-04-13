@@ -5,7 +5,7 @@ services:
     image: hkim0331/duct:0.2.1
     # user: vscode
     ports:
-      - "3002:3002"
+      - "3002:3000"
     working_dir: /usr/src/app
     volumes:
       # https://gotohayato.com/content/544/
