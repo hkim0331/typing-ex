@@ -28,7 +28,8 @@
             :results   []
             :todays    []
             :todays-trials 0
-            :stat "normal"}))
+            :stat "normal"
+            :next ""}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -169,7 +170,8 @@ of yonder warehouses will not suffice."])
                       (get mt (mod @mt-counter 3)))
                     (-> (<! (http/get "/drill"))
                         :body))
-            words (str/split drill #"\s+")]
+            words (str/split drill #"\s+")
+            next (first words)]
         (swap! app-state assoc
                :stat stat
                :text drill
@@ -179,7 +181,8 @@ of yonder warehouses will not suffice."])
                :words words
                :words-max (count words)
                :pos 0
-               :results [])
+               :results []
+               :next next)
         (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
@@ -190,12 +193,16 @@ of yonder warehouses will not suffice."])
     (fetch-display!)))
 
 
+(defn- next-word []
+  (get (:words @app-state) (:pos @app-state)))
+
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
         typed  (last (str/split (@app-state :answer) #"\s"))]
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
+    (swap! app-state update :next next-word)
     (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
@@ -240,6 +247,7 @@ of yonder warehouses will not suffice."])
                                     :answer
                                     (-> % .-target .-value))}]
      [results-component]
+     [:div (:next @app-state)]
      [:p
       [:input {:type  "button"
                :id    "seconds"
