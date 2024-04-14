@@ -1,18 +1,19 @@
 (ns typing-ex.typing
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
+  ;; (:require-macros
+  ;;  [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<! <!!]]
+   [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "1.22.0")
+(def ^:private version "2.2.803")
 
+;;(js/setInterval countdown 1000)
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
@@ -27,30 +28,29 @@
             :results   []
             :todays    []
             :todays-trials 0
-            :stat "normal"}))
+            :stat "normal"
+            :next ""}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
-;; midterm exam
-;; (def mt
-;;   ["An aviator whose plane is forced down in the Sahara Desert
-;; encounters a little prince from a small planet who relates
-;; his adventures in seeking the secret of what is important
-;; in life."
-;;    "Once when I was six years old I saw a beautiful picture in
-;; a book about the primeval forest called 'True Stories'.
-;; It showed a boa constrictor swallowing an animal.
-;; Here is a copy of the drawing."
-;;    "I showed my masterpiece to the grown-ups and asked them if
-;; my drawing frightened them. They answered: 'Why should
-;; anyone be frightened by a hat?' My drawing did not represent
-;; a hat. It was supposed to be a boa constrictor digesting elephant.
-;; "])
+(def little-prince
+  ["An aviator whose plane is forced down in the Sahara Desert
+encounters a little prince from a small planet who relates
+his adventures in seeking the secret of what is important
+in life."
+   "Once when I was six years old I saw a beautiful picture in
+a book about the primeval forest called 'True Stories'.
+It showed a boa constrictor swallowing an animal.
+Here is a copy of the drawing."
+   "I showed my masterpiece to the grown-ups and asked them if
+my drawing frightened them. They answered: 'Why should
+anyone be frightened by a hat?' My drawing did not represent
+a hat. It was supposed to be a boa constrictor digesting elephant.
+"])
 
 ;; from Moby-Dick
-;; no heading spaces!
-(def mt
+(def moby-dick
   ["Call me Ishmael. Some years ago—never mind how long precisely
 having little or no money in my purse, and nothing particular to
 interest me on shore, I thought I would sail about a little
@@ -64,6 +64,8 @@ and seemingly bound for a dive. Strange! Nothing will content them
 but the extremest limit of the land; loitering under the shady lee
 of yonder warehouses will not suffice."])
 
+(def mt little-prince)
+
 (defonce ^:private mt-counter (atom 0))
 
 (def points-debug (atom {}))
@@ -74,6 +76,7 @@ of yonder warehouses will not suffice."])
       (.-value)))
 
 ;; FIXME!
+;; how about call /sleep/:n?
 (defn busy-wait
   [n]
   (let [start (.now js/Date.)]
@@ -92,16 +95,16 @@ of yonder warehouses will not suffice."])
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
         ;; 二乗で減点するのをやめる。2023-04-12
         ;; err   (* errors errors)
-        err errors
+        bs errors ;; backspace key
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :bs err :seconds seconds)
+           :all all :goods goods :bads bads :bs bs :seconds seconds)
     (cond
       (< goods 10) 0
       (= all goods) (+ score seconds 10) ;; bonus 10
-      (= all (+ goods bads)) (+ score seconds (- err))
-      :else (+ score (- err)))))
+      (= all (+ goods bads)) (+ score seconds (- bs))
+      :else (- score bs))))
 
 (defn pt
   "スコアをマイナスにしない"
@@ -110,18 +113,19 @@ of yonder warehouses will not suffice."])
 
 (defn show-score
   [pt]
-  (let [;; pt (:pt @app-state)
-        login (get-login)
-        s1 (str login " さんのスコアは " pt " 点です。")
-        s2 (condp <= pt
-             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90  "がんばった。もう少しで 100 点だね。"
-             60  "だいぶ上手です。この調子でがんばれ。"
-             30  "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")]
-    (if (empty? (:results @app-state))
-      (js/alert (str "コピペはダメよ"))
-      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)"))
+  (if (empty? (:results @app-state))
+    (js/alert (str "コピペはダメよ"))
+    (let [;; pt (:pt @app-state)
+          login (get-login)
+          s1 (str login " さんのスコアは " pt " 点です。")
+          s2 (condp <= pt
+               100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
+               90  "がんばった。もう少しで 100 点だね。"
+               60  "だいぶ上手です。この調子でがんばれ。"
+               30  "指先を見ずに、ゆっくり、ミスを少なく。"
+               "練習あるのみ。")
+          msg (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)")]
+      (when-not (js/confirm msg)
         (js/alert (str
                    (str @points-debug) " => " pt
                    "\n\n"
@@ -129,16 +133,16 @@ of yonder warehouses will not suffice."])
                    "\n\n"
                    (apply str (:results @app-state))
                    "\n\n"
-                   (:text  @app-state)))))
-    (swap! app-state update :todays-trials inc)
-    (when (< todays-limit (:todays-trials @app-state))
-      (js/alert
-       (str "連続 "
-            (:todays-trials @app-state)
-            " 回、行きました。他の勉強もしろよ🐥")))));;🐥☕️
+                   (:text  @app-state))))))
+  (swap! app-state update :todays-trials inc)
+  (when (< todays-limit (:todays-trials @app-state))
+    (js/alert
+     (str "連続 "
+          (:todays-trials @app-state)
+          " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn send-
-  "send- 中で (:todays @app-state) を更新する。"
+(defn send-point
+  "send-point 中で (:todays @app-state) を更新する。"
   [pt]
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
@@ -157,45 +161,40 @@ of yonder warehouses will not suffice."])
                   {:__anti-forgery-token (csrf-token)
                    :pt pt}})))))))
 
-;; FIXME: ex-mode and normal-mode
 (defn fetch-display!
   []
-  (let [stat (-> (<!! (http/get "/stat"))
-                 :body)
-            ;; _ (.log js/console "fetch-display! stat" stat)
-        drill (if (= stat "exam")
-                (do
-                  (swap! mt-counter inc)
-                  (get mt (mod @mt-counter 3)))
-                (-> (<! (http/get "/drill"))
-                    :body))
-        words (str/split drill #"\s+")]
-    (swap! app-state assoc
-           :stat stat
-           :text drill
-           :answer ""
-           :seconds timeout
-           :errors 0
-           :words words
-           :words-max (count words)
-           :pos 0
-           :results [])
-    (.focus (.getElementById js/document "drill"))))
+  (go (let [stat (-> (<! (http/get "/stat")) :body)
+            drill (if (= stat "exam")
+                    (do
+                      (swap! mt-counter inc)
+                      (get mt (mod @mt-counter 3)))
+                    (-> (<! (http/get "/drill"))
+                        :body))
+            words (str/split drill #"\s+")
+            next (first words)]
+        (swap! app-state assoc
+               :stat stat
+               :text drill
+               :answer ""
+               :seconds timeout
+               :errors 0
+               :words words
+               :words-max (count words)
+               :pos 0
+               :results []
+               :next next)
+        (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-fetch-display!
-  "must exec sequentially"
   []
   (let [pt (pt @app-state)]
     (show-score pt)
-    ;; (if (= 1 (:todays-trials @app-state))
-    ;;   (js/alert "Go! と再読み込み直後の一回めは記録しません。")
-    ;;   (send- pt))
-    (send- pt)
+    (send-point pt)
     (fetch-display!)))
 
-;; FIXME: when moving below block to top of this code,
-;;        becomes not counting down even if declared.
-;; (declare countdown)
+
+(defn- next-word []
+  (get (:words @app-state) (:pos @app-state)))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
@@ -203,18 +202,18 @@ of yonder warehouses will not suffice."])
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
+    (swap! app-state update :next next-word)
     (when (<= (:words-max @app-state) (:pos @app-state))
       (show-send-fetch-display!))))
 
-(defn countdown []
-  (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
-    (swap! app-state update :results conj "🔴") ;; no effect?
-    (show-send-fetch-display!)))
+(defn countdown
+  "最初のキーが打たれるまで待つ"
+  []
+  (when-not (empty? (:answer @app-state))
+    (swap! app-state update :seconds dec)
+    (when (zero? (:seconds @app-state))
+      (show-send-fetch-display!))))
 
-(defonce ^:private updater (js/setInterval countdown 1000))
-
-;; Backspace でスペースを消した時
 (defn check-key [key]
   (case key
     " " (check-word)
@@ -248,6 +247,7 @@ of yonder warehouses will not suffice."])
                                     :answer
                                     (-> % .-target .-value))}]
      [results-component]
+     [:div (:next @app-state)]
      [:p
       [:input {:type  "button"
                :id    "seconds"
@@ -280,17 +280,19 @@ of yonder warehouses will not suffice."])
                {:form-params {:__anti-forgery-token (csrf-token)}}))
         ;; 20 seconds
         (when (< diff 20000)
-          (js/alert (str "むずいのでも練習しなくちゃ。"))
+          (js/alert (str "めんどくさいのも練習しなくちゃ。"))
           (busy-wait 1000))))
   (go (<! (http/post
            "/restarts"
            {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn start []
+  (js/setInterval countdown 1000)
   (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
   (.focus (.getElementById js/document "drill"))
-  (startup-message))
+  ;; (startup-message)
+  )
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

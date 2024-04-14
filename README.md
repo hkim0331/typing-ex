@@ -10,14 +10,15 @@ ClojureScript でフロントを書く練習。
 
 ## develop
 
-```shell
-$ yarn watch
-$ lein repl
-user> (dev)
-user> (go)
+check postgres alive,
 
-$ open http://localhost:3002
-```
+    $ yarn watch
+    $ lein repl
+    user> (dev)
+    user> (go)
+
+    $ open http://localhost:3002
+
 
 or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
@@ -27,7 +28,7 @@ or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
 ## License
 
-Copyright © 2021-2023 hkimura
+Copyright © 2021-2024 hkimura
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "1.22.0")
+(def ^:private version "2.2.803")
 
 ;--------------------------------
 ;; FIXME
@@ -150,7 +150,8 @@
               [:a {:href (str "/record/" login)
                    :class (if (= login user) "yes" "other")}
                login]])])]
-   (headline days)))
+  ;;  (headline days)
+   ))
 
 (defn- count-ex-days
   [days login]
@@ -183,7 +184,8 @@
                 [:a {:href (str "/record/" login)
                      :class (if (= login user) "yes" "other")}
                  login]])])]
-     (headline days))))
+     ;; (headline days)
+     )))
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -215,9 +217,7 @@
 
 (defn display-records
   [login scores _me? _admin?]
-  ;;(def data scores)
-  (let [;;positives (map #(assoc % :pt (max 0 (:pt %))) scores)
-        avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
+  (let [avg (/ (reduce + (map :pt (take 10 (reverse scores)))) 10.0)
         todays (filter #(today? (:timestamp %)) scores)]
     (page
      [:h2 "Typing: " login " Records"]
@@ -225,7 +225,6 @@
       [:br]
       "TOTAL は全スコア、TODAYS は本日分（10回以上練習）、
           DAY BY DAY は一日平均。"]
-
      ;; FIXME: start date
      [:div.d-inline-flex
       [:div.px-2.mx-auto
@@ -261,7 +260,7 @@
         [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
-;; using?
+;; use in core.clj.
 (defn active-users-page [ret]
   (page
    [:h2 "Typing: Last 40 trials"]
@@ -278,7 +277,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。" ]
+    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))
@@ -288,11 +287,9 @@
               (:login r)]
              "&nbsp;"
              #_[:a {:href (str "https://hp.melt.kyutech.ac.jp/"
-                             (:login r))}
-              "(RP)"]
-             ]))]
-   #_(headline 7)
-   ))
+                               (:login r))}
+                "(RP)"]]))]
+   #_(headline 7)))
 
 (defn sums-page [ret user n]
   (page

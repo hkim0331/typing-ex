@@ -29,3 +29,10 @@ ${SED} -E -i \
 ${SED} -E -i \
     -e "s/main.js\?version=.*/main.js?version=$1\">/" \
     resources/typing_ex/handler/index.html
+
+# CHANGELOG.md
+VER=$1
+TODAY=`date +%F`
+${SED} -i -e "/SNAPSHOT/c\
+## ${VER} / ${TODAY}" CHANGELOG.md
+
