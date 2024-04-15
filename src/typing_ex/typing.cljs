@@ -1,35 +1,40 @@
 (ns typing-ex.typing
-  (:require-macros
-   [cljs.core.async.macros :refer [go]])
+  ;; (:require-macros
+  ;;  [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
-   [cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [<!]]
+   #_[cljs.reader :refer [read-string]]
+   [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
-   [taoensso.timbre :as timbre]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "1.13.2")
-(def ^:private timeout 60)
 
+(def ^:private version "2.2.803")
+
+;;(js/setInterval countdown 1000)
+(def ^:private timeout 60)
 (def ^:private todays-limit 10)
 
 (defonce ^:private app-state
-  (r/atom  {:text "App is starting..."
-            :answer ""
-            :seconds timeout
-            :errors 0
-            :words ""
+  (r/atom  {:text      "App is starting..."
+            :answer    ""
+            :seconds   timeout
+            :errors    0
+            :words     ""
             :words-max 0
-            :pos 0
-            :results []
-            :todays {}
-            :todays-trials 0}))
+            :pos       0
+            :results   []
+            :todays    []
+            :todays-trials 0
+            :stat "normal"
+            :next ""}))
 
-;; midterm exam
-(def mt
+(defn csrf-token []
+  (.-value (.getElementById js/document "__anti-forgery-token")))
+
+(def little-prince
   ["An aviator whose plane is forced down in the Sahara Desert
 encounters a little prince from a small planet who relates
 his adventures in seeking the secret of what is important
@@ -43,101 +48,132 @@ my drawing frightened them. They answered: 'Why should
 anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
-(defonce mt-counter (atom 0))
 
+;; from Moby-Dick
+(def moby-dick
+  ["Call me Ishmael. Some years ago—never mind how long precisely
+having little or no money in my purse, and nothing particular to
+interest me on shore, I thought I would sail about a little
+and see the watery part of the world."
+   "There now is your insular city of the Manhattoes, belted round
+by wharves as Indian isles by coral reefs commerce surrounds it
+with her surf. Right and left, the streets take you waterward.
+Its extreme downtown is the battery, where that noble mole is washed"
+   "But look! here come more crowds, pacing straight for the water,
+and seemingly bound for a dive. Strange! Nothing will content them
+but the extremest limit of the land; loitering under the shady lee
+of yonder warehouses will not suffice."])
+
+(def mt little-prince)
+
+(defonce ^:private mt-counter (atom 0))
+
+(def points-debug (atom {}))
+
+;------------------------------------------
 (defn get-login []
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;;; 1.12.x
-(def points-debug (atom {}))
-;;; pt must not be nagative.
+;; FIXME!
+;; how about call /sleep/:n?
+(defn busy-wait
+  [n]
+  (let [start (.now js/Date.)]
+    (loop [now (.now js/Date)]
+      (when (< (- now start) n)
+        (recur (.now js/Date.))))))
+;------------------------------------------
+
+;; FIXME: dirty.
 (defn pt-raw [{:keys [text answer seconds errors]}]
   (let [s1 (str/split text #"\s+")
-        s2 (str/split answer #"\s+")
+        s2 (str/split answer #"\s")
         s1<>s2 (map list s1 s2)
         all (count s1)
         goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
         bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        err   (* errors errors)
+        ;; 二乗で減点するのをやめる。2023-04-12
+        ;; err   (* errors errors)
+        bs errors ;; backspace key
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
-    ;; 1.12.x
     (swap! points-debug
            assoc
-           :all all :goods goods :bads bads :bs err :bonus seconds)
+           :all all :goods goods :bads bads :bs bs :seconds seconds)
     (cond
       (< goods 10) 0
-      (= all (+ goods bads)) (+ score seconds (- err))
-      :else (+ score (- err)))
-    #_(if (= all (+ goods bads))
-        (+ score (* -1 err) seconds)
-        (+ score (* -1 err)))))
+      (= all goods) (+ score seconds 10) ;; bonus 10
+      (= all (+ goods bads)) (+ score seconds (- bs))
+      :else (- score bs))))
 
-(defn pt [args]
+(defn pt
+  "スコアをマイナスにしない"
+  [args]
   (max 0 (pt-raw args)))
 
-(defn show-score [pt]
-  (let [login (get-login)
-        s1 (str login " さんのスコアは " pt " 点です。")
-        s2 (condp <= pt
-             100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
-             90 "がんばった。もう少しで 100 点だね。"
-             60 "だいぶ上手です。この調子でがんばれ。"
-             30 "指先を見ずに、ゆっくり、ミスを少なく。"
-             "練習あるのみ。")
-        c (+ (get-in @app-state [:results :goods])
-             (get-in @app-state [:results :bads]))]
-    (if (empty? (:results @app-state))
-      (js/alert (str "doing nasty?"))
-      (when-not (js/confirm (str  s1 "\n" s2 "\n(Cancel でタイプのデータを表示)"))
-        (js/alert (str (:text  @app-state)
-                       "\n\n"
-                       (:answer @app-state)
-                       "\n\n"
-                       (apply str (:results @app-state))
-                       "\n\n"
-                       (str @points-debug) "=>" pt))))
-    (swap! app-state update :todays-trials inc)
-    (when (< todays-limit (:todays-trials @app-state))
-      (js/alert "他の勉強もしろよ🐥"))));;🐥☕️
+(defn show-score
+  [pt]
+  (if (empty? (:results @app-state))
+    (js/alert (str "コピペはダメよ"))
+    (let [;; pt (:pt @app-state)
+          login (get-login)
+          s1 (str login " さんのスコアは " pt " 点です。")
+          s2 (condp <= pt
+               100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
+               90  "がんばった。もう少しで 100 点だね。"
+               60  "だいぶ上手です。この調子でがんばれ。"
+               30  "指先を見ずに、ゆっくり、ミスを少なく。"
+               "練習あるのみ。")
+          msg (str  s1 "\n" s2 "\n(Cancel でタイプデータ表示)")]
+      (when-not (js/confirm msg)
+        (js/alert (str
+                   (str @points-debug) " => " pt
+                   "\n\n"
+                   (:answer @app-state)
+                   "\n\n"
+                   (apply str (:results @app-state))
+                   "\n\n"
+                   (:text  @app-state))))))
+  (swap! app-state update :todays-trials inc)
+  (when (< todays-limit (:todays-trials @app-state))
+    (js/alert
+     (str "連続 "
+          (:todays-trials @app-state)
+          " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
-(defn csrf-token []
-  (.-value (.getElementById js/document "__anti-forgery-token")))
-
-(defn send-score! [pt]
-  (http/post "/score"
-             {:form-params
-              {:pt pt
-               :__anti-forgery-token (csrf-token)}}))
-
-;; (go (<!)) は非同期に実行される。
-;; 同期プロブラムと同じ気持ちで呑気にプログラムしただけだと、
-;; app-state がアップデートされた後のレンダリングが保証されない。
-
-(defn send- []
+(defn send-point
+  "send-point 中で (:todays @app-state) を更新する。"
+  [pt]
   (if (zero? (count (:answer @app-state)))
     (when-not (empty? (:words @app-state))
       (js/alert "タイプ、忘れた？"))
-    (let [pt (pt @app-state)]
-      (show-score pt)
-      (go (<! (send-score! pt))))))
+    (do
+      (swap! app-state update :todays conj {:pt pt})
+      (go (<! (http/post
+               "/score"
+               {:form-params
+                {:pt pt
+                 :__anti-forgery-token (csrf-token)}})))
+      (when (= "roll-call" (:stat @app-state))
+        (go (<! (http/post
+                 "/rc"
+                 {:form-params
+                  {:__anti-forgery-token (csrf-token)
+                   :pt pt}})))))))
 
-(defn fetch-reset! []
-  (go (let [{body :body} (<! (http/get (str "/todays/" (get-login))))
-            scores (read-string body)
-              ;;; midterm exam
-              ;;; go の内側で go はいけない。
-            {ex? :body} (<! (http/get "/mt"))
-            {drill :body}  (if (:b (read-string ex?))
-                             (do
-                               (.log js/console "ex mode")
-                               (swap! mt-counter inc)
-                               {:body (get mt (mod @mt-counter 3))})
-                             (do
-                               (.log js/console "normal mode")
-                               (<! (http/get (str "/drill")))))
-            words (str/split drill #"\s+")]
+(defn fetch-display!
+  []
+  (go (let [stat (-> (<! (http/get "/stat")) :body)
+            drill (if (= stat "exam")
+                    (do
+                      (swap! mt-counter inc)
+                      (get mt (mod @mt-counter 3)))
+                    (-> (<! (http/get "/drill"))
+                        :body))
+            words (str/split drill #"\s+")
+            next (first words)]
         (swap! app-state assoc
+               :stat stat
                :text drill
                :answer ""
                :seconds timeout
@@ -146,87 +182,117 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
                :words-max (count words)
                :pos 0
                :results []
-               :todays scores)
+               :next next)
         (.focus (.getElementById js/document "drill")))))
 
-(defn send-fetch-reset! []
-  (send-)
-  (fetch-reset!))
+(defn show-send-fetch-display!
+  []
+  (let [pt (pt @app-state)]
+    (show-score pt)
+    (send-point pt)
+    (fetch-display!)))
 
-(defn countdown []
-  (swap! app-state update :seconds dec)
-  (when (zero? (:seconds @app-state))
-    (send-fetch-reset!)))
 
-;; FIXME: when moving below block to top of this code,
-;;        becomes not counting down even if declared.
-;;(declare countdown)
-(defonce updater (js/setInterval countdown 1000))
+(defn- next-word []
+  (get (:words @app-state) (:pos @app-state)))
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
-        typed  (last (str/split (@app-state :answer) #"\s+"))]
-    ;;(.log js/console target typed)
+        typed  (last (str/split (@app-state :answer) #"\s"))]
     (swap! app-state update :results
            #(conj % (if (= target typed) "🟢" "🔴")))
     (swap! app-state update :pos inc)
-    (when (<= (@app-state :words-max) (@app-state :pos))
-      (send-fetch-reset!))))
+    (swap! app-state update :next next-word)
+    (when (<= (:words-max @app-state) (:pos @app-state))
+      (show-send-fetch-display!))))
+
+(defn countdown
+  "最初のキーが打たれるまで待つ"
+  []
+  (when-not (empty? (:answer @app-state))
+    (swap! app-state update :seconds dec)
+    (when (zero? (:seconds @app-state))
+      (show-send-fetch-display!))))
 
 (defn check-key [key]
   (case key
     " " (check-word)
     "Enter" (check-word)
-    "Backspace" (swap! app-state update :errors inc)
+    "Backspace" (do
+                  (swap! app-state update :errors inc)
+                  (swap! app-state update :results conj "🟡"))
     nil))
 
-(defn error-component []
-  ;;(.log js/console "errors" (:errors @app-state))
-  [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
+;; (defn error-component []
+;;   ;;(.log js/console "errors" (:errors @app-state))
+;;   [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
 
 (defn results-component []
-  [:div.drill (apply str (@app-state :results))])
+  [:div.drill (apply str (:results @app-state))])
 
-(defn ex-page []
-  ;;(timbre/info "drill" (subs (:drill @app-state) 0 20))
-  ;;(timbre/info "todays" (:todays @app-state))
-  [:div
-   [:h2 "Typing: Challenge"]
-   [:p {:class "red"} "指先見ないで、ゆっくり、確実に。単語間のスペースは一個で。"]
-   [:pre {:id "example"} (:text @app-state)]
-   [:textarea {:name "answer"
-               :id "drill"
-               :value (:answer @app-state)
-               :on-key-up #(check-key (.-key %))
-               :on-change #(swap! app-state
-                                  assoc
-                                  :answer
-                                  (-> % .-target .-value))}]
-   [error-component]
-   [results-component]
-   [:p
-    [:input {:type  "button"
-             :id    "seconds"
-             :class "btn btn-success btn-sm"
-             :style {:font-family "monospace"}
-             :value (:seconds @app-state)
-             :on-click #(do (send-fetch-reset!))}]
-    " 🔚 全部打った後にスペースかエンターでボーナス"]
-   [:p
-    "todays:"
-    [:br]
-    [bar-chart 300 150 (:todays @app-state)]]
-   [:p
-    [:a {:href "/sum/1" :class "btn btn-primary btn-sm"} "D.P."]
-    " "
-    [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
-   [:hr]
-   [:div "hkimura, " version]])
+(defn ex-page
+  []
+  (fn []
+    [:div {:class (:stat @app-state)}
+     [:h2 "Typing: Challenge"]
+     [:p {:class "red"}
+      "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
+     [:pre {:id "example"} (:text @app-state)]
+     [:textarea {:name "answer"
+                 :id "drill"
+                 :value (:answer @app-state)
+                 :on-key-up #(check-key (.-key %))
+                 :on-change #(swap! app-state
+                                    assoc
+                                    :answer
+                                    (-> % .-target .-value))}]
+     [results-component]
+     [:div (:next @app-state)]
+     [:p
+      [:input {:type  "button"
+               :id    "seconds"
+               :class "btn btn-success btn-sm"
+               :style {:font-family "monospace"}
+               :value (:seconds @app-state)
+               :on-click #(do (show-send-fetch-display!))}]
+      " 🔚 全部タイプした後にスペースかエンターでボーナス"]
+     [:p
+      "todays:"
+      [:br]
+      (bar-chart 300 150 (map :pt (:todays @app-state)))]
+     [:p
+      [:a {:href "/todays" :class "btn btn-danger btn-sm"} "todays"]
+      " "
+      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "logout"]]
+     [:hr]
+     [:div "hkimura, " version]]))
+
+
+(defn startup-message
+  []
+  (go (let [last (-> (<! (http/get (str "/restarts/" (get-login))))
+                     :body
+                     js/parseInt)
+            now (.now js/Date.)
+            diff  (- now last)]
+        #_(<! (http/post
+               "/restarts"
+               {:form-params {:__anti-forgery-token (csrf-token)}}))
+        ;; 20 seconds
+        (when (< diff 20000)
+          (js/alert (str "めんどくさいのも練習しなくちゃ。"))
+          (busy-wait 1000))))
+  (go (<! (http/post
+           "/restarts"
+           {:form-params {:__anti-forgery-token (csrf-token)}}))))
 
 (defn start []
-  (fetch-reset!)
+  (js/setInterval countdown 1000)
+  (fetch-display!)
   (rdom/render [ex-page] (js/document.getElementById "app"))
-  (.focus (.getElementById js/document "drill")))
+  (.focus (.getElementById js/document "drill"))
+  ;; (startup-message)
+  )
 
 (defn ^:export init []
   ;; init is called ONCE when the page loads

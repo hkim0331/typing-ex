@@ -1,27 +1,43 @@
-version: "3.8"
+version: "3"
+
 services:
-  db:
-    image: postgres:12.10
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=l22
-      - POSTGRES_USER=postgres
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - TZ=Asia/Tokyo
+  typing-ex:
+    image: hkim0331/duct:0.2.1
+    # user: vscode
     ports:
-      - "5432:5432"
+      - "3002:3000"
+    working_dir: /usr/src/app
     volumes:
-      - data:/var/lib/postgres/data
-  app:
-    build: .
-    tty: true
-    environment:
-      LEIN_REPL_PORT: 8888
-      LEIN_REPL_HOST: 0.0.0.0
-    ports:
-      - "3000:3000"
-      - "8888:8888"
-    volumes:
+      # https://gotohayato.com/content/544/
+      # https://qiita.com/kino-ma/items/eae3dac942e899f9a77b
+      # - node_modules:/usr/src/app/node_modules
       - .:/usr/src/app
+      - m2:/root/.m2
+      - gitlibs:/root/.gitlibs
+    entrypoint:
+      - sleep
+      - infinity
+
+  db:
+    image: postgres:14.11
+    restart: always
+    environment:
+      POSTGRES_DB: typing_ex
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8 --locale=C
+      TZ: Asia/Toky
+    # ports:
+    #   - "55432:5432"
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - data:/var/lib/postgresql/data
+
 volumes:
   data:
+    driver: local
+  gitlibs:
+    external: true
+  m2:
+    external: true
+  # node_modules:
+  #   external: true

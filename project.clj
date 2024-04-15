@@ -1,26 +1,26 @@
-(defproject typing-ex "1.13.2"
+(defproject typing-ex "2.2.803"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[buddy/buddy-auth "3.0.323"]
-                 [buddy/buddy-hashers "1.8.158"]
-                 [cheshire/cheshire "5.10.2"]
-                 [clojure.java-time "0.3.3"]
-                 [com.github.seancorfield/next.jdbc "1.2.780"]
-                 [com.taoensso/timbre "5.2.1"]
-                 [duct/core "0.8.0"]
+                 [buddy/buddy-hashers "2.0.167"]
+                 [cheshire/cheshire "5.13.0"]
+                 [clojure.java-time/clojure.java-time "1.4.2"]
+                 [com.github.seancorfield/next.jdbc "1.3.925"]
+                 #_[com.taoensso/timbre "6.1.0"]
+                 [duct/core "0.8.1"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
                  [duct/module.sql "0.6.1"]
                  [duct/module.web "0.7.3"]
                  [environ "1.2.0"]
+                 [hato "0.9.0"]
                  [hiccup "1.0.5"]
-                 [org.clojure/clojure "1.11.1"]
-                 [org.postgresql/postgresql "42.3.5"]]
-                 ;; no use cors
-                 ;;[ring-cors "0.1.13"]
-                 ;; no effect
-                 ;; [medley/medley "1.4.0"]
+                 ;; develop only?
+                 ;; [integrant/repl "0.3.2"]
+                 ;;
+                 [org.clojure/clojure "1.11.2"]
+                 [org.postgresql/postgresql "42.7.3"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
@@ -34,8 +34,8 @@
    :profiles/dev {}
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources"]
-                  :dependencies   [[integrant/repl "0.3.2"]
+                  :dependencies   [[integrant/repl "0.3.3"]
                                    [hawk "0.2.11"]
-                                   [eftest "0.5.9"]
+                                   [eftest "0.6.0"]
                                    [fipp "0.6.26"]
                                    [kerodon "0.9.1"]]}})

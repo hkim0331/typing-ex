@@ -4,5 +4,8 @@
     "editor.unicodeHighlight.invisibleCharacters": true
   },
   "editor.unicodeHighlight.ambiguousCharacters": true,
-  "editor.unicodeHighlight.invisibleCharacters": true
+  "editor.unicodeHighlight.invisibleCharacters": true,
+  "[clojure]": {
+    "files.trimTrailingWhitespace": true
+  }
 }
