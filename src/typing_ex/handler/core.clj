@@ -153,10 +153,15 @@
     (let [days 7]
       (redirect (format "/scores/%d" days)))))
 
+(defn non-empty-text [db]
+  (let [ret (drills/fetch-drill db)]
+    (if (re-find #"\S" ret)
+      ret
+      (non-empty-text db))))
+
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
-    (let [ret (drills/fetch-drill db)]
-      [::response/ok ret])))
+    [::response/ok (non-empty-text db)]))
 
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]

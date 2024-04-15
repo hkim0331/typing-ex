@@ -3,19 +3,11 @@
 (defn solve
   "連立方程式 ax + by = c, dx + ey = f を解く。"
   [[a b c] [d e f]]
-  ;; (println a)
-  ;; (println b)
-  ;; (println c)
-  ;; (println d)
-  ;; (println e)
-  ;; (println f)
   (let [denom (- (* b d) (* a e))]
-    [(/ (- (* b f) (* c e)) denom)
-     (/ (- (* c d) (* a f)) denom)]))
-
-(comment
-  (solve [1 2 3] [4 5 6])
-  :rcf)
+    (if-not (zero? denom)
+      [(/ (- (* b f) (* c e)) denom)
+       (/ (- (* c d) (* a f)) denom)]
+      [0, 100])))
 
 (defn lsm
   "least square sum method"
@@ -25,8 +17,6 @@
         sy  (reduce + y)
         sxy (reduce + (map * x y))
         sx2 (reduce + (map * x x))]
-    ;; (println x)
-    ;; (println y)
     (solve [sx2 sx (- sxy)] [sx n (- sy)])))
 
 (defn- frame [w h]
@@ -63,7 +53,6 @@
         ys (map #(- h 10 %) data)
         [a b] (lsm xs ys)
         f #(+ (* (- a) %) (- b))]
-    ;; (println "y = " a "x+" b)
     (conj
      (into
       (frame w h)

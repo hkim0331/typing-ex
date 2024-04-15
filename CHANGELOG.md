@@ -11,38 +11,47 @@
 ## Unreleased
 - 各行ごとに集計。
 - 日本語例文。
-- 周回ごとに ready, set, go! を表示。きっと邪魔だ。
 - 「授業中は練習なしよ」モード
-- WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core,
-  being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
-- D.P. up/down/even を表示できるか？
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
-- /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
+- docker: yarn watch のたびにインストールが走ってしまう。
+- .m2, .gitlibs の位置の調整ができてない．
+  mount しているのは /root，しかし，lein で入れるのは/home/vscode
 - リファラ見てアラート出すかどうか、決められないか？
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
-- docker: yarn watch のたびにインストールが走ってしまう。
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
-- .m2, .gitlibs の位置の調整ができてない．
-  mount しているのは /root，しかし，lein で入れるのは/home/vscode
+- java -jar で立ち上がり完了の合図を出す．
+- an issue on checking good/bad last word typing.
+- スコアが二度提出されることがある。
+- delete した影響で空のdrill.textを作ってしまった。
+- Today's GO が表示されない。/restarts-page/:login
 
+
+## 2.3-SNAPSHOT
+
+
+## 2.2.803 / 2024-04-13
+- typing.clls: display next word.
+- core.clj: defined `non-empty-text`.
+
+## 2.1.794 / 2024-04-10
+- fix: korosuke で Internal Server Error
 
 ## 2.0.781 / 2024-04-09
 - dependency l22, env-var で．
-- last word issue.
+
 - found a miss to update libaries.
   ```
   clojure -Tantq outdated :upgrade true :force true
   ```
-
 
 ## 1.23-778 / 2024-04-09
 - タイプはじめの1文字待ち．
