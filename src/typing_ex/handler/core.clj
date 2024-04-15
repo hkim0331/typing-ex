@@ -22,6 +22,11 @@
   (env :tp-dev)
   :rcf)
 
+;; l22 の定義を変えるではなく，auth? で誤魔化す？
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
+(def typing-start (or (env :tp-start) "2024-04-01"))
+
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -40,14 +45,12 @@
   (fn [req]
     (view/login-page req)))
 
-(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
-
 (defn- find-user [login]
   (let [url (str l22 login)
         body (:body (hc/get url {:as :json}))]
     body))
 
-;; FIXME: env 以外、system をみてスイッチしたい
+;; FIXME: 環境変数以外の方法は？
 (defn auth? [login password]
   (or
    (= "true" (env :tp-dev))
@@ -61,8 +64,8 @@
       (-> (redirect "/total/7")
           (assoc-in [:session :identity] (keyword login)))
       (-> (redirect "/login")
-        (dissoc :session)
-        (assoc :flash "login failure")))))
+          (dissoc :session)
+          (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -74,7 +77,8 @@
                #"xxx"
                login))
 
-;; index. anti-forgery-field と login を埋め込む。
+;; index.
+;; DON't FORGET: anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -89,8 +93,10 @@
     <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
   </head>
   <body>"
+      ;; DON'T FORGET
       (anti-forgery-field)
       (login-field (get-login req))
+      ;;
       "<div class='container'>
     <div id='app'>
       Shadow-cljs rocks!
@@ -121,16 +127,14 @@
           login (get-login req)
           max-pt (results/find-max-pt db days)
           ;;ex-days (results/find-ex-days db days)
-          ex-days "dummy"
-          ]
+          ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [days (Integer/parseInt n)
           login (get-login req)
-          ex-days (results/find-ex-days db days)
-          ]
+          ex-days (results/find-ex-days db days)]
       (view/ex-days-page ex-days login days))))
 
 ;; meta endpoint, dispatches to /total, /days and /max.
@@ -149,18 +153,24 @@
     (let [days 7]
       (redirect (format "/scores/%d" days)))))
 
+(defn non-empty-text [db]
+  (let [ret (drills/fetch-drill db)]
+    (if (re-find #"\S" ret)
+      ret
+      (non-empty-text db))))
+
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
-    (let [ret (drills/fetch-drill db)]
-      [::response/ok ret])))
+    [::response/ok (non-empty-text db)]))
 
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    (view/svg-self-records login
-                           (results/fetch-records db login)
-                           (= (get-login req) login)
-                           (= (get-login req) "hkimura"))))
+    (view/display-records login
+                          ;; (results/fetch-records db login)
+                          (results/fetch-records-since db login typing-start)
+                          (= (get-login req) login)
+                          (= (get-login req) "hkimura"))))
 
 ;; req から login をとるのはどうかな。
 (defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
@@ -177,12 +187,12 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
-   (let [ret (->> (results/todays-act db)
-                  (partition-by :login)
-                  (map first)
-                  (sort-by :timestamp)
-                  reverse)]
-     (view/todays-act-page ret (get-login req)))))
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret (get-login req)))))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]
@@ -244,10 +254,11 @@
       [::response/ok (str created_at)])))
 
 (comment
+  ;; jit を得る。
   (-> (jt/local-date-time)
       jt/sql-timestamp ;; can not remove this!
       jt/to-millis-from-epoch)
-
+  ;; 現在時間なら、
   (-> (jt/instant)
       jt/to-millis-from-epoch); => 1685318564122
-  )
+  :rcf)

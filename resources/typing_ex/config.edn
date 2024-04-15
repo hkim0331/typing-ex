@@ -2,7 +2,8 @@
 
  {:duct.core/project-ns typing-ex
 
-  :duct.server.http/jetty {:port 3002}
+  ;; dev/resources/
+  ;; :duct.server.http/jetty {:port 3002}
 
   :duct.router/ataraxy
   {:routes
@@ -10,22 +11,24 @@
     [:post "/login" {params :form-params}] [:typing-ex.handler.core/login-post params]
     [:get  "/logout"] [:typing-ex.handler.core/logout]
 
-    [:get "/"]      ^:auth [:typing-ex.handler.core/typing]
+    [:get "/"] ^:auth [:typing-ex.handler.core/typing]
     [:get "/drill"] ^:auth [:typing-ex.handler.core/drill]
 
-    [:get "/todays"]      ^:auth [:typing-ex.handler.core/todays-act]
+    [:get "/todays"] ^:auth [:typing-ex.handler.core/todays-act]
+
     ;; recent is a meta endpoint of total, days, max
-    [:get "/recent"]     ^:auth [:typing-ex.handler.core/recent]
-    [:get "/total/" n]     ^:auth [:typing-ex.handler.core/total n]
-    [:get "/days/" n] ^:auth [:typing-ex.handler.core/ex-days n]
-    [:get "/max/" n]  ^:auth [:typing-ex.handler.core/scores n]
+    [:get "/recent"]   ^:auth [:typing-ex.handler.core/recent]
+    [:get "/total/" n] ^:auth [:typing-ex.handler.core/total n]
+    [:get "/days/" n]  ^:auth [:typing-ex.handler.core/ex-days n]
+    [:get "/max/" n]   ^:auth [:typing-ex.handler.core/scores n]
     ;; [:get "/scores"]     ^:auth [:typing-ex.handler.core/scores-no-arg]
 
     ;; send typing score
     [:post "/score"] ^:auth [:typing-ex.handler.core/score-post]
 
-    ;; show page including svg plot
+    ;; show user info including svg plots
     [:get "/record/" login] ^:auth [:typing-ex.handler.core/record login]
+
     ;; returns [{:pt n} {:pt m} {:pt k} ....]
     [:get "/todays/" login] ^:auth [:typing-ex.handler.core/todays login]
 

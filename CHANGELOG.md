@@ -11,29 +11,90 @@
 ## Unreleased
 - 各行ごとに集計。
 - 日本語例文。
-- 周回ごとに ready, set, go! を表示。きっと邪魔だ。
 - 「授業中は練習なしよ」モード
-- WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core,
-  being replaced by: #'medley.core/abs
 - 自分データを csv でダウンロードできるように。
-- D.P. up/down/even を表示できるか？
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- 例文を足す moby-dick
 - admin? を DB から引く
   l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
   あるいは /admin/:user を作るか。
-- VScode で cljs repl につながらなくなった。以前はどうだったか？
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
-- /todays に today's total を表示。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
+- docker: yarn watch のたびにインストールが走ってしまう。
+- .m2, .gitlibs の位置の調整ができてない．
+  mount しているのは /root，しかし，lein で入れるのは/home/vscode
 - リファラ見てアラート出すかどうか、決められないか？
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
+- @app-state を廃止したい。
+- drills 一括ダウンロード。
+- java -jar で立ち上がり完了の合図を出す．
+- an issue on checking good/bad last word typing.
+- スコアが二度提出されることがある。
+- delete した影響で空のdrill.textを作ってしまった。
+- Today's GO が表示されない。/restarts-page/:login
 
 
+## 2.3-SNAPSHOT
 
-## 1.19.5-SNAPSHOT
+
+## 2.2.803 / 2024-04-13
+- typing.clls: display next word.
+- core.clj: defined `non-empty-text`.
+
+## 2.1.794 / 2024-04-10
+- fix: korosuke で Internal Server Error
+
+## 2.0.781 / 2024-04-09
+- dependency l22, env-var で．
+
+- found a miss to update libaries.
+  ```
+  clojure -Tantq outdated :upgrade true :force true
+  ```
+
+## 1.23-778 / 2024-04-09
+- タイプはじめの1文字待ち．
+- 最後の1ワード
+- 少数タイプでの点数
+- updated libraries
+
+| :file           | :name                               | :current | :latest |
+|---------------- | ----------------------------------- | -------- | --------|
+| project.clj     | cheshire/cheshire                   | 5.11.0   | 5.13.0  |
+|                 | clojure.java-time/clojure.java-time | 1.3.0    | 1.4.2   |
+|                 | com.github.seancorfield/next.jdbc   | 1.3.883  | 1.3.925 |
+|                 | duct/core                           | 0.8.0    | 0.8.1   |
+|                 | org.clojure/clojure                 | 1.11.1   | 1.11.2  |
+|                 | org.postgresql/postgresql           | 42.6.0   | 42.7.3  |
+| shadow-cljs.edn | cljs-http                           | 0.1.46   | 0.1.48  |
+
+
+## 1.22.0 - 2023-09-10
+- fixed: DAY BY DAY プロット
+  環境変数 TP_START で集計スタート日を与えるよう変更した。
+- clojure -Tantq outdated :upgrade true
+
+| :file       | :name                               | :current | :latest |
+|------------ | ----------------------------------- | -------- | --------|
+| project.clj | buddy/buddy-hashers                 | 1.8.158  | 2.0.167 |
+|             | clojure.java-time/clojure.java-time | 1.2.0    | 1.3.0   |
+|             | com.github.seancorfield/next.jdbc   | 1.3.874  | 1.3.883 |
+|             | integrant/repl                      | 0.3.2    | 0.3.3   |
+
+
+## 1.21.0 - 2023-09-06
+- hkim0331/typing-ex:0.3
+- postgres:14.9
+
+## 1.20.0 - 2023-08-10
+- moby dick.
+
+## 1.19.6 - 2023-06-30
+- rename page.clj/svg-self-records to page.clj/display-records
+- day by day plot
+
+## 1.23.778 / 2024-04-08
 - jetty port 3002
 ```
   :duct.server.http/jetty {:port 3002}
@@ -269,7 +330,7 @@ Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or i
 ## 1.13.0 - 2022-08-06
 - ペーストを (< goods 10) で判定する。
 
-## 1.13.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - add more examples(drills)
 - fix asnync get
 
@@ -300,7 +361,7 @@ Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or i
 ## 1.9.1 - 2022-06-08
 - bump-version.sh updates js version number in `index.html`.
 
-## 1.9.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 中間試験モード
 
 ## 1.8.4
@@ -333,7 +394,7 @@ code polish up
 - timeout 6 sec
 - counter does not stop at 0
 
-## 1.7.1-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - go ブロックは呼んだ順に実行されるとは限らない。
 - reset! を swap! に戻す。
 - defonce を１つに。除く setInterval.
@@ -355,7 +416,7 @@ code polish up. not improved.
 - reset-todays! を独立させた
 
 ## 1.6.4 - 2022-05-07
-- app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
+## 1.23.778 / 2024-04-08
 
 ## 1.6.3 - 2022-05-07
 - 時々、「今日の練習グラフ」がアップデートされない。`get` の順番で改善できるか？
@@ -679,7 +740,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 ### added
 - link to ul.melt
 
-## 0.9.18-SNAPSHOT
+## 1.23.778 / 2024-04-08
 ### Changed
 - hkimura のバックグラウンドカラーを blue に。
 
@@ -786,7 +847,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - ちょっとましな評価関数
 - display self record
 
-## 0.5.3-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - typing-ex.boundary.utils ネームスペース。
 - 評価関数 残り時間を足す。
   v = (g/a - b/g)*100 + c
@@ -803,7 +864,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - counter=0 で発射。
 - テキストエリアのサイズ調整。
 
-## 0.5.0-SNAPSHOT - 2021-06-01
+## 1.23.778 / 2024-04-08
 - テストを採点する。(+ (- goods bads) (quot counter 2)) じゃあんまりか。
 - Fix: js/setInterval instead of js/setTimeout.
 - babashka のインストールはターミナルで１行。app.melt でやってしまう。
@@ -865,7 +926,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
   auth に通ったら / に行き、cljs のページを表示できる。
   勇気づけのための 0.1.0. まだ typing-ex の動作はしない。
 
-## 0.1.0-SNAPSHOT - 2021-05-30
+## 1.23.778 / 2024-04-08
 - duct から shadow-cljs で作成したページを読めるようになった。
 - docker compose
 - basic routing. login/logout, /typing, score/:id, scores.

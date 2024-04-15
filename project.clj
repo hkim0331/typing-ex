@@ -1,14 +1,14 @@
-(defproject typing-ex "1.19.5-SNAPSHOT"
+(defproject typing-ex "2.2.803"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
   :dependencies [[buddy/buddy-auth "3.0.323"]
-                 [buddy/buddy-hashers "1.8.158"]
-                 [cheshire/cheshire "5.11.0"]
-                 [clojure.java-time/clojure.java-time "1.2.0"]
-                 [com.github.seancorfield/next.jdbc "1.3.874"]
+                 [buddy/buddy-hashers "2.0.167"]
+                 [cheshire/cheshire "5.13.0"]
+                 [clojure.java-time/clojure.java-time "1.4.2"]
+                 [com.github.seancorfield/next.jdbc "1.3.925"]
                  #_[com.taoensso/timbre "6.1.0"]
-                 [duct/core "0.8.0"]
+                 [duct/core "0.8.1"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
                  [duct/module.sql "0.6.1"]
@@ -19,8 +19,8 @@
                  ;; develop only?
                  ;; [integrant/repl "0.3.2"]
                  ;;
-                 [org.clojure/clojure "1.11.1"]
-                 [org.postgresql/postgresql "42.6.0"]]
+                 [org.clojure/clojure "1.11.2"]
+                 [org.postgresql/postgresql "42.7.3"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
@@ -34,7 +34,7 @@
    :profiles/dev {}
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources"]
-                  :dependencies   [[integrant/repl "0.3.2"]
+                  :dependencies   [[integrant/repl "0.3.3"]
                                    [hawk "0.2.11"]
                                    [eftest "0.6.0"]
                                    [fipp "0.6.26"]
