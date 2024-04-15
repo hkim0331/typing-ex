@@ -22,6 +22,7 @@
   (env :tp-dev)
   :rcf)
 
+;; l22 の定義を変えるではなく，auth? で誤魔化す？
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
