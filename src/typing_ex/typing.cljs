@@ -141,9 +141,13 @@ of yonder warehouses will not suffice."])
           " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
 (defn- send-point-aux [url pt]
-  (go (<! (http/post url
-                     {:__anti-forgery-token (csrf-token)
-                      :pt pt}))))
+
+  (go (let [ret (<! (http/post
+                     url
+                     {:form-params
+                      {:__anti-forgery-token (csrf-token), :pt pt}}))]
+        (.log js/console "send-point-aux" url pt ret))))
+
 (defn send-point
   "send-point 中で (:todays @app-state) を更新する。"
   [pt]
