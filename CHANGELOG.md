@@ -34,7 +34,7 @@
 - Today's GO が表示されない。/restarts-page/:login
 
 
-## 2.3-SNAPSHOT / 2024-04-15
+## v2.3.822 / 2024-04-16
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
 - rnamed fetch-display to reset-display!
