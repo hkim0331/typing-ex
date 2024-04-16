@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "2.3-SNAPSHOT")
+(def ^:private version "v2.3.822")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -145,7 +145,6 @@ of yonder warehouses will not suffice."])
           " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
 (defn- send-point-aux [url pt]
-
   (go (let [ret (<! (http/post
                      url
                      {:form-params

@@ -34,11 +34,10 @@
 - Today's GO が表示されない。/restarts-page/:login
 
 
-## 2.3-SNAPSHOT / 2024-04-15
+## 2.3-822 / 2024-04-15
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
 - rnamed fetch-display to reset-display!
-- 緑赤で表示するデータからスコアを計算する。
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
