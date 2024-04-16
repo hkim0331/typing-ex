@@ -34,7 +34,7 @@
 - Today's GO が表示されない。/restarts-page/:login
 
 
-## 2.4-SNAPSHOT
+## v2.4-SNAPSHOT / 2024-04-17
 merge に手こずった。
 
 ## 2.3-822 / 2024-04-15
