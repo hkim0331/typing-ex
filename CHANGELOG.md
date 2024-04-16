@@ -33,12 +33,13 @@
 - スコアが二度提出されることがある。
 - Today's GO が表示されない。/restarts-page/:login
 
-
-## v2.3.816 / 2024-04-16
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
 - rnamed fetch-display to reset-display!
-- added /css/bootstrap.min.css
+## 2.3-SNAPSHOT / 2024-04-15
+- typing.cljs/pt: map -> mapv
+- fix a bug: forgot {:form-params}
+- rnamed fetch-display to reset-display!
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
