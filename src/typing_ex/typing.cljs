@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "2.3-SNAPSHOT")
+(def ^:private version "v2.3.816")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
