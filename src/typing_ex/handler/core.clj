@@ -22,6 +22,7 @@
   (env :tp-dev)
   :rcf)
 
+;; l22 の定義を変えるではなく，auth? で誤魔化す？
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
@@ -87,7 +88,8 @@
   <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css' integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2' crossorigin='anonymous'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <link href='css/style.css' rel='stylesheet' type='text/css'>
     <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
   </head>
