@@ -38,6 +38,7 @@
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
 - rnamed fetch-display to reset-display!
+- 緑赤で表示するデータからスコアを計算する。
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.

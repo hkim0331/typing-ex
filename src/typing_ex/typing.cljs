@@ -28,7 +28,9 @@
             :todays    []
             :todays-trials 0
             :stat "normal"
-            :next ""}))
+            :next ""
+            :goods 0
+            :bads 0}))
 
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
@@ -85,13 +87,15 @@ of yonder warehouses will not suffice."])
 ;------------------------------------------
 
 ;; FIXME: dirty.
-(defn pt [{:keys [text answer seconds errors]}]
+(defn pt [{:keys [text answer seconds errors goods bads]}]
   (let [s1 (str/split text #"\s+")
         s2 (str/split answer #"\s")
         s1<>s2 (mapv list s1 s2)
         all (count s1)
-        goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
-        bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
+        ;; goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
+        ;; bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
+        ;; goods (:goods @app-state)
+        ;; bads (:bads @app-state)
         ;; 二乗で減点するのをやめる。2023-04-12
         ;; err   (* errors errors)
         bs errors ;; backspace key
@@ -181,7 +185,9 @@ of yonder warehouses will not suffice."])
                :words-max (count words)
                :pos 0
                :results []
-               :next next)
+               :next next
+               :goods 0
+               :bads 0)
         (.focus (.getElementById js/document "drill")))))
 
 (defn show-send-reset-display!
@@ -196,9 +202,12 @@ of yonder warehouses will not suffice."])
 
 (defn check-word []
   (let [target (get (@app-state :words) (@app-state :pos))
-        typed  (last (str/split (@app-state :answer) #"\s"))]
+        typed  (last (str/split (@app-state :answer) #"\s"))
+        good? (= target typed)]
+
     (swap! app-state update :results
-           #(conj % (if (= target typed) "🟢" "🔴")))
+           #(conj % (if good? "🟢" "🔴")))
+    (swap! app-state update (if good? :goods :bads) inc)
     (swap! app-state update :pos inc)
     (swap! app-state update :next next-word)
     (when (<= (:words-max @app-state) (:pos @app-state))
@@ -221,10 +230,6 @@ of yonder warehouses will not suffice."])
                   (swap! app-state update :results conj "🟡"))
     nil))
 
-;; (defn error-component []
-;;   ;;(.log js/console "errors" (:errors @app-state))
-;;   [:div.drill (repeat (:errors @app-state) "🥶")]) ;;🙅💧💦💔❌🦠🥶🥺
-
 (defn results-component []
   [:div.drill (apply str (:results @app-state))])
 
@@ -240,10 +245,11 @@ of yonder warehouses will not suffice."])
                  :id "drill"
                  :value (:answer @app-state)
                  :on-key-up #(check-key (.-key %))
-                 :on-change #(swap! app-state
-                                    assoc
-                                    :answer
-                                    (-> % .-target .-value))}]
+                 :on-change (fn [e]
+                              (swap! app-state
+                                     assoc
+                                     :answer
+                                     (-> e .-target .-value)))}]
      [results-component]
      [:div (:next @app-state)]
      [:p
