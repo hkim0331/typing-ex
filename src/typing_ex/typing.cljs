@@ -141,7 +141,6 @@ of yonder warehouses will not suffice."])
           " 回、行きました。他の勉強もしろよ🐥"))));;🐥☕️
 
 (defn- send-point-aux [url pt]
-
   (go (let [ret (<! (http/post
                      url
                      {:form-params

@@ -38,6 +38,7 @@
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
 - rnamed fetch-display to reset-display!
+- added /css/bootstrap.min.css
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
