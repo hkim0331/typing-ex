@@ -31,12 +31,19 @@
 - java -jar で立ち上がり完了の合図を出す．
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
-- delete した影響で空のdrill.textを作ってしまった。
+- Today's GO が表示されない。/restarts-page/:login
 
+
+## v2.3.816 / 2024-04-16
+- typing.cljs/pt: map -> mapv
+- fix a bug: forgot {:form-params}
+- rnamed fetch-display to reset-display!
+- added /css/bootstrap.min.css
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
 - core.clj: defined `non-empty-text`.
+  delete した影響で空のdrill.textを17個作ってしまったに対応した。
 
 ## 2.1.794 / 2024-04-10
 - fix: korosuke で Internal Server Error
