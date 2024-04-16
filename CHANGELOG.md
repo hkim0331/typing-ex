@@ -34,6 +34,9 @@
 - Today's GO が表示されない。/restarts-page/:login
 
 
+## 2.4-SNAPSHOT
+merge に手こずった。
+
 ## 2.3-822 / 2024-04-15
 - typing.cljs/pt: map -> mapv
 - fix a bug: forgot {:form-params}
