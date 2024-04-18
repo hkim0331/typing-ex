@@ -34,7 +34,7 @@
 - Today's GO が表示されない。/restarts-page/:login
 
 
-## v2.4-SNAPSHOT / 2024-04-17
+## v2.4.829 / 2024-04-18
 - merge に手こずった。
 - "traning days" 10 回以上、トレーニングに入った日をカウント。
 
