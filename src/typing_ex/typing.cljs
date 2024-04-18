@@ -4,7 +4,7 @@
   (:require
    [cljs-http.client :as http]
    #_[cljs.reader :refer [read-string]]
-   [cljs.core.async :refer [go <! put!]]
+   [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
    [reagent.dom :as rdom]
@@ -87,17 +87,8 @@ of yonder warehouses will not suffice."])
 ;------------------------------------------
 
 ;; FIXME: dirty.
-(defn pt [{:keys [text answer seconds errors goods bads]}]
-  (let [s1 (str/split text #"\s+")
-        s2 (str/split answer #"\s")
-        s1<>s2 (mapv list s1 s2)
-        all (count s1)
-        ;; goods (count (filter (fn [[x y]] (= x y)) s1<>s2))
-        ;; bads  (count (remove (fn [[x y]] (= x y)) s1<>s2))
-        ;; goods (:goods @app-state)
-        ;; bads (:bads @app-state)
-        ;; 二乗で減点するのをやめる。2023-04-12
-        ;; err   (* errors errors)
+(defn pt [{:keys [seconds errors goods bads]}]
+  (let [all (:words-max @app-state)
         bs errors ;; backspace key
         score (int (* 100 (- (/ goods all) (/ bads goods))))]
     (swap! points-debug
@@ -108,11 +99,6 @@ of yonder warehouses will not suffice."])
              (= all goods) (+ score seconds 10) ;; bonus 10
              (= all (+ goods bads)) (+ score seconds (- bs))
              :else (- score bs)))))
-
-;; (defn pt
-;;   "スコアをマイナスにしない"
-;;   [args]
-;;   (max 0 (pt-raw args)))
 
 (defn show-score
   [pt]

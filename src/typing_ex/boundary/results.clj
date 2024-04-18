@@ -18,7 +18,10 @@
   (active-users [db n])
   ;; (find-ex-days-thres [db days thres])
   (find-ex-days [db days])
-  (todays-act [db]))
+  (todays-act [db])
+  ;; 2024-04-18
+  (users [db])
+  (login-timestamp [db]))
 
 (extend-protocol Results
   duct.database.sql.Boundary
@@ -53,11 +56,11 @@
                  order by id asc" login]))
 
   (fetch-records-since
-   [db login date]
-   (prn "date:" date)
-   (sql/query
-    (ds-opt db)
-    ["select pt, timestamp from results
+    [db login date]
+    (prn "date:" date)
+    (sql/query
+     (ds-opt db)
+     ["select pt, timestamp from results
        where login=? and timestamp > date(?)
        order by id asc" login date]))
 
@@ -92,9 +95,21 @@
           ret (sql/query (ds-opt db) [q])]
       ret))
 
-  (todays-act [db]
+  (todays-act
+    [db]
     (sql/query
      (ds-opt db)
      ["select login, timestamp from results
        where timestamp::DATE=current_date
-       order by login, timestamp desc"])))
+       order by login, timestamp desc"]))
+
+  ;; 2024-04-18
+  (users
+    [db]
+    (sql/query
+     (ds-opt db)
+     ["select distinct(login) from results"]))
+
+  (login-timestamp
+    [db]
+    (sql/query (ds-opt db) ["select login, timestamp::date from results"])))

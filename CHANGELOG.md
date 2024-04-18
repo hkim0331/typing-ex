@@ -35,7 +35,9 @@
 
 
 ## v2.4-SNAPSHOT / 2024-04-17
-merge に手こずった。
+- merge に手こずった。
+- "traning days" 10 回以上、トレーニングに入った日をカウント。
+
 
 ## 2.3-822 / 2024-04-15
 - typing.cljs/pt: map -> mapv
