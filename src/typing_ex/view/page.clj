@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.3.816")
+(def ^:private version "v2.4.829")
 
 ;--------------------------------
 ;; FIXME
@@ -117,6 +117,10 @@
      "&nbsp;"
      (form-to
       [:get "/recent"]
+      (submit-button {:class "btn btn-primary btn-sm"
+                      :name "kind"}
+                     "training days")
+      "&nbsp;"
       (text-field {:size 2
                    :value n
                    :style "text-align:right"}
@@ -125,10 +129,6 @@
       (submit-button {:class "btn btn-primary btn-sm"
                       :name "kind"}
                      "total")
-      "&nbsp;"
-      (submit-button {:class "btn btn-primary btn-sm"
-                      :name "kind"}
-                     "days")
       "&nbsp;"
       (submit-button {:class "btn btn-primary btn-sm"
                       :name "kind"}
@@ -166,30 +166,49 @@
        count))
 
 (defn ex-days-page
-  "ex-days: 練習日数
-   user: アカウント
-   days: 何日間のデータか？"
-  [ex-days user days]
-  (let [logins (->> ex-days (map :login) distinct)
-        data (->> (for [login logins]
-                    [(count-ex-days ex-days login) login])
-                  (sort-by first)
-                  reverse)]
-    (page
-     [:h2 "Typing: Last " days " days Maxes"]
-     (headline days)
-     [:div {:style "margin-left:1rem;"}
-      [:p "毎日ちょっとずつが伸びる秘訣。"]
-      (into [:ol
-             (for [[count login] data]
-               [:li
-                (format "(%d) " count)
-                " "
-                [:a {:href (str "/record/" login)
-                     :class (if (= login user) "yes" "other")}
-                 login]])])]
-     ;; (headline days)
-     )))
+  "self はログインアカウント、
+   data はソーティング済みの[[login days] ...]"
+  [self data]
+  (page
+   [:h2 "Typing: 10 回以上練習した日数"]
+   (headline 7)
+   [:div {:style "margin-left:1rem;"}
+    [:p "毎日ちょっとずつが伸びる秘訣。"]
+    (into [:ol
+           (for [[login n] data]
+             [:li
+              (format "(%d) " n)
+              " "
+              [:a {:href (str "/record/" login)
+                   :class (if (= login self) "yes" "other")}
+               login]])])]))
+
+;; (defn ex-days-page
+;;   "ex-days: 練習日数
+;;    user: アカウント
+;;    days: 何日間のデータか？"
+;;   [ex-days user days]
+;;   (let [logins (->> ex-days (map :login) distinct)
+;;         data (->> (for [login logins]
+;;                     [(count-ex-days ex-days login) login])
+;;                   (sort-by first)
+;;                   reverse)]
+;;     (page
+;;      [:h2 "Typing: Last " days " days Maxes"]
+;;      (headline days)
+;;      [:div {:style "margin-left:1rem;"}
+;;       [:p "毎日ちょっとずつが伸びる秘訣。"]
+;;       (into [:ol
+;;              (for [[count login] data]
+;;                [:li
+;;                 (format "(%d) " count)
+;;                 " "
+;;                 [:a {:href (str "/record/" login)
+;;                      :class (if (= login user) "yes" "other")}
+;;                  login]])])]
+;;      ;; (headline days)
+;;      )))
+
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
