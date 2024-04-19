@@ -1,8 +1,6 @@
-version: "3"
-
 services:
   typing-ex:
-    image: hkim0331/duct:0.2.1
+    image: clojure:lein
     # user: vscode
     ports:
       - "3002:3000"
