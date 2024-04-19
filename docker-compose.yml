@@ -1,6 +1,6 @@
 services:
   typing-ex:
-    image: clojure:lein
+    image: hkim0331/typing-ex:0.4.0
     # user: vscode
     environment:
       TP_DEV: true
