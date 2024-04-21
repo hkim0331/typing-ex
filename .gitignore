@@ -38,3 +38,7 @@ pom.xml.asc
 
 # not depend on global gitignore
 .DS_Store
+
+start.sh
+stop.sh
+restart.sh
