@@ -40,13 +40,8 @@
      [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
     [:link
      {:rel "stylesheet"
-      :href "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      :integrity "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      :crossorigin "anonymous"}]
-    ;; [:link
-    ;;  {:rel "stylesheet"
-    ;;   :href "/css/bootstrap.min.css"
-    ;;   :type "text/css"}]
+      :href "/css/bootstrap.min.css"
+      :type "text/css"}]
     [:link
      {:rel "stylesheet"
       :href "/css/style.css"}]
@@ -82,10 +77,10 @@
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      "&nbsp;"
      ;;py99
-     [:a {:href "https://py99.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "Py99"]
-     "&nbsp;"
+    ;;  [:a {:href "https://py99.melt.kyutech.ac.jp/"
+    ;;       :class "btn btn-info btn-sm"}
+    ;;   "Py99"]
+    ;;  "&nbsp;"
      ;; literacy reports
      ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
      ;;       :class "btn btn-info btn-sm"}
@@ -94,7 +89,7 @@
      [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
+          :class "btn btn-success btn-sm"}
       "WIL"]
      "&nbsp;"
      [:a {:href "http://qa.melt.kyutech.ac.jp/"
@@ -106,7 +101,7 @@
       "MT"]
      "&nbsp;"
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
+          :class "btn btn-success btn-sm"}
       "L22"]
      "&nbsp;"
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]

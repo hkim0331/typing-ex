@@ -40,6 +40,7 @@
   environment:
     TP_DEV: true
 ```
+- bootstrap CDN やめて、ローカルに5.2.3コピーを持つ。
 
 
 ## v2.4.829 / 2024-04-18
