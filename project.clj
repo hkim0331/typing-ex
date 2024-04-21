@@ -1,4 +1,4 @@
-(defproject typing-ex "2.2.803"
+(defproject typing-ex "v2.5.836"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"

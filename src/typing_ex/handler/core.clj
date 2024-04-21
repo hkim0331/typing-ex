@@ -22,6 +22,7 @@
   (env :tp-dev)
   :rcf)
 
+;; l22 の定義を変えるではなく，auth? で誤魔化す？
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
@@ -87,9 +88,9 @@
   <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css' integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2' crossorigin='anonymous'>
-    <link href='css/style.css' rel='stylesheet' type='text/css'>
-    <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
+    <link href='/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/css/style.css' rel='stylesheet' type='text/css'>
+    <link rel='icon' href='/favicon.ico'>
   </head>
   <body>"
       ;; DON'T FORGET
@@ -98,8 +99,9 @@
       ;;
       "<div class='container'>
     <div id='app'>
-      Shadow-cljs rocks!
+      core/typing
     </div>
+    <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
     <script src='js/compiled/main.js' type='text/javascript'></script>
     <script>typing_ex.typing.init();</script>
     </div>
@@ -129,12 +131,31 @@
           ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
+;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+;;   (fn [{[_ n] :ataraxy/result :as req}]
+;;     (let [days (Integer/parseInt n)
+;;           login (get-login req)
+;;           ex-days (results/find-ex-days db days)]
+;;       (view/ex-days-page ex-days login days))))
+
+(defn days [all login]
+  (let [ret (filter (fn [x] (= login (:login x))) all)]
+    (->> ret
+         (group-by :timestamp)
+         (map (fn [x] (count (val x))))
+         (filter #(< 9 %))
+         count)))
+
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
-    (let [days (Integer/parseInt n)
-          login (get-login req)
-          ex-days (results/find-ex-days db days)]
-      (view/ex-days-page ex-days login days))))
+    (let [logins (results/users db)
+          all (results/login-timestamp db)
+          self (get-login req)]
+      (view/ex-days-page
+       self
+       (->> (for [{:keys [login]} logins]
+              [login (days all login)])
+            (sort-by second >))))))
 
 ;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
@@ -144,7 +165,7 @@
       ;; (println "kind" kind)
       (case kind
         "total" (redirect (str "/total/" days))
-        "days"  (redirect (str "/days/" days))
+        "training days"  (redirect (str "/days/" days))
         "max"   (redirect (str "/max/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]

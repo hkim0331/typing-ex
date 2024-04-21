@@ -31,16 +31,32 @@
 - java -jar で立ち上がり完了の合図を出す．
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
-- delete した影響で空のdrill.textを作ってしまった。
 - Today's GO が表示されない。/restarts-page/:login
 
+## v2.5.836 / 2024-04-21
+- hkim0331/typing-ex:0.4.0
+- apt-get -y install --no-install-recommends git npm postgresql-client
+```
+  environment:
+    TP_DEV: true
+```
+- bootstrap CDN やめて、ローカルに5.2.3コピーを持つ。
 
-## 2.3-SNAPSHOT
 
+## v2.4.829 / 2024-04-18
+- merge に手こずった。
+- "traning days" 10 回以上、トレーニングに入った日をカウント。
+
+
+## 2.3-822 / 2024-04-15
+- typing.cljs/pt: map -> mapv
+- fix a bug: forgot {:form-params}
+- rnamed fetch-display to reset-display!
 
 ## 2.2.803 / 2024-04-13
 - typing.clls: display next word.
 - core.clj: defined `non-empty-text`.
+  delete した影響で空のdrill.textを17個作ってしまったに対応した。
 
 ## 2.1.794 / 2024-04-10
 - fix: korosuke で Internal Server Error
