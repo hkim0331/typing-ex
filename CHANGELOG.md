@@ -33,7 +33,7 @@
 - スコアが二度提出されることがある。
 - Today's GO が表示されない。/restarts-page/:login
 
-## v2.5-SNAPSHOT
+## v2.5.836 / 2024-04-21
 - hkim0331/typing-ex:0.4.0
 - apt-get -y install --no-install-recommends git npm postgresql-client
 ```
