@@ -12,6 +12,7 @@
     [:get  "/logout"] [:typing-ex.handler.core/logout]
 
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
+
     [:get "/drill"] ^:auth [:typing-ex.handler.core/drill]
 
     [:get "/todays"] ^:auth [:typing-ex.handler.core/todays-act]
