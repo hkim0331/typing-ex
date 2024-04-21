@@ -27,6 +27,13 @@ or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
     $ make deploy
 
+
+## require
+
+* postgresql 14.*
+* jre 17
+
+
 ## License
 
 Copyright © 2021-2024 hkimura
