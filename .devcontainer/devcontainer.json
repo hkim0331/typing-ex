@@ -1,0 +1,18 @@
+{
+    "name": "Typing Exercise",
+    "service": "typing-ex",
+    // "remoteUser": "vscode",
+    "workspaceFolder": "/usr/src/app",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "betterthantomorrow.calva",
+                "jsynowiec.vscode-insertdatestring"
+            ]
+        }
+    }
+}

@@ -37,3 +37,9 @@ span.mmm { margin-left: 2em;}
 .hkimura { background: blue; color: white;}
 .btn#counter { font-family: monospace;}
 
+.boxed { border: solid 1pt black;
+         padding: 2px;}
+
+.normal    {background-color: white;}
+.roll-call {background-color: yellow;}
+.exam      {background-color: pink;}

@@ -4,19 +4,32 @@
    [ataraxy.response :as response]
    [buddy.hashers :as hashers]
    [clojure.string :as str]
-   [typing-ex.boundary.drills  :as drills]
-   [typing-ex.boundary.users   :as users]
-   [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.status  :as status]
-   [typing-ex.view.page :as view]
+   [environ.core :refer [env]]
+   [hato.client :as hc]
    [integrant.core :as ig]
+   #_[integrant.repl.state :refer [system]]
+   [java-time.api :as jt]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
-   [taoensso.timbre :as timbre]
-   [ring.util.anti-forgery :refer [anti-forgery-field]]))
+   [typing-ex.boundary.drills  :as drills]
+   [typing-ex.boundary.roll-calls :as roll-calls]
+   [typing-ex.boundary.restarts :as restarts]
+   [typing-ex.boundary.results :as results]
+   [typing-ex.boundary.stat :as stat]
+   [typing-ex.view.page :as view]))
+
+(comment
+  (env :tp-dev)
+  :rcf)
+
+;; l22 の定義を変えるではなく，auth? で誤魔化す？
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
+(def typing-start (or (env :tp-start) "2024-04-01"))
 
 ;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
-  (let [admins #{"hkimura" "ayako" "login888"}]
+  (let [admins #{"hkimura"}]
     (get admins s)))
 
 (defn get-login
@@ -32,24 +45,27 @@
   (fn [req]
     (view/login-page req)))
 
-(defn auth? [db login password]
-  (let [ret (users/find-user-by-login db login)]
-    (timbre/debug "auth?" login)
-    (and (some? ret)
-         (hashers/check password (:password ret)))))
+(defn- find-user [login]
+  (let [url (str l22 login)
+        body (:body (hc/get url {:as :json}))]
+    body))
 
-(defmethod ig/init-key :typing-ex.handler.core/login-post [_ {:keys [db]}]
+;; FIXME: 環境変数以外の方法は？
+(defn auth? [login password]
+  (or
+   (= "true" (env :tp-dev))
+   (let [ret (find-user login)]
+     (and (some? ret)
+          (hashers/check password (:password ret))))))
+
+(defmethod ig/init-key :typing-ex.handler.core/login-post [_ _]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
-    (if (and (seq login) (auth? db login password))
-      (do
-        (timbre/debug "login success" login)
-        (-> (redirect "/sum/1")
-            (assoc-in [:session :identity] (keyword login))))
-      (do
-        (timbre/debug "login failure" login)
-        (-> (redirect "/login")
-            (dissoc :session)
-            (assoc :flash "login failure"))))))
+    (if (and (seq login) (auth? login password))
+      (-> (redirect "/total/7")
+          (assoc-in [:session :identity] (keyword login)))
+      (-> (redirect "/login")
+          (dissoc :session)
+          (assoc :flash "login failure")))))
 
 (defmethod ig/init-key :typing-ex.handler.core/logout [_ _]
   (fn [_]
@@ -61,7 +77,8 @@
                #"xxx"
                login))
 
-;; index. anti-forgery-field と login を埋め込む。
+;; index.
+;; DON't FORGET: anti-forgery-field と login を埋め込む。
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     [::response/ok
@@ -71,30 +88,33 @@
   <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css' integrity='sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2' crossorigin='anonymous'>
-    <link href='css/style.css' rel='stylesheet' type='text/css'>
-    <link rel='icon' href='https://clojurescript.org/images/cljs-logo-icon-32.png'>
+    <link href='/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='/css/style.css' rel='stylesheet' type='text/css'>
+    <link rel='icon' href='/favicon.ico'>
   </head>
   <body>"
+      ;; DON'T FORGET
       (anti-forgery-field)
       (login-field (get-login req))
+      ;;
       "<div class='container'>
     <div id='app'>
-      Shadow-cljs rocks!
+      core/typing
     </div>
+    <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
     <script src='js/compiled/main.js' type='text/javascript'></script>
     <script>typing_ex.typing.init();</script>
     </div>
   </body>
 </html>")]))
 
-(defmethod ig/init-key :typing-ex.handler.core/sum [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
-    (let [ret (results/sum db n)
+    (let [n (Integer/parseInt n)
+          ret (results/sum db n)
           user (get-login req)]
-      (view/sums-page ret user))))
+      (view/sums-page ret user n))))
 
-;; POST works!
 (defmethod ig/init-key :typing-ex.handler.core/score-post [_ {:keys [db]}]
   (fn [{{:strs [pt]} :form-params :as req}]
     (let [login (get-login req)
@@ -107,33 +127,70 @@
     (let [days (Integer/parseInt n)
           login (get-login req)
           max-pt (results/find-max-pt db days)
-          ex-days (results/find-ex-days db)]
-      ;;(timbre/debug "n" n)
+          ;;ex-days (results/find-ex-days db days)
+          ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
+;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+;;   (fn [{[_ n] :ataraxy/result :as req}]
+;;     (let [days (Integer/parseInt n)
+;;           login (get-login req)
+;;           ex-days (results/find-ex-days db days)]
+;;       (view/ex-days-page ex-days login days))))
+
+(defn days [all login]
+  (let [ret (filter (fn [x] (= login (:login x))) all)]
+    (->> ret
+         (group-by :timestamp)
+         (map (fn [x] (count (val x))))
+         (filter #(< 9 %))
+         count)))
+
+(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+  (fn [{[_ n] :ataraxy/result :as req}]
+    (let [logins (results/users db)
+          all (results/login-timestamp db)
+          self (get-login req)]
+      (view/ex-days-page
+       self
+       (->> (for [{:keys [login]} logins]
+              [login (days all login)])
+            (sort-by second >))))))
+
+;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
-    ;;(timbre/debug "get-in req [:params :n]" (get-in req [:params :n]))
-    (let [days  (get-in req [:params :n])]
-      (redirect (str "/scores/" days)))))
+    (let [days (get-in req [:params :n])
+          kind (get-in req [:query-params "kind"])]
+      ;; (println "kind" kind)
+      (case kind
+        "total" (redirect (str "/total/" days))
+        "training days"  (redirect (str "/days/" days))
+        "max"   (redirect (str "/max/" days))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/scores-no-arg [_ _]
   (fn [_]
     (let [days 7]
       (redirect (format "/scores/%d" days)))))
 
+(defn non-empty-text [db]
+  (let [ret (drills/fetch-drill db)]
+    (if (re-find #"\S" ret)
+      ret
+      (non-empty-text db))))
+
 (defmethod ig/init-key :typing-ex.handler.core/drill [_ {:keys [db]}]
   (fn [_]
-    (let [ret (drills/fetch-drill db)]
-      [::response/ok ret])))
+    [::response/ok (non-empty-text db)]))
 
 ;; admin 以外、自分のレコードしか見れない。
 (defmethod ig/init-key :typing-ex.handler.core/record [_ {:keys [db]}]
   (fn [{[_ login] :ataraxy/result :as req}]
-    (view/svg-self-records login
-                           (results/fetch-records db login)
-                           (= (get-login req) login)
-                           (= (get-login req) "hkimura"))))
+    (view/display-records login
+                          ;; (results/fetch-records db login)
+                          (results/fetch-records-since db login typing-start)
+                          (= (get-login req) login)
+                          (= (get-login req) "hkimura"))))
 
 ;; req から login をとるのはどうかな。
 (defmethod ig/init-key :typing-ex.handler.core/todays [_ {:keys [db]}]
@@ -150,21 +207,78 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/todays-act [_ {:keys [db]}]
   (fn [req]
-   (let [ret (->> (results/todays-act db)
-                  (partition-by :login)
-                  (map first)
-                  (sort-by :timestamp)
-                  reverse)]
-     (view/todays-act-page ret))))
+    (let [ret (->> (results/todays-act db)
+                   (partition-by :login)
+                   (map first)
+                   (sort-by :timestamp)
+                   reverse)]
+      (view/todays-act-page ret (get-login req)))))
 
-;; midterm exam
-(defmethod ig/init-key :typing-ex.handler.core/mt [_ {:keys [db]}]
+(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
   (fn [_]
-    (let [ret (status/mt db)]
-      [::response/ok (str ret)])))
+    [::response/ok (:stat (stat/stat db))]))
 
-(defmethod ig/init-key :typing-ex.handler.core/toggle-mt [_ {:keys [db]}]
-  (fn [_]
-    (let [ret (status/toggle-mt! db)]
-      (timbre/debug "toggle-mt returns " ret)
-      [::response/ok (str (dissoc ret :id :i :s :updated_at))])))
+(defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
+  (fn [req]
+    (if (= "hkimura" (get-login req))
+      (view/stat-page (:stat (stat/stat db)))
+      [::response/forbidden "ACCESS FORBIDDEN"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
+  (fn [{{:keys [stat]} :params}]
+    (stat/stat! db stat)
+    (redirect "/")))
+
+(defn- date-only
+  "datetime is a java.time.LocalDateTime object"
+  [datetime]
+  (first (str/split (str datetime) #"T")))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
+  (fn [req]
+    (let [ret (->> (roll-calls/rc db (get-login req))
+                   (map :created_at)
+                   (map date-only)
+                   dedupe)]
+      ;; (println (str ret))
+      (view/rc-page ret))))
+
+(defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
+  (fn [{{:keys [pt]} :params :as req}]
+    (let [ret (roll-calls/rc! db (get-login req) (Integer/parseInt pt))]
+      (if ret
+        [::response/ok (str pt (get-login req) (java.util.Date.))]
+        [::response/bad-request "rc! errored"]))))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts! [_ {:keys [db]}]
+  (fn [req]
+    (let [login (get-login req)
+          ret (restarts/restarts! db login)]
+      (if ret
+        [::response/ok (str "/restarts! " login)]
+        [::response/bad-request "restarts! errored"]))))
+
+(defmethod ig/init-key :typing-ex.handler.core/restarts-page [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (let [ret (restarts/restarts db login)]
+      (view/restarts-page login ret))))
+
+;; returns millis
+(defmethod ig/init-key :typing-ex.handler.core/restarts [_ {:keys [db]}]
+  (fn [{[_ login] :ataraxy/result}]
+    (let [created_at (-> (restarts/restarts db login)
+                         last
+                         :created_at
+                         jt/sql-timestamp
+                         jt/to-millis-from-epoch)]
+      [::response/ok (str created_at)])))
+
+(comment
+  ;; jit を得る。
+  (-> (jt/local-date-time)
+      jt/sql-timestamp ;; can not remove this!
+      jt/to-millis-from-epoch)
+  ;; 現在時間なら、
+  (-> (jt/instant)
+      jt/to-millis-from-epoch); => 1685318564122
+  :rcf)

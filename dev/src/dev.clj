@@ -34,12 +34,13 @@
 
 ;;; add by me.
 
-(timbre/set-level! :debug)
-(timbre/info "timbre/set-level! :debug")
-
 ;;https://github.com/duct-framework/docs/blob/master/GUIDE.rst
 (defn db []
   (-> system (ig/find-derived-1 :duct.database/sql) val :spec))
 
 (defn q [sql]
   (jdbc/query (db) sql))
+
+(comment
+ (q "select (1+(random() * (max(id)-1)))::int from drills")
+ :rcf)

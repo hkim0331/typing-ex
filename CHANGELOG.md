@@ -1,5 +1,6 @@
 # typing-ex
 
+## Required
 * Clojure/ClojureScript
 * duct
 * shadow-cljs
@@ -10,19 +11,333 @@
 ## Unreleased
 - 各行ごとに集計。
 - 日本語例文。
-- clojure.java-time もしくは clj-time での comparator?
-  sort-by で使えるもの。
-- 周回ごとに ready, set, go! を表示。きっと邪魔だ。
-- do not treat as one if the count of exercises is less than 10.
 - 「授業中は練習なしよ」モード
-- WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
-- (next.jdbc.date-time/read-as-local) の場所。
-  今は boundary/results.clj に書いている。もっとプロジェクト全体に関わるところがいい。
 - 自分データを csv でダウンロードできるように。
-- D.P. up/down/even を表示できるか？
-- log がうるさい。
-- 回帰直線、回帰曲線を乗せる。
-- 移動平均を乗せる
+- 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
+- admin? を DB から引く
+  l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
+  あるいは /admin/:user を作るか。
+- hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
+- 環境変数の参照以外に develop/production を判定する方法。
+  devcontainer 時、(env :tp-dev) が解決できてない。
+- docker: yarn watch のたびにインストールが走ってしまう。
+- .m2, .gitlibs の位置の調整ができてない．
+  mount しているのは /root，しかし，lein で入れるのは/home/vscode
+- リファラ見てアラート出すかどうか、決められないか？
+  グラフから戻ってGo! するときは記録しないでよい。
+- space を超えるバックスペースは無効にする
+- @app-state を廃止したい。
+- drills 一括ダウンロード。
+- java -jar で立ち上がり完了の合図を出す．
+- an issue on checking good/bad last word typing.
+- スコアが二度提出されることがある。
+- Today's GO が表示されない。/restarts-page/:login
+
+## v2.5.836 / 2024-04-21
+- hkim0331/typing-ex:0.4.0
+- apt-get -y install --no-install-recommends git npm postgresql-client
+```
+  environment:
+    TP_DEV: true
+```
+- bootstrap CDN やめて、ローカルに5.2.3コピーを持つ。
+
+
+## v2.4.829 / 2024-04-18
+- merge に手こずった。
+- "traning days" 10 回以上、トレーニングに入った日をカウント。
+
+
+## 2.3-822 / 2024-04-15
+- typing.cljs/pt: map -> mapv
+- fix a bug: forgot {:form-params}
+- rnamed fetch-display to reset-display!
+
+## 2.2.803 / 2024-04-13
+- typing.clls: display next word.
+- core.clj: defined `non-empty-text`.
+  delete した影響で空のdrill.textを17個作ってしまったに対応した。
+
+## 2.1.794 / 2024-04-10
+- fix: korosuke で Internal Server Error
+
+## 2.0.781 / 2024-04-09
+- dependency l22, env-var で．
+
+- found a miss to update libaries.
+  ```
+  clojure -Tantq outdated :upgrade true :force true
+  ```
+
+## 1.23-778 / 2024-04-09
+- タイプはじめの1文字待ち．
+- 最後の1ワード
+- 少数タイプでの点数
+- updated libraries
+
+| :file           | :name                               | :current | :latest |
+|---------------- | ----------------------------------- | -------- | --------|
+| project.clj     | cheshire/cheshire                   | 5.11.0   | 5.13.0  |
+|                 | clojure.java-time/clojure.java-time | 1.3.0    | 1.4.2   |
+|                 | com.github.seancorfield/next.jdbc   | 1.3.883  | 1.3.925 |
+|                 | duct/core                           | 0.8.0    | 0.8.1   |
+|                 | org.clojure/clojure                 | 1.11.1   | 1.11.2  |
+|                 | org.postgresql/postgresql           | 42.6.0   | 42.7.3  |
+| shadow-cljs.edn | cljs-http                           | 0.1.46   | 0.1.48  |
+
+
+## 1.22.0 - 2023-09-10
+- fixed: DAY BY DAY プロット
+  環境変数 TP_START で集計スタート日を与えるよう変更した。
+- clojure -Tantq outdated :upgrade true
+
+| :file       | :name                               | :current | :latest |
+|------------ | ----------------------------------- | -------- | --------|
+| project.clj | buddy/buddy-hashers                 | 1.8.158  | 2.0.167 |
+|             | clojure.java-time/clojure.java-time | 1.2.0    | 1.3.0   |
+|             | com.github.seancorfield/next.jdbc   | 1.3.874  | 1.3.883 |
+|             | integrant/repl                      | 0.3.2    | 0.3.3   |
+
+
+## 1.21.0 - 2023-09-06
+- hkim0331/typing-ex:0.3
+- postgres:14.9
+
+## 1.20.0 - 2023-08-10
+- moby dick.
+
+## 1.19.6 - 2023-06-30
+- rename page.clj/svg-self-records to page.clj/display-records
+- day by day plot
+
+## 1.23.778 / 2024-04-08
+- jetty port 3002
+```
+  :duct.server.http/jetty {:port 3002}
+```
+## 1.19.4 - 2023-05-29
+- busy wait. wait するのはユーザのブラウザだ。
+
+## 1.19.3 - 2023-05-29
+- duct は (java.util.Date.) を local-date-time に変えてストアする？
+- 前回の記録から 20 秒以内の再読み込みはアラート。
+
+## 1.19.2 - 2023-05-28
+- error-component やめて🟡を (:results @app-state)に入れる
+
+## 1.19.1 - 2023-05-26
+- Go! と reload 直後の 1 回目は記録しない。
+
+## 1.19.0 - 2023-05-25
+- created table restarts
+- post /restarts
+- get /restarts shows today's restarted (launched) times
+
+## 1.18.10 - 2023-05-23
+- return to /todays page
+/total/7 だと、上位20位以外の人はスクロールしないと自分の行にたどりつかない。
+/todays だと一番上付近に見つかる。
+
+## 1.18.9 - 2023-05-21
+- asking wil start time only
+
+## 1.18.8 - 2023-05-20
+- encourage wil
+
+## 1.18.7 - 2023-05-19
+- link to /stat-page from `/rc`. only admin can follow the link.
+
+## 1.18.6 - 2023-05-18
+- radio button /stat-page
+
+## 1.18.5 - 2023-05-18
+- /rc の表示する日時を dedupe する。
+
+## 1.18.4 - 2023-05-16
+- FIXED: plot 中で (map :pt data) は役割分担としておかしい。
+
+## 1.18.3 - 2023-05-16
+- todays, total 入れ替え
+
+## 1.18.2 - 2023-05-16
+ダミーリリース。「ブラウザの履歴をクリア」のチェック。
+
+## 1.18.1 - 2023-05-16
+- plot todays when (< 9 (count todays))
+- /todays に (headline 7)
+
+## 1.18.0 - 2023-05-16
+- double plots. need adjust margin and position
+
+## 1.17.3 - 2023-05-15
+### refactor
+- /daily => /todays
+- /sum => /total
+- /ex-days => /days
+- /scores => /max
+- remove /scores-no-arg
+- link from /record/:login to /todays/:login
+
+## 1.17.2 - 2023-05-15
+- sum, ex-days, max に分割。
+
+## 1.17.1 - 2023-05-14
+- can see other's details
+
+## 1.17.0 - 2023-05-14
+- 回帰直線
+
+## 1.16.9 - 2023-05-14
+### Removed
+- exam_mode.clj
+- users.clj
+- timbre
+- useless println
+
+## 1.16.8 - 2023-05-14
+- headline two lines
+
+## 1.16.7 - 2023-05-14
+- メッセージの修正
+- Bootstrap 5.2.3
+- forget to update integrity in bootstrap
+
+## 1.16.5 - 2023-05-14
+- **bugfix** /stat は hkimura only ではいけない
+
+## 1.16.4 - 2023-05-14
+- /rc ボタンに、Clear Browsin Data... してねのメッセージ
+
+## 1.16.3 - 2023-05-14
+- /stat と /stat-page admin only に制限
+
+## 1.16.1 - 2023-05-13
+- /rc に誰の出席データかを表示
+
+## 1.16.0 - 2023-05-13
+roll-calls
+- ブランチを作らず、1.15.13 の上に足してしまった。
+- table stat
+- boundary.stat
+- style.css .stat class
+- change background color in normal/roll-call/exam as white/yello/pink
+
+
+## 1.15.13 - 2023-05-08
+- default 7 days
+
+## 1.15.12 - 2023-05-08
+- DB のクエリを伴う関数自身が timbre/log しなくても、duct がログする。
+- headline に 引数 n
+
+## 1.15.11 - 2023-05-07
+- clean up typing-ex.boundary.drills
+- extracted random-id from fetch-drill, log produced random ids.
+
+## 1.15.10 - 2023-05-07
+## Fixed
+- adding [integrant/repl "0.3.2"] to dependencies.
+integralt/repl is only for development?
+
+```
+1.15.9: Syntax error macroexpanding at (core.clj:1:1).
+Execution error (FileNotFoundException) at typing-ex.handler.core/loading (core.clj:1).
+Could not locate integrant/repl/state__init.class, integrant/repl/state.clj or integrant/repl/state.cljc on classpath.
+```
+
+## 1.15.9 - 2023-05-07
+- docker container yarn
+- develop 時は auth? を省略
+```
+(defn auth? [login password]
+  (or
+   (= :development (:duct.core/environment system))
+   ...
+ ))
+```
+
+## 1.15.8 - 2023-05-05
+- 合格点は 3500
+
+## 1.15.7 - 2023-05-01
+### FIXME
+- core/auth? FIXME: env 以外、system をみてスイッチしたい
+
+### Added
+- WIL を headline に追加した
+
+### Removed
+- typing-ex.boundary.users を core から外した
+
+## 1.15.6 - 2023-04-27
+- /daily で、自分を赤表示する
+
+## 1.15.5
+- hkim0331/luminus:latest と postgres:14.7
+  postgres:latest は 15.2 まで行っちゃって dump/restore がうまくいかないことある。
+
+## 1.15.4 - 2023-04-25
+- '7 days max' で過去7日間の練習日数を表示。今までは過去のすべての日数だった。
+- postgres:15.2 でイメージをリストア後、postgres:14.7 にすると
+  接続してくれない。app.melt と同じバージョンの 14.7 で restore からやり直す。
+- yarn 使っているのに、コンテナの設定に入ってない。
+  コンテナ立ち上げてから npm で入る。
+  $ npm install --global yarn
+  コンテナで動き出した。
+- initdb.d から初期データをすんなり入れられなくちゃ。
+
+## 1.15.3 - 2023-04-23
+- CHANGELOG.md を 80 コラム未満で折り返した。
+- D.P ボタンやめた。日付入れて total, max をクリックで。
+
+## 1.15.2 - 2023-04-23
+### Addded
+- db-dumps/fetch.sh
+
+## Changed
+- db-dumps/{dump,restore}.sh: removed `-w` switch, depends on `~/.pgpass`.
+
+## 1.15.1 - 2023-04-14
+### Fixed
+(:todays @app-state)'s initial value is []. not {}.
+
+## 1.15.0 - 2023-04-14
+### Fixed
+- typing.cljs: (:todays @app-state) の更新を send- に移動。
+  プロットの時間差を解消した。
+- L22 データベースに依存を止める。
+- BS で減点やめようか。
+- devcontainer まだだったか？
+- bug: can not record scores
+- yarn watch してるのにブラウザに反映しない
+
+### Updated
+- clojure -Tantq outdated
+|           :file |                               :name | :current | :latest |
+| --------------- | ----------------------------------- | -------- | ------- |
+|     project.clj | clojure.java-time/clojure.java-time |    1.1.0 |   1.2.0 |
+|                 |   com.github.seancorfield/next.jdbc |  1.3.834 | 1.3.865 |
+|                 |                 com.taoensso/timbre |    5.2.1 |   6.1.0 |
+|                 |                       eftest/eftest |    0.5.9 |   0.6.0 |
+|                 |           org.postgresql/postgresql |   42.5.0 |  42.6.0 |
+| shadow-cljs.edn |                  binaryage/devtools |    1.0.6 |   1.0.7 |
+|                 |                 com.taoensso/timbre |    5.2.1 |   6.1.0 |
+|                 |                             reagent |    1.1.1 |   1.2.0 |
+
+
+## 1.14.3 - 2023-04-12
+- bump-version.sh calls `num install` to update package-lock.json
+  is it right?
+
+## 1.14.0 - 2022-10-15
+- clj -Tantq outdated :upgrade true
+
+## 1.14.1 - 2023-04-12
+- 「1.14.0 はすでに使ってしまった」メッセージ
+
+## 1.14.0 - 2023-04-12
+- l22 api auth
+- added Makefile
 
 ## 1.13.2 - 2022-08-06
 - send-fetch-reset! を send- と fetch-reset! に分割した。
@@ -31,7 +346,7 @@
 ## 1.13.0 - 2022-08-06
 - ペーストを (< goods 10) で判定する。
 
-## 1.13.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - add more examples(drills)
 - fix asnync get
 
@@ -62,7 +377,7 @@
 ## 1.9.1 - 2022-06-08
 - bump-version.sh updates js version number in `index.html`.
 
-## 1.9.0-SNAPSHOT
+## 1.23.778 / 2024-04-08
 中間試験モード
 
 ## 1.8.4
@@ -95,7 +410,7 @@ code polish up
 - timeout 6 sec
 - counter does not stop at 0
 
-## 1.7.1-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - go ブロックは呼んだ順に実行されるとは限らない。
 - reset! を swap! に戻す。
 - defonce を１つに。除く setInterval.
@@ -108,13 +423,16 @@ code polish up. not improved.
 - package.json 中の "version": を bump-version.sh でケアする。
 - 素点をログ。cljs 側では login 名がわからない。token として埋め込むか？
 - react 17 に戻した。
-  ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it’s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot
+  ReactDOM.render is no longer supported in React 18. Use createRoot instead.
+  Until you switch to the new API, your app will behave as if it’s running
+   React 17. Learn more: https://reactjs.org/link/switch-to-createroot
 - build.sh
-  export TAOENSSO_TIMBRE_NS_PATTERN_EDN='{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
+  export TAOENSSO_TIMBRE_NS_PATTERN_EDN=
+   '{:deny #{"duct.database.sql.hikaricp" "duct.middleware.web"}}'
 - reset-todays! を独立させた
 
 ## 1.6.4 - 2022-05-07
-- app.js が 1.6.3-SNAPSHOT のまま。lein uberjar の前に yarn release しないとダメか？
+## 1.23.778 / 2024-04-08
 
 ## 1.6.3 - 2022-05-07
 - 時々、「今日の練習グラフ」がアップデートされない。`get` の順番で改善できるか？
@@ -438,7 +756,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 ### added
 - link to ul.melt
 
-## 0.9.18-SNAPSHOT
+## 1.23.778 / 2024-04-08
 ### Changed
 - hkimura のバックグラウンドカラーを blue に。
 
@@ -545,7 +863,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - ちょっとましな評価関数
 - display self record
 
-## 0.5.3-SNAPSHOT
+## 1.23.778 / 2024-04-08
 - typing-ex.boundary.utils ネームスペース。
 - 評価関数 残り時間を足す。
   v = (g/a - b/g)*100 + c
@@ -562,12 +880,15 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - counter=0 で発射。
 - テキストエリアのサイズ調整。
 
-## 0.5.0-SNAPSHOT - 2021-06-01
+## 1.23.778 / 2024-04-08
 - テストを採点する。(+ (- goods bads) (quot counter 2)) じゃあんまりか。
 - Fix: js/setInterval instead of js/setTimeout.
 - babashka のインストールはターミナルで１行。app.melt でやってしまう。
 
-  $ bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+  $ bash <
+    <(curl
+      -s
+      https://raw.githubusercontent.com/babashka/babashka/master/install)
 
 ## 0.4.0 - 2021-06-1
 - 間違って、initdb.d/gtypist を git に入れた。
@@ -621,7 +942,7 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
   auth に通ったら / に行き、cljs のページを表示できる。
   勇気づけのための 0.1.0. まだ typing-ex の動作はしない。
 
-## 0.1.0-SNAPSHOT - 2021-05-30
+## 1.23.778 / 2024-04-08
 - duct から shadow-cljs で作成したページを読めるようになった。
 - docker compose
 - basic routing. login/logout, /typing, score/:id, scores.

@@ -4,7 +4,6 @@
    [duct.database.sql]
    [next.jdbc.date-time]
    [next.jdbc.sql :as sql]
-   #_[taoensso.timbre :as timbre]
    [typing-ex.boundary.utils :refer [ds-opt]]))
 
 (next.jdbc.date-time/read-as-local)
@@ -14,10 +13,15 @@
   (sum [db n])
   (find-max-pt [db n])
   (fetch-records [db login])
+  (fetch-records-since [db login date])
   (todays-score [db login])
   (active-users [db n])
-  (find-ex-days [db])
-  (todays-act [db]))
+  ;; (find-ex-days-thres [db days thres])
+  (find-ex-days [db days])
+  (todays-act [db])
+  ;; 2024-04-18
+  (users [db])
+  (login-timestamp [db]))
 
 (extend-protocol Results
   duct.database.sql.Boundary
@@ -51,6 +55,15 @@
                  where login=?
                  order by id asc" login]))
 
+  (fetch-records-since
+    [db login date]
+    (prn "date:" date)
+    (sql/query
+     (ds-opt db)
+     ["select pt, timestamp from results
+       where login=? and timestamp > date(?)
+       order by id asc" login date]))
+
   (todays-score [db login]
     (sql/query
      (ds-opt db)
@@ -66,16 +79,37 @@
            (partition-by :login)
            (take n))))
 
-  (find-ex-days [db]
-    (let [ret (sql/query
-               (ds-opt db)
-               ["select login, date(timestamp) from results
-                 group by login, date(timestamp)"])]
+  ;; (find-ex-days-thres [db days thres]
+  ;;   (let [q (str/replace "select login, date(timestamp) from results
+  ;;                where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
+  ;;                group by login, date(timestamp)"
+  ;;                        #"XXX" (str days))
+  ;;         ret (sql/query (ds-opt db) [q])]
+  ;;     ret))
+
+  (find-ex-days [db days]
+    (let [q (str/replace "select login, date(timestamp) from results
+                 where date(timestamp) > CURRENT_DATE - INTERVAL 'XXX' day
+                 group by login, date(timestamp)"
+                         #"XXX" (str days))
+          ret (sql/query (ds-opt db) [q])]
       ret))
 
-  (todays-act [db]
+  (todays-act
+    [db]
     (sql/query
      (ds-opt db)
      ["select login, timestamp from results
        where timestamp::DATE=current_date
-       order by login, timestamp desc"])))
+       order by login, timestamp desc"]))
+
+  ;; 2024-04-18
+  (users
+    [db]
+    (sql/query
+     (ds-opt db)
+     ["select distinct(login) from results"]))
+
+  (login-timestamp
+    [db]
+    (sql/query (ds-opt db) ["select login, timestamp::date from results"])))
