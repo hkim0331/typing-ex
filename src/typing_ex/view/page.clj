@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.5.836")
+(def ^:private version "v2.5.848")
 
 ;--------------------------------
 ;; FIXME
@@ -274,7 +274,7 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct scores)]
         [:li "Exercises (today/total) " (count todays) "/" (count scores)]
-        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
+        ;; [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
