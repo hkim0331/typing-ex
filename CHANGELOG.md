@@ -21,8 +21,6 @@
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
 - docker: yarn watch のたびにインストールが走ってしまう。
-- .m2, .gitlibs の位置の調整ができてない．
-  mount しているのは /root，しかし，lein で入れるのは/home/vscode
 - リファラ見てアラート出すかどうか、決められないか？
   グラフから戻ってGo! するときは記録しないでよい。
 - space を超えるバックスペースは無効にする
@@ -31,7 +29,9 @@
 - java -jar で立ち上がり完了の合図を出す．
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
-- Today's GO が表示されない。/restarts-page/:login
+
+## v2.5-SNAPSHOT
+- (dev) (go) でエラーになることがある。lein clean で直るが。
 
 ## v2.5.836 / 2024-04-21
 - hkim0331/typing-ex:0.4.0
