@@ -30,7 +30,7 @@
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
 
-## v2.5-SNAPSHOT
+## v2.5.849 / 2024-04-25
 - (dev) (go) でエラーになることがある。lein clean で直るが。
 
 ## v2.5.836 / 2024-04-21
