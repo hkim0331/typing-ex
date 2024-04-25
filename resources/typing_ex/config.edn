@@ -2,9 +2,6 @@
 
  {:duct.core/project-ns typing-ex
 
-  ;; dev/resources/
-  ;; :duct.server.http/jetty {:port 3002}
-
   :duct.router/ataraxy
   {:routes
    {[:get  "/login"] [:typing-ex.handler.core/login]
