@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.5.848")
+(def ^:private version "v2.5.858")
 
 ;--------------------------------
 ;; FIXME
@@ -288,6 +288,13 @@
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
+(defn- todays-msg
+  []
+  (let [msg ["好き嫌い言わずになんでも食べるのが健康の元だ。"
+             "一日一回、QAも見るんだぞ。答えられる Q には A をつけよう。"
+             "ガンバッてる人とそうでない人と、割れてきたように見えないか？"]]
+    (get msg (rand-int (count msg)))))
+
 ;; view of /todays
 (defn todays-act-page [ret login]
   ;;(println "todays-act-page " (str ret))
@@ -295,7 +302,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
+    [:p (todays-msg)]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))

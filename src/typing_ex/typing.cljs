@@ -3,7 +3,6 @@
   ;;  [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
-   #_[cljs.reader :refer [read-string]]
    [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
@@ -11,7 +10,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "v2.5.848")
+(def ^:private version "v2.5.858")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -123,6 +122,10 @@ of yonder warehouses will not suffice."])
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state))))))
+  ;; VScode, 2024-04-26
+  (when (< (:todays-trials @app-state) 3)
+    (js/alert "VScode?"))
+  ;;
   (swap! app-state update :todays-trials inc)
   (when (< todays-limit (:todays-trials @app-state))
     (js/alert
