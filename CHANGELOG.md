@@ -33,6 +33,10 @@
 ## v2.5.849 / 2024-04-25
 - (dev) (go) でエラーになることがある。lein clean で直るが。
 
+## v2.5.848 / 2024-04-25
+- today's GO を表示しない。これは例文を流すやつ対策で作ったものだった。
+
+
 ## v2.5.836 / 2024-04-21
 - hkim0331/typing-ex:0.4.0
 - apt-get -y install --no-install-recommends git npm postgresql-client
