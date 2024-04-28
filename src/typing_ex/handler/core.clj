@@ -18,7 +18,8 @@
    [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
    ;;
-   [taoensso.carmine :as car :refer [wcar]]))
+   [taoensso.carmine :as car :refer [wcar]]
+   [clojure.edn :refer [read-string]]))
 
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://127.0.0.1:6379"})
@@ -26,6 +27,7 @@
 
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
+
 
 (comment
   (wcar my-wcar-opts (car/ping))
@@ -159,10 +161,24 @@
          (map (fn [x] (count (val x))))
          (filter #(< 9 %))
          count)))
+
+(comment
+  (wcar* (car/get "ex-days"))
+  (wcar* (car/get "users-all"))
+  :rcf)
+
 ;; ここ。
+(defn- users-all [db]
+  (if-let [users-all (wcar* (car/get "users-all"))]
+    (read-string users-all)
+    (let [ret (results/users db)]
+      (tap> ret)
+      (wcar* (car/setex "users-all" 3600 (str ret)))
+      ret)))
+
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
-  (fn [{[_ n] :ataraxy/result :as req}]
-    (let [logins (results/users db)
+  (fn [req]
+    (let [logins (users-all db)
           all (results/login-timestamp db)
           self (get-login req)]
       (view/ex-days-page
