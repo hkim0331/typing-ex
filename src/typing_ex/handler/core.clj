@@ -19,7 +19,9 @@
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car :refer [wcar]]
-   [clojure.edn :refer [read-string]]))
+   [clojure.edn :as edn]))
+
+(add-tap prn)
 
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://127.0.0.1:6379"})
@@ -163,35 +165,65 @@
          count)))
 
 (comment
-  (wcar* (car/get "ex-days"))
+  (add-tap prn)
+  (tap> "tap")
   (wcar* (car/get "users-all"))
+  (wcar* (car/ttl "users-all"))
+  (wcar* (car/ttl "login-timestamp"))
+  (wcar* (car/setex "expire" 10 "10sec"))
+  (wcar* (car/ttl "expire"))
   :rcf)
 
 ;; ここ。
 (defn- users-all [db]
   (if-let [users-all (wcar* (car/get "users-all"))]
-    (read-string users-all)
+    (edn/read-string users-all)
     (let [ret (results/users db)]
       (wcar* (car/setex "users-all" 3600 (str ret)))
       ret)))
 
+
 (defn- login-timestamp [db]
   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
-    (read-string login-timestamp)
+    ;; ここがエラー。
+    (edn/read-string {:readers *data-readers*} login-timestamp)
     (let [ret (results/login-timestamp db)]
-      (wcar* (car/setex "login-timetam" 60 (str ret)))
+      (wcar* (car/setex "login-timestamp" 30 (str ret)))
       ret)))
+;;
+
+;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+;;   (fn [req]
+;;     (let [logins (users-all db)
+;;           all (login-timestamp db)
+;;           self (get-login req)]
+;;       (view/ex-days-page
+;;        self
+;;        (->> (for [{:keys [login]} logins]
+;;               [login (days all login)])
+;;             (sort-by second >))))))
+
+(defn- training-days [req db]
+  (tap> "training-days")
+  (if-let [training-days (wcar* (car/get "training-days"))]
+    (do
+      (tap> "hit")
+      training-days)
+    (let [logins (users-all db)
+          all (results/login-timestamp db)
+          training-days (->> (for [{:keys [login]} logins]
+                               [login (days all login)])
+                             (sort-by second >))]
+      (tap> "miss")
+      (wcar* (car/setex "training-days" 60 training-days))
+      training-days)))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [req]
-    (let [logins (users-all db)
-          all (login-timestamp db)
-          self (get-login req)]
+    (let [training-days (training-days req db)]
       (view/ex-days-page
-       self
-       (->> (for [{:keys [login]} logins]
-              [login (days all login)])
-            (sort-by second >))))))
+       (get-login req)
+       training-days))))
 
 ;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
