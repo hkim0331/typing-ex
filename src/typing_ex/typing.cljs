@@ -10,7 +10,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "v2.6.870")
+(def ^:private version "v2.7.876")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -239,7 +239,7 @@ of yonder warehouses will not suffice."])
                                      :answer
                                      (-> e .-target .-value)))}]
      [results-component]
-     [:div (:next @app-state)]
+     [:div {:id "next"} (:next @app-state)]
      [:p
       [:input {:type  "button"
                :id    "seconds"

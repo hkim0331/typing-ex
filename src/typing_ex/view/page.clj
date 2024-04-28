@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.6.870")
+(def ^:private version "v2.7.876")
 
 ;--------------------------------
 ;; FIXME
@@ -294,7 +294,7 @@
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつが一番。一度にたくさんやっても身につかないよ。"]
+    [:p "まとめてやっても平常点にはならない。平常点は平常につく。当たり前。"]
     (into [:ol]
           (for [r ret]
             (let [login (:login r)

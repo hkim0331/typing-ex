@@ -29,6 +29,9 @@ services:
       - ./initdb.d:/docker-entrypoint-initdb.d
       - data:/var/lib/postgresql/data
 
+  redis:
+    image: redis
+
 volumes:
   data:
     driver: local

@@ -27,8 +27,17 @@
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
 - java -jar で立ち上がり完了の合図を出す．
+  -main に仕掛ければいいだけでは？
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
+- コードを書き換えずに、アラートの表示、非表示をコントロールできないか？
+- n 回で強制的にやめさすには？
+
+
+## v2.7.876 / 2024-04-29
+- redis 入りコンテナ。
+- font monospace -> Courier, monospace
+  Courier New は細すぎた。
 
 ## v2.6.870 / 2024-04-28
 - com.taoennso/carmine 3.3.2
@@ -36,6 +45,7 @@
 - core/login-timestamp with redis
 - core/training-days
   timestamp が上手く扱えないので回避策。HTML をごっそりキャッシュする。
+  タイムアウト 600 秒。
 
 ## v2.5.858 / 2024-04-26
 - vscode alert.
@@ -54,7 +64,6 @@
     TP_DEV: true
 ```
 - bootstrap CDN やめて、ローカルに5.2.3コピーを持つ。
-
 
 ## v2.4.829 / 2024-04-18
 - merge に手こずった。

@@ -4,7 +4,7 @@ body {
 
 pre#example {
     padding-left: 5px;
-    font-family: monospace;
+    font-family: Courier, monospace;
     font-size: 12pt;
     user-select: none;
     -webkit-user-select: none;
@@ -16,10 +16,14 @@ pre#example {
 }
 
 textarea#drill {
-    font-family: monospace;
+    font-family: Courier, monospace;
     font-size: 12pt;
     width: 660px;
     height: 120px;
+}
+
+div#next {
+    font-family: Courier, monospace;
 }
 
 span#counter {
@@ -29,17 +33,45 @@ span#counter {
     width: 1em;
 }
 
-span.mmm { margin-left: 2em;}
+span.mmm {
+    margin-left: 2em;
+}
 
-.drill { width: 660px;}
-.red { color: red;}
-.yes { background-color: red; color: white;}
-.hkimura { background: blue; color: white;}
-.btn#counter { font-family: monospace;}
+.drill {
+    width: 660px;
+}
 
-.boxed { border: solid 1pt black;
-         padding: 2px;}
+.red {
+    color: red;
+}
 
-.normal    {background-color: white;}
-.roll-call {background-color: yellow;}
-.exam      {background-color: pink;}
+.yes {
+    background-color: red;
+    color: white;
+}
+
+.hkimura {
+    background: blue;
+    color: white;
+}
+
+.btn#counter {
+    font-family: monospace;
+}
+
+.boxed {
+    border: solid 1pt black;
+    padding: 2px;
+}
+
+.normal {
+    background-color: white;
+}
+
+.roll-call {
+    background-color: yellow;
+}
+
+.exam {
+    background-color: pink;
+}
