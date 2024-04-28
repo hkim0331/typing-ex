@@ -34,7 +34,7 @@
 - n 回で強制的にやめさすには？
 
 
-## v2.7-SNAPSHOT
+## v2.7.876 / 2024-04-29
 - redis 入りコンテナ。
 - font monospace -> Courier, monospace
   Courier New は細すぎた。
