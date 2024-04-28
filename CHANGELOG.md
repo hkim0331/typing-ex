@@ -34,6 +34,8 @@
 - com.taoennso/carmine 3.3.2
 - core/users-all with redis
 - core/login-timestamp with redis
+- core/training-days
+  timestamp が上手く扱えないので回避策。HTML をごっそりキャッシュする。
 
 ## v2.5.858 / 2024-04-26
 - vscode alert.

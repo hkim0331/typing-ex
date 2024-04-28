@@ -21,7 +21,7 @@
    [taoensso.carmine :as car :refer [wcar]]
    [clojure.edn :as edn]))
 
-(add-tap prn)
+;; (add-tap prn)
 
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://127.0.0.1:6379"})
@@ -29,7 +29,6 @@
 
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
-
 
 (comment
   (wcar my-wcar-opts (car/ping))
@@ -182,14 +181,13 @@
       (wcar* (car/setex "users-all" 3600 (str ret)))
       ret)))
 
-
-(defn- login-timestamp [db]
-  (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
-    ;; ここがエラー。
-    (edn/read-string {:readers *data-readers*} login-timestamp)
-    (let [ret (results/login-timestamp db)]
-      (wcar* (car/setex "login-timestamp" 30 (str ret)))
-      ret)))
+;; (defn- login-timestamp [db]
+;;   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
+;;     ;; ここがエラー。別の作戦で。
+;;     (edn/read-string {:readers *data-readers*} login-timestamp)
+;;     (let [ret (results/login-timestamp db)]
+;;       (wcar* (car/setex "login-timestamp" 30 (str ret)))
+;;       ret)))
 ;;
 
 ;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
@@ -203,7 +201,10 @@
 ;;               [login (days all login)])
 ;;             (sort-by second >))))))
 
-(defn- training-days [req db]
+
+(defn- training-days
+  "redis キャッシュ付きでバージョンアップ。"
+  [req db]
   (tap> "training-days")
   (if-let [training-days (wcar* (car/get "training-days"))]
     (do
