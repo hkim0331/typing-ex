@@ -7,7 +7,6 @@
    [environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
-   #_[integrant.repl.state :refer [system]]
    [java-time.api :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
@@ -22,6 +21,7 @@
    [clojure.edn :as edn]))
 
 ;; (add-tap prn)
+;; (remove-tap prn)
 
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://redis:6379"})
@@ -36,6 +36,7 @@
    (car/ping)
    (car/set "foo" "bar")
    (car/get "foo"))
+
   (env :tp-dev)
   :rcf)
 
@@ -110,7 +111,7 @@
     <link rel='icon' href='/favicon.ico'>
   </head>
   <body>"
-      ;; DON'T FORGET
+      ;; DON'T FORGET. mandatory info.
       (anti-forgery-field)
       (login-field (get-login req))
       ;;
@@ -148,13 +149,6 @@
           ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
-;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
-;;   (fn [{[_ n] :ataraxy/result :as req}]
-;;     (let [days (Integer/parseInt n)
-;;           login (get-login req)
-;;           ex-days (results/find-ex-days db days)]
-;;       (view/ex-days-page ex-days login days))))
-
 (defn days [all login]
   (let [ret (filter (fn [x] (= login (:login x))) all)]
     (->> ret
@@ -163,17 +157,6 @@
          (filter #(< 9 %))
          count)))
 
-(comment
-  (add-tap prn)
-  (tap> "tap")
-  (wcar* (car/get "users-all"))
-  (wcar* (car/ttl "users-all"))
-  (wcar* (car/ttl "login-timestamp"))
-  (wcar* (car/setex "expire" 10 "10sec"))
-  (wcar* (car/ttl "expire"))
-  :rcf)
-
-;; ここ。
 (defn- users-all [db]
   (if-let [users-all (wcar* (car/get "users-all"))]
     (edn/read-string users-all)
@@ -190,17 +173,6 @@
 ;;       ret)))
 ;;
 
-;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
-;;   (fn [req]
-;;     (let [logins (users-all db)
-;;           all (login-timestamp db)
-;;           self (get-login req)]
-;;       (view/ex-days-page
-;;        self
-;;        (->> (for [{:keys [login]} logins]
-;;               [login (days all login)])
-;;             (sort-by second >))))))
-
 
 (defn- training-days
   "redis キャッシュ付きでバージョンアップ。"
@@ -216,7 +188,7 @@
                                [login (days all login)])
                              (sort-by second >))]
       (tap> "miss")
-      (wcar* (car/setex "training-days" 600 training-days))
+      (wcar* (car/setex "training-days" 3600 training-days))
       training-days)))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
@@ -231,7 +203,6 @@
   (fn [req]
     (let [days (get-in req [:params :n])
           kind (get-in req [:query-params "kind"])]
-      ;; (println "kind" kind)
       (case kind
         "total" (redirect (str "/total/" days))
         "training days"  (redirect (str "/days/" days))
