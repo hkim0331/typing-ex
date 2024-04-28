@@ -36,6 +36,8 @@
 
 ## v2.7-SNAPSHOT
 - redis 入りコンテナ。
+- font monospace -> Courier, monospace
+  Courier New は細すぎた。
 
 ## v2.6.870 / 2024-04-28
 - com.taoennso/carmine 3.3.2

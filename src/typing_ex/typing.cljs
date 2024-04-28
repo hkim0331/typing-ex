@@ -239,7 +239,7 @@ of yonder warehouses will not suffice."])
                                      :answer
                                      (-> e .-target .-value)))}]
      [results-component]
-     [:div (:next @app-state)]
+     [:div {:id "next"} (:next @app-state)]
      [:p
       [:input {:type  "button"
                :id    "seconds"
