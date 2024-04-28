@@ -24,7 +24,7 @@
 ;; (add-tap prn)
 
 (defonce my-conn-pool (car/connection-pool {}))
-(def     my-conn-spec {:uri "redis://127.0.0.1:6379"})
+(def     my-conn-spec {:uri "redis://redis:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 
 ;; changed by me, not ~my-wcar-opts.
