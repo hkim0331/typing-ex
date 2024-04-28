@@ -172,14 +172,20 @@
   (if-let [users-all (wcar* (car/get "users-all"))]
     (read-string users-all)
     (let [ret (results/users db)]
-      (tap> ret)
       (wcar* (car/setex "users-all" 3600 (str ret)))
+      ret)))
+
+(defn- login-timestamp [db]
+  (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
+    (read-string login-timestamp)
+    (let [ret (results/login-timestamp db)]
+      (wcar* (car/setex "login-timetam" 60 (str ret)))
       ret)))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [req]
     (let [logins (users-all db)
-          all (results/login-timestamp db)
+          all (login-timestamp db)
           self (get-login req)]
       (view/ex-days-page
        self
