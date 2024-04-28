@@ -216,7 +216,7 @@
                                [login (days all login)])
                              (sort-by second >))]
       (tap> "miss")
-      (wcar* (car/setex "training-days" 60 training-days))
+      (wcar* (car/setex "training-days" 600 training-days))
       training-days)))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
