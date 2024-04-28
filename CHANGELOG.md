@@ -30,6 +30,9 @@
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
 
+## v2.6-SNAPSHOT / 2024-04-28
+- com.taoennso/carmine 3.3.2
+
 ## v2.5.858 / 2024-04-26
 - vscode alert.
 

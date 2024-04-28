@@ -16,9 +16,23 @@
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
-   [typing-ex.view.page :as view]))
+   [typing-ex.view.page :as view]
+   ;;
+   [taoensso.carmine :as car :refer [wcar]]))
+
+(defonce my-conn-pool (car/connection-pool {}))
+(def     my-conn-spec {:uri "redis://127.0.0.1:6379"})
+(def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
+
+;; changed by me, not ~my-wcar-opts.
+(defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
 (comment
+  (wcar my-wcar-opts (car/ping))
+  (wcar*
+   (car/ping)
+   (car/set "foo" "bar")
+   (car/get "foo"))
   (env :tp-dev)
   :rcf)
 
@@ -145,7 +159,7 @@
          (map (fn [x] (count (val x))))
          (filter #(< 9 %))
          count)))
-
+;; ここ。
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
     (let [logins (results/users db)
