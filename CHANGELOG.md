@@ -30,14 +30,21 @@
 - an issue on checking good/bad last word typing.
 - スコアが二度提出されることがある。
 
+## v2.6.870 / 2024-04-28
+- com.taoennso/carmine 3.3.2
+- core/users-all with redis
+- core/login-timestamp with redis
+- core/training-days
+  timestamp が上手く扱えないので回避策。HTML をごっそりキャッシュする。
+
 ## v2.5.858 / 2024-04-26
+- vscode alert.
 
 ## v2.5.849 / 2024-04-25
 - (dev) (go) でエラーになることがある。lein clean で直るが。
 
 ## v2.5.848 / 2024-04-25
 - today's GO を表示しない。これは例文を流すやつ対策で作ったものだった。
-
 
 ## v2.5.836 / 2024-04-21
 - hkim0331/typing-ex:0.4.0

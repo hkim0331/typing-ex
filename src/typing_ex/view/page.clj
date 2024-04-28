@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.5.858")
+(def ^:private version "v2.6.870")
 
 ;--------------------------------
 ;; FIXME
@@ -177,33 +177,6 @@
               [:a {:href (str "/record/" login)
                    :class (if (= login self) "yes" "other")}
                login]])])]))
-
-;; (defn ex-days-page
-;;   "ex-days: 練習日数
-;;    user: アカウント
-;;    days: 何日間のデータか？"
-;;   [ex-days user days]
-;;   (let [logins (->> ex-days (map :login) distinct)
-;;         data (->> (for [login logins]
-;;                     [(count-ex-days ex-days login) login])
-;;                   (sort-by first)
-;;                   reverse)]
-;;     (page
-;;      [:h2 "Typing: Last " days " days Maxes"]
-;;      (headline days)
-;;      [:div {:style "margin-left:1rem;"}
-;;       [:p "毎日ちょっとずつが伸びる秘訣。"]
-;;       (into [:ol
-;;              (for [[count login] data]
-;;                [:li
-;;                 (format "(%d) " count)
-;;                 " "
-;;                 [:a {:href (str "/record/" login)
-;;                      :class (if (= login user) "yes" "other")}
-;;                  login]])])]
-;;      ;; (headline days)
-;;      )))
-
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
