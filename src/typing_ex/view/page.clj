@@ -52,6 +52,16 @@
       [:hr]
       "hkimura, " version "."]])])
 
+(defn alert-form [_]
+  (page
+   [:h2 "Typing: Alert"]
+   (form-to
+    [:post "/alert"]
+    (anti-forgery-field)
+    (text-field {:placeholder "alert" :size 40} "alert")
+    [:br]
+    (submit-button  "set"))))
+
 (defn login-page [req]
   (page
    [:h2 "Typing: Login"]
@@ -86,7 +96,7 @@
      ;;       :class "btn btn-info btn-sm"}
      ;;   "RP"]
      ;;  "&nbsp;"
-     [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
+     [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
@@ -330,9 +340,9 @@
 
 ;; roll-call
 ;; FIXME: 表示で工夫するよりも、データベースに入れる時に加工するか？
-(defn rc-page [ret]
+(defn rc-page [ret login]
   (page
-   [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
+   [:h2 "Typing: 出席データ(" login ")"]
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
     "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"

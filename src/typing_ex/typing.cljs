@@ -112,8 +112,11 @@ of yonder warehouses will not suffice."])
                    "\n\n"
                    (:text  @app-state))))))
   ;; VScode, 2024-04-26
-  (when (< (:todays-trials @app-state) 3)
-    (js/alert "VScode?"))
+  ;; (when (< (:todays-trials @app-state) 3)
+  ;;   (js/alert "VScode?"))
+  (go (when-let [{:keys [body]} (<! (http/get "/alert"))]
+        (when (re-find #"\S" body)
+          (js/alert body))))
   ;;
   (swap! app-state update :todays-trials inc)
   (when (< todays-limit (:todays-trials @app-state))

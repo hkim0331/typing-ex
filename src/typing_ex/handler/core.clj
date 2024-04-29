@@ -47,6 +47,23 @@
     (name (get-in req [:session :identity]))
     (catch Exception _ nil)))
 
+;; alert
+(defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
+  (fn [_]
+    [::response/ok (wcar* (car/get "alert"))]))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert-form [_ _]
+  (fn [req]
+    (if (admin? (get-login req))
+      (view/alert-form req)
+      [::response/forbidden "admin only"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert! [_ _]
+  (fn [{{:keys [alert]} :params}]
+    (wcar* (car/set "alert" alert))
+    [::response/ok (str "alert!:" alert)]
+    (redirect "/total/7")))
+
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
   (fn [req]
@@ -108,7 +125,7 @@
       core/typing
     </div>
     <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
-    <script src='js/compiled/main.js' type='text/javascript'></script>
+    <script src='/js/compiled/main.js' type='text/javascript'></script>
     <script>typing_ex.typing.init();</script>
     </div>
   </body>
@@ -264,12 +281,13 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
-    (let [ret (->> (roll-calls/rc db (get-login req))
+    (let [login (get-login req)
+          ret (->> (roll-calls/rc db login)
                    (map :created_at)
                    (map date-only)
                    dedupe)]
       ;; (println (str ret))
-      (view/rc-page ret))))
+      (view/rc-page ret login))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
   (fn [{{:keys [pt]} :params :as req}]

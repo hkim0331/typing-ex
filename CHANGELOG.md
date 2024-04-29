@@ -18,9 +18,6 @@
 - drills 一括ダウンロード。
 - n 回で強制的にやめさすには？
 - (reset) が必要になるケースはどんなケース？
-
-## v2.8-SNAPSHOT
-- コードを書き換えずに、アラートの表示、非表示をコントロールできないか？
 - redis が使えない時、デグレードする。
   -> redis がない時は考えなくていい。コンテナで開発するならいつでも redis は手に入る。
 - テストモード、3回の平均で ⭕️ ❌ をつける。
@@ -29,6 +26,13 @@
 - スコアが二度提出されることがある。
 - good/bad last word
 
+
+## v2.8-SNAPSHOT
+- input alert message from /alert-form.
+  when empty string is set, alert will not appear.
+  the alert message is hold on redis as "alert" key.
+- roll call background yellow.
+- display login on RC page.
 
 ## v2.7.883 / 2024-04-29
 - removed magic numbers.
