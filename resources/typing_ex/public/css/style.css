@@ -4,7 +4,7 @@ body {
 
 pre#example {
     padding-left: 5px;
-    font-family: Courier, monospace;
+    font-family: monospace;
     font-size: 12pt;
     user-select: none;
     -webkit-user-select: none;
@@ -16,14 +16,15 @@ pre#example {
 }
 
 textarea#drill {
-    font-family: Courier, monospace;
+    font-family: monospace;
     font-size: 12pt;
     width: 660px;
     height: 120px;
 }
 
 div#next {
-    font-family: Courier, monospace;
+    font-family: monospace;
+    font-size: 10pt;
 }
 
 span#counter {
