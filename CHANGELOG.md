@@ -25,7 +25,12 @@
   -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
+- test mode enhanced
 
+
+## v2.8.893 / 2024-04-29
+- display end `datetime` in `/rc`.
+- 小窓の font-size 12pt.
 
 ## v2.8.888 / 2024-04-29
 - input alert message from /alert-form.
