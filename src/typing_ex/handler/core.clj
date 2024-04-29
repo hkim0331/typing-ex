@@ -26,9 +26,9 @@
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://redis:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
-
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
+
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 (def ^:private redis-expire 3600)
@@ -46,6 +46,23 @@
   (try
     (name (get-in req [:session :identity]))
     (catch Exception _ nil)))
+
+;; alert
+(defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
+  (fn [_]
+    [::response/ok (wcar* (car/get "alert"))]))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert-form [_ _]
+  (fn [req]
+    (if (admin? (get-login req))
+      (view/alert-form req)
+      [::response/forbidden "admin only"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert! [_ _]
+  (fn [{{:keys [alert]} :params}]
+    (wcar* (car/set "alert" alert))
+    [::response/ok (str "alert!:" alert)]
+    (redirect "/total/7")))
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
@@ -108,7 +125,7 @@
       core/typing
     </div>
     <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
-    <script src='js/compiled/main.js' type='text/javascript'></script>
+    <script src='/js/compiled/main.js' type='text/javascript'></script>
     <script>typing_ex.typing.init();</script>
     </div>
   </body>
@@ -152,7 +169,9 @@
       (wcar* (car/setex "users-all" redis-expire (str ret)))
       ret)))
 
+;; ----------------------
 ;; FIXME: tagged literal
+;; ----------------------
 ;; (defn- login-timestamp [db]
 ;;   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
 ;;     (edn/read-string {:readers *data-readers*} login-timestamp)
@@ -262,12 +281,13 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
-    (let [ret (->> (roll-calls/rc db (get-login req))
+    (let [login (get-login req)
+          ret (->> (roll-calls/rc db login)
                    (map :created_at)
                    (map date-only)
                    dedupe)]
       ;; (println (str ret))
-      (view/rc-page ret))))
+      (view/rc-page ret login))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
   (fn [{{:keys [pt]} :params :as req}]

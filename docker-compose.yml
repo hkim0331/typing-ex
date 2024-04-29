@@ -31,6 +31,8 @@ services:
 
   redis:
     image: redis
+    volumes:
+      - redis:/data
 
 volumes:
   data:
@@ -39,5 +41,5 @@ volumes:
     external: true
   m2:
     external: true
-  # node_modules:
-  #   external: true
+  redis:
+    driver: local
