@@ -28,9 +28,9 @@
 - test mode enhanced
 
 
-## 2.8-SNAPSHOT
+## v2.8.893 / 2024-04-29
 - display end `datetime` in `/rc`.
-
+- 小窓の font-size 12pt.
 
 ## v2.8.888 / 2024-04-29
 - input alert message from /alert-form.
