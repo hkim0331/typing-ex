@@ -34,7 +34,7 @@
 - n 回で強制的にやめさすには？
 - redis が使えない時、デグレードする。
 
-## v2.7-SNAPSHOT
+## v2.7.883 / 2024-04-29
 - removed magic numbers.
   ```
   (def ^:private redis-expire 3600)
