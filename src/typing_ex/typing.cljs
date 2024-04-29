@@ -75,17 +75,6 @@ of yonder warehouses will not suffice."])
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; FIXME!
-;; how about call /sleep/:n?
-;; (defn busy-wait
-;;   [n]
-;;   (let [start (.now js/Date.)]
-;;     (loop [now (.now js/Date)]
-;;       (when (< (- now start) n)
-;;         (recur (.now js/Date.))))))
-;------------------------------------------
-
-;; FIXME: dirty.
 (defn pt [{:keys [seconds errors goods bads]}]
   (let [all (:words-max @app-state)
         bs errors ;; backspace key

@@ -9,30 +9,26 @@
 * (docker, docker-compose)
 
 ## Unreleased
-- 各行ごとに集計。
 - 日本語例文。
-- 「授業中は練習なしよ」モード
-- 自分データを csv でダウンロードできるように。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- admin? を DB から引く
-  l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
-  あるいは /admin/:user を作るか。
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
-- docker: yarn watch のたびにインストールが走ってしまう。
-- リファラ見てアラート出すかどうか、決められないか？
-  グラフから戻ってGo! するときは記録しないでよい。
-- space を超えるバックスペースは無効にする
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
-- java -jar で立ち上がり完了の合図を出す．
-  -main に仕掛ければいいだけでは？
-- an issue on checking good/bad last word typing.
-- スコアが二度提出されることがある。
-- コードを書き換えずに、アラートの表示、非表示をコントロールできないか？
 - n 回で強制的にやめさすには？
+- (reset) が必要になるケースはどんなケース？
+
+## v2.8-SNAPSHOT
+- コードを書き換えずに、アラートの表示、非表示をコントロールできないか？
 - redis が使えない時、デグレードする。
+  -> redis がない時は考えなくていい。コンテナで開発するならいつでも redis は手に入る。
+- テストモード、3回の平均で ⭕️ ❌ をつける。
+- 「授業中は練習なしよ」モード
+  -> 授業中の空き時間にタイプしている人もいる。
+- スコアが二度提出されることがある。
+- good/bad last word
+
 
 ## v2.7.883 / 2024-04-29
 - removed magic numbers.

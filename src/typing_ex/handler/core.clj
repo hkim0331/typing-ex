@@ -26,9 +26,9 @@
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://redis:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
-
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
+
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 (def ^:private redis-expire 3600)
@@ -152,7 +152,9 @@
       (wcar* (car/setex "users-all" redis-expire (str ret)))
       ret)))
 
+;; ----------------------
 ;; FIXME: tagged literal
+;; ----------------------
 ;; (defn- login-timestamp [db]
 ;;   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
 ;;     (edn/read-string {:readers *data-readers*} login-timestamp)
