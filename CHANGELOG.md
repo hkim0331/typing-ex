@@ -25,6 +25,10 @@
   -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
+- test mode enhanced
+- display end `datetime` in `/rc`.
+
+## 2.8-SNAPSHOT
 
 
 ## v2.8.888 / 2024-04-29

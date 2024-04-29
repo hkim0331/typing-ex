@@ -34,6 +34,7 @@
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
+
 (def little-prince
   ["An aviator whose plane is forced down in the Sahara Desert
 encounters a little prince from a small planet who relates
@@ -49,7 +50,6 @@ anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
 
-;; from Moby-Dick
 (def moby-dick
   ["Call me Ishmael. Some years ago—never mind how long precisely
 having little or no money in my purse, and nothing particular to
