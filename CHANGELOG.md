@@ -27,7 +27,7 @@
 - good/bad last word
 
 
-## v2.8-SNAPSHOT
+## v2.8.888 / 2024-04-29
 - input alert message from /alert-form.
   when empty string is set, alert will not appear.
   the alert message is hold on redis as "alert" key.
