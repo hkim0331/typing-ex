@@ -30,22 +30,11 @@
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
-(comment
-  (wcar my-wcar-opts (car/ping))
-  (wcar*
-   (car/ping)
-   (car/set "foo" "bar")
-   (car/get "foo"))
-
-  (env :tp-dev)
-  :rcf)
-
-;; l22 の定義を変えるではなく，auth? で誤魔化す？
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+(def ^:private redis-expire 3600)
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
 
-;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
     (get admins s)))
@@ -111,10 +100,9 @@
     <link rel='icon' href='/favicon.ico'>
   </head>
   <body>"
-      ;; DON'T FORGET. mandatory info.
+      ;; DON'T FORGET. mandatory.
       (anti-forgery-field)
       (login-field (get-login req))
-      ;;
       "<div class='container'>
     <div id='app'>
       core/typing
@@ -161,18 +149,16 @@
   (if-let [users-all (wcar* (car/get "users-all"))]
     (edn/read-string users-all)
     (let [ret (results/users db)]
-      (wcar* (car/setex "users-all" 3600 (str ret)))
+      (wcar* (car/setex "users-all" redis-expire (str ret)))
       ret)))
 
+;; FIXME: tagged literal
 ;; (defn- login-timestamp [db]
 ;;   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
-;;     ;; ここがエラー。別の作戦で。
 ;;     (edn/read-string {:readers *data-readers*} login-timestamp)
 ;;     (let [ret (results/login-timestamp db)]
 ;;       (wcar* (car/setex "login-timestamp" 30 (str ret)))
 ;;       ret)))
-;;
-
 
 (defn- training-days
   "redis キャッシュ付きでバージョンアップ。"
@@ -188,7 +174,7 @@
                                [login (days all login)])
                              (sort-by second >))]
       (tap> "miss")
-      (wcar* (car/setex "training-days" 3600 training-days))
+      (wcar* (car/setex "training-days" redis-expire training-days))
       training-days)))
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]

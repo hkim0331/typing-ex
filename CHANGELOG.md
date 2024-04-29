@@ -34,6 +34,12 @@
 - n 回で強制的にやめさすには？
 - redis が使えない時、デグレードする。
 
+## v2.7-SNAPSHOT
+- removed magic numbers.
+  ```
+  (def ^:private redis-expire 3600)
+  ```
+
 ## v2.7.880 / 2024-04-29
 - Courier monospace では細すぎ、monospace に戻す。
 - font-size 10pt
