@@ -31,7 +31,8 @@ or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 ## require
 
 * postgresql 14.*
-* jre 17
+* redis
+* jre >= 11
 
 
 ## License

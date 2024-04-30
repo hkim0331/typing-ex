@@ -1,4 +1,4 @@
-(defproject typing-ex "v2.5.858"
+(defproject typing-ex "v2.8.893"
   :description "typing exercises for literacy classes"
   :url "http://example.com/FIXME"
   :min-lein-version "2.0.0"
@@ -19,7 +19,8 @@
                  ;; develop only?
                  ;; [integrant/repl "0.3.2"]
                  ;;
-                 [org.clojure/clojure "1.11.2"]
+                 [com.taoensso/carmine "3.3.2"]
+                 [org.clojure/clojure "1.11.3"]
                  [org.postgresql/postgresql "42.7.3"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main

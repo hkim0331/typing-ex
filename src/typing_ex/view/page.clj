@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.5.858")
+(def ^:private version "v2.8.893")
 
 ;--------------------------------
 ;; FIXME
@@ -52,6 +52,16 @@
       [:hr]
       "hkimura, " version "."]])])
 
+(defn alert-form [_]
+  (page
+   [:h2 "Typing: Alert"]
+   (form-to
+    [:post "/alert"]
+    (anti-forgery-field)
+    (text-field {:placeholder "alert" :size 40} "alert")
+    [:br]
+    (submit-button  "set"))))
+
 (defn login-page [req]
   (page
    [:h2 "Typing: Login"]
@@ -86,7 +96,7 @@
      ;;       :class "btn btn-info btn-sm"}
      ;;   "RP"]
      ;;  "&nbsp;"
-     [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
+     [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
@@ -177,33 +187,6 @@
               [:a {:href (str "/record/" login)
                    :class (if (= login self) "yes" "other")}
                login]])])]))
-
-;; (defn ex-days-page
-;;   "ex-days: 練習日数
-;;    user: アカウント
-;;    days: 何日間のデータか？"
-;;   [ex-days user days]
-;;   (let [logins (->> ex-days (map :login) distinct)
-;;         data (->> (for [login logins]
-;;                     [(count-ex-days ex-days login) login])
-;;                   (sort-by first)
-;;                   reverse)]
-;;     (page
-;;      [:h2 "Typing: Last " days " days Maxes"]
-;;      (headline days)
-;;      [:div {:style "margin-left:1rem;"}
-;;       [:p "毎日ちょっとずつが伸びる秘訣。"]
-;;       (into [:ol
-;;              (for [[count login] data]
-;;                [:li
-;;                 (format "(%d) " count)
-;;                 " "
-;;                 [:a {:href (str "/record/" login)
-;;                      :class (if (= login user) "yes" "other")}
-;;                  login]])])]
-;;      ;; (headline days)
-;;      )))
-
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -321,7 +304,7 @@
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつが一番。一度にたくさんやっても身につかないよ。"]
+    [:p "まとめてやっても平常点にはならない。平常点は平常につく。当たり前。"]
     (into [:ol]
           (for [r ret]
             (let [login (:login r)
@@ -357,12 +340,12 @@
 
 ;; roll-call
 ;; FIXME: 表示で工夫するよりも、データベースに入れる時に加工するか？
-(defn rc-page [ret]
+(defn rc-page [ret login]
   (page
-   [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
+   [:h2 "Typing: 出席データ(" login ")"]
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
-    "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"
+    "「閲覧履歴の消去」でバージョンアップしよう。"
     [:a {:href "/stat-page"} "[admin only]"]]
    [:ul {:class "roll-call"}
     (for [r ret]
