@@ -12,12 +12,13 @@ ClojureScript でフロントを書く練習。
 
 check postgres alive,
 
-    $ yarn watch
+    $ npm install
+    $ npx shadow-cljs watch app
     $ lein repl
     user> (dev)
     user> (go)
 
-    $ open http://localhost:3002
+    $ open http://localhost:3000
 
 
 or from VScode, choose  REPL -> Leiningen after `yarn watch`.
@@ -25,6 +26,14 @@ or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 ## deploy
 
     $ make deploy
+
+
+## require
+
+* postgresql 14.*
+* redis
+* jre >= 11
+
 
 ## License
 

@@ -3,7 +3,6 @@
   ;;  [cljs.core.async.macros :refer [go]])
   (:require
    [cljs-http.client :as http]
-   #_[cljs.reader :refer [read-string]]
    [cljs.core.async :refer [go <!]]
    [clojure.string :as str]
    [reagent.core :as r]
@@ -11,7 +10,7 @@
    [typing-ex.plot :refer [bar-chart]]))
 
 
-(def ^:private version "v2.4.829")
+(def ^:private version "v2.8.893")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -35,6 +34,7 @@
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
+
 (def little-prince
   ["An aviator whose plane is forced down in the Sahara Desert
 encounters a little prince from a small planet who relates
@@ -50,7 +50,6 @@ anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
 
-;; from Moby-Dick
 (def moby-dick
   ["Call me Ishmael. Some years ago—never mind how long precisely
 having little or no money in my purse, and nothing particular to
@@ -76,17 +75,6 @@ of yonder warehouses will not suffice."])
   (-> (.getElementById js/document "login")
       (.-value)))
 
-;; FIXME!
-;; how about call /sleep/:n?
-;; (defn busy-wait
-;;   [n]
-;;   (let [start (.now js/Date.)]
-;;     (loop [now (.now js/Date)]
-;;       (when (< (- now start) n)
-;;         (recur (.now js/Date.))))))
-;------------------------------------------
-
-;; FIXME: dirty.
 (defn pt [{:keys [seconds errors goods bads]}]
   (let [all (:words-max @app-state)
         bs errors ;; backspace key
@@ -123,6 +111,13 @@ of yonder warehouses will not suffice."])
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state))))))
+  ;; VScode, 2024-04-26
+  ;; (when (< (:todays-trials @app-state) 3)
+  ;;   (js/alert "VScode?"))
+  (go (when-let [{:keys [body]} (<! (http/get "/alert"))]
+        (when (re-find #"\S" body)
+          (js/alert body))))
+  ;;
   (swap! app-state update :todays-trials inc)
   (when (< todays-limit (:todays-trials @app-state))
     (js/alert
@@ -223,10 +218,11 @@ of yonder warehouses will not suffice."])
   (fn []
     [:div {:class (:stat @app-state)}
      [:h2 "Typing: Challenge"]
-     [:p {:class "red"}
-      "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
+     #_[:p {:class "red"}
+        "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
      [:pre {:id "example"} (:text @app-state)]
      [:textarea {:name "answer"
+                 :placeholder "ノーミスゴールでボーナス。単語間のスペースは一個で。キーボード見るなよ。"
                  :id "drill"
                  :value (:answer @app-state)
                  :on-key-up #(check-key (.-key %))
@@ -236,7 +232,7 @@ of yonder warehouses will not suffice."])
                                      :answer
                                      (-> e .-target .-value)))}]
      [results-component]
-     [:div (:next @app-state)]
+     [:div {:id "next"} (:next @app-state)]
      [:p
       [:input {:type  "button"
                :id    "seconds"

@@ -9,30 +9,76 @@
 * (docker, docker-compose)
 
 ## Unreleased
-- 各行ごとに集計。
 - 日本語例文。
-- 「授業中は練習なしよ」モード
-- 自分データを csv でダウンロードできるように。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- admin? を DB から引く
-  l22 が返すのは login, password, uhour のみ、そこを変えないと改良ならない。
-  あるいは /admin/:user を作るか。
 - hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
-- docker: yarn watch のたびにインストールが走ってしまう。
-- .m2, .gitlibs の位置の調整ができてない．
-  mount しているのは /root，しかし，lein で入れるのは/home/vscode
-- リファラ見てアラート出すかどうか、決められないか？
-  グラフから戻ってGo! するときは記録しないでよい。
-- space を超えるバックスペースは無効にする
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
-- java -jar で立ち上がり完了の合図を出す．
-- an issue on checking good/bad last word typing.
+- n 回で強制的にやめさすには？
+- (reset) が必要になるケースはどんなケース？
+- redis が使えない時、デグレードする。
+  -> redis がない時は考えなくていい。コンテナで開発するならいつでも redis は手に入る。
+- テストモード、3回の平均で ⭕️ ❌ をつける。
+- 「授業中は練習なしよ」モード
+  -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
-- Today's GO が表示されない。/restarts-page/:login
+- good/bad last word
+- test mode enhanced
 
+
+## v2.8.893 / 2024-04-29
+- display end `datetime` in `/rc`.
+- 小窓の font-size 12pt.
+
+## v2.8.888 / 2024-04-29
+- input alert message from /alert-form.
+  when empty string is set, alert will not appear.
+  the alert message is hold on redis as "alert" key.
+- roll call background yellow.
+- display login on RC page.
+
+## v2.7.883 / 2024-04-29
+- removed magic numbers.
+  ```
+  (def ^:private redis-expire 3600)
+  ```
+
+## v2.7.880 / 2024-04-29
+- Courier monospace では細すぎ、monospace に戻す。
+- font-size 10pt
+
+## v2.7.876 / 2024-04-29
+- redis 入りコンテナ。
+- font monospace -> Courier, monospace
+  Courier New は細すぎた。
+
+## v2.6.870 / 2024-04-28
+- com.taoennso/carmine 3.3.2
+- core/users-all with redis
+- core/login-timestamp with redis
+- core/training-days
+  timestamp が上手く扱えないので回避策。HTML をごっそりキャッシュする。
+  タイムアウト 600 秒。
+
+## v2.5.858 / 2024-04-26
+- vscode alert.
+
+## v2.5.849 / 2024-04-25
+- (dev) (go) でエラーになることがある。lein clean で直るが。
+
+## v2.5.848 / 2024-04-25
+- today's GO を表示しない。これは例文を流すやつ対策で作ったものだった。
+
+## v2.5.836 / 2024-04-21
+- hkim0331/typing-ex:0.4.0
+- apt-get -y install --no-install-recommends git npm postgresql-client
+```
+  environment:
+    TP_DEV: true
+```
+- bootstrap CDN やめて、ローカルに5.2.3コピーを持つ。
 
 ## v2.4.829 / 2024-04-18
 - merge に手こずった。

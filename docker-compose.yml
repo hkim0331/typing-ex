@@ -1,16 +1,13 @@
-version: "3"
-
 services:
   typing-ex:
-    image: hkim0331/duct:0.2.1
+    image: hkim0331/typing-ex:0.4.0
     # user: vscode
+    environment:
+      TP_DEV: true
     ports:
       - "3002:3000"
     working_dir: /usr/src/app
     volumes:
-      # https://gotohayato.com/content/544/
-      # https://qiita.com/kino-ma/items/eae3dac942e899f9a77b
-      # - node_modules:/usr/src/app/node_modules
       - .:/usr/src/app
       - m2:/root/.m2
       - gitlibs:/root/.gitlibs
@@ -20,7 +17,7 @@ services:
 
   db:
     image: postgres:14.11
-    restart: always
+    # restart: always
     environment:
       POSTGRES_DB: typing_ex
       POSTGRES_HOST_AUTH_METHOD: trust
@@ -32,6 +29,11 @@ services:
       - ./initdb.d:/docker-entrypoint-initdb.d
       - data:/var/lib/postgresql/data
 
+  redis:
+    image: redis
+    volumes:
+      - redis:/data
+
 volumes:
   data:
     driver: local
@@ -39,5 +41,5 @@ volumes:
     external: true
   m2:
     external: true
-  # node_modules:
-  #   external: true
+  redis:
+    driver: local

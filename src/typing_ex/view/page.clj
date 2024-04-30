@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.4.829")
+(def ^:private version "v2.8.893")
 
 ;--------------------------------
 ;; FIXME
@@ -40,13 +40,8 @@
      [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]]
     [:link
      {:rel "stylesheet"
-      :href "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-      :integrity "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-      :crossorigin "anonymous"}]
-    ;; [:link
-    ;;  {:rel "stylesheet"
-    ;;   :href "/css/bootstrap.min.css"
-    ;;   :type "text/css"}]
+      :href "/css/bootstrap.min.css"
+      :type "text/css"}]
     [:link
      {:rel "stylesheet"
       :href "/css/style.css"}]
@@ -56,6 +51,16 @@
       contents
       [:hr]
       "hkimura, " version "."]])])
+
+(defn alert-form [_]
+  (page
+   [:h2 "Typing: Alert"]
+   (form-to
+    [:post "/alert"]
+    (anti-forgery-field)
+    (text-field {:placeholder "alert" :size 40} "alert")
+    [:br]
+    (submit-button  "set"))))
 
 (defn login-page [req]
   (page
@@ -82,19 +87,19 @@
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      "&nbsp;"
      ;;py99
-     [:a {:href "https://py99.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
-      "Py99"]
-     "&nbsp;"
+    ;;  [:a {:href "https://py99.melt.kyutech.ac.jp/"
+    ;;       :class "btn btn-info btn-sm"}
+    ;;   "Py99"]
+    ;;  "&nbsp;"
      ;; literacy reports
      ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
      ;;       :class "btn btn-info btn-sm"}
      ;;   "RP"]
      ;;  "&nbsp;"
-     [:a {:href "/rc" :class "btn btn-info btn-sm"} "RC"]
+     [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
+          :class "btn btn-success btn-sm"}
       "WIL"]
      "&nbsp;"
      [:a {:href "http://qa.melt.kyutech.ac.jp/"
@@ -106,7 +111,7 @@
       "MT"]
      "&nbsp;"
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
-          :class "btn btn-info btn-sm"}
+          :class "btn btn-success btn-sm"}
       "L22"]
      "&nbsp;"
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
@@ -183,33 +188,6 @@
                    :class (if (= login self) "yes" "other")}
                login]])])]))
 
-;; (defn ex-days-page
-;;   "ex-days: 練習日数
-;;    user: アカウント
-;;    days: 何日間のデータか？"
-;;   [ex-days user days]
-;;   (let [logins (->> ex-days (map :login) distinct)
-;;         data (->> (for [login logins]
-;;                     [(count-ex-days ex-days login) login])
-;;                   (sort-by first)
-;;                   reverse)]
-;;     (page
-;;      [:h2 "Typing: Last " days " days Maxes"]
-;;      (headline days)
-;;      [:div {:style "margin-left:1rem;"}
-;;       [:p "毎日ちょっとずつが伸びる秘訣。"]
-;;       (into [:ol
-;;              (for [[count login] data]
-;;                [:li
-;;                 (format "(%d) " count)
-;;                 " "
-;;                 [:a {:href (str "/record/" login)
-;;                      :class (if (= login user) "yes" "other")}
-;;                  login]])])]
-;;      ;; (headline days)
-;;      )))
-
-
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
   where login='hkimura'; を clojure で。"
@@ -279,7 +257,7 @@
         [:li "Average (last 10) " avg]
         [:li "Exercise days " (select-count-distinct scores)]
         [:li "Exercises (today/total) " (count todays) "/" (count scores)]
-        [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
+        ;; [:li [:a {:href (str "/restarts-page/" login)} "Today's Go!"]]
         [:li "Last Exercise " (ss (str (:timestamp (last scores))))]])
      [:p [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]])))
 
@@ -293,6 +271,13 @@
          (for [[u & _] ret]
            [:li (ss (:timestamp u)) " " (:login u)]))))
 
+(defn- todays-msg
+  []
+  (let [msg ["好き嫌い言わずになんでも食べるのが健康の元だ。"
+             "一日一回、QAも見るんだぞ。答えられる Q には A をつけよう。"
+             "ガンバッてる人とそうでない人と、割れてきたように見えないか？"]]
+    (get msg (rand-int (count msg)))))
+
 ;; view of /todays
 (defn todays-act-page [ret login]
   ;;(println "todays-act-page " (str ret))
@@ -300,7 +285,7 @@
    [:h2 "Typing: Todays"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "好き嫌い言わずになんでも食べるのが健康の元ってのと同じこと。"]
+    [:p (todays-msg)]
     (into [:ol]
           (for [r ret]
             [:li (ss (jt/local-date-time (:timestamp r)))
@@ -319,7 +304,7 @@
    [:h2 "Typing: Last " n " days Totals"]
    (headline n)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつが一番。一度にたくさんやっても身につかないよ。"]
+    [:p "まとめてやっても平常点にはならない。平常点は平常につく。当たり前。"]
     (into [:ol]
           (for [r ret]
             (let [login (:login r)
@@ -355,12 +340,12 @@
 
 ;; roll-call
 ;; FIXME: 表示で工夫するよりも、データベースに入れる時に加工するか？
-(defn rc-page [ret]
+(defn rc-page [ret login]
   (page
-   [:h2 "Typing: 出席データ(" (-> ret first :login) ")"]
+   [:h2 "Typing: 出席データ(" login ")"]
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
-    "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"
+    "「閲覧履歴の消去」でバージョンアップしよう。"
     [:a {:href "/stat-page"} "[admin only]"]]
    [:ul {:class "roll-call"}
     (for [r ret]

@@ -2,9 +2,6 @@
 
  {:duct.core/project-ns typing-ex
 
-  ;; dev/resources/
-  ;; :duct.server.http/jetty {:port 3002}
-
   :duct.router/ataraxy
   {:routes
    {[:get  "/login"] [:typing-ex.handler.core/login]
@@ -12,6 +9,7 @@
     [:get  "/logout"] [:typing-ex.handler.core/logout]
 
     [:get "/"] ^:auth [:typing-ex.handler.core/typing]
+
     [:get "/drill"] ^:auth [:typing-ex.handler.core/drill]
 
     [:get "/todays"] ^:auth [:typing-ex.handler.core/todays-act]
@@ -44,11 +42,21 @@
 
     [:get  "/restarts/" login]      [:typing-ex.handler.core/restarts login]
     [:get  "/restarts-page/" login] [:typing-ex.handler.core/restarts-page login]
-    [:post "/restarts"]             [:typing-ex.handler.core/restarts!]}
+    [:post "/restarts"]             [:typing-ex.handler.core/restarts!]
+
+    ;; alert -- returns (wcar* (cat/get "alert"))
+    [:get "/alert"] ^:auth [:typing-ex.handler.core/alert]
+    [:get "/alert-form"] ^:auth [:typing-ex.handler.core/alert-form]
+    [:post "/alert"] [:typing-ex.handler.core/alert!]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
+
+  ;; alert
+  :typing-ex.handler.core/alert {}
+  :typing-ex.handler.core/alert-form {}
+  :typing-ex.handler.core/alert! {}
 
   :typing-ex.handler.core/login      {:db #ig/ref :duct.database/sql}
   :typing-ex.handler.core/login-post {:db #ig/ref :duct.database/sql}
