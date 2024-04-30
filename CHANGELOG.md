@@ -26,6 +26,7 @@
 - スコアが二度提出されることがある。
 - good/bad last word
 - test mode enhanced
+- docker hub にプッシュするスクリプト。
 
 
 ## v2.8.893 / 2024-04-29

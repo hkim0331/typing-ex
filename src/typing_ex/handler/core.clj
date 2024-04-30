@@ -31,7 +31,7 @@
 
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
-(def ^:private redis-expire 3600)
+(def ^:private redis-expire 1200) ;; was 3600
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
 
