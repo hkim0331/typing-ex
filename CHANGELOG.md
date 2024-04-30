@@ -26,6 +26,7 @@
 - スコアが二度提出されることがある。
 - good/bad last word
 - test mode enhanced
+- docker hub にプッシュするスクリプト。
 
 ## v2.9.899 / 2024-05-01
 - resources/typing_ex/config.edn:
