@@ -27,6 +27,9 @@
 - good/bad last word
 - test mode enhanced
 - docker hub にプッシュするスクリプト。
+- exam 記録に時刻。
+- exam モードにタイムアウト。
+
 
 ## v2.9.907 / 2024-05-01
 - post "/exam"
