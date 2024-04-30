@@ -27,7 +27,7 @@
 - good/bad last word
 - test mode enhanced
 
-## v2.9-SNAPSHOT
+## v2.9.899 / 2024-05-01
 - resources/typing_ex/config.edn:
   [post "/exam"]
 - src/typing_ex/handler/core.clj:
