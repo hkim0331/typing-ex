@@ -7,7 +7,6 @@
    [environ.core :refer [env]]
    [hato.client :as hc]
    [integrant.core :as ig]
-   #_[integrant.repl.state :refer [system]]
    [java-time.api :as jt]
    [ring.util.anti-forgery :refer [anti-forgery-field]]
    [ring.util.response :refer [redirect]]
@@ -16,18 +15,26 @@
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
    [typing-ex.boundary.stat :as stat]
-   [typing-ex.view.page :as view]))
+   [typing-ex.view.page :as view]
+   ;;
+   [taoensso.carmine :as car :refer [wcar]]
+   [clojure.edn :as edn]))
 
-(comment
-  (env :tp-dev)
-  :rcf)
+;; (add-tap prn)
+;; (remove-tap prn)
 
-;; l22 の定義を変えるではなく，auth? で誤魔化す？
+(defonce my-conn-pool (car/connection-pool {}))
+(def     my-conn-spec {:uri "redis://redis:6379"})
+(def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
+;; changed by me, not ~my-wcar-opts.
+(defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
+
+
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+(def ^:private redis-expire 3600)
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
 
-;; FIXME: データベースに持っていかねば。
 (defn admin? [s]
   (let [admins #{"hkimura"}]
     (get admins s)))
@@ -39,6 +46,23 @@
   (try
     (name (get-in req [:session :identity]))
     (catch Exception _ nil)))
+
+;; alert
+(defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
+  (fn [_]
+    [::response/ok (wcar* (car/get "alert"))]))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert-form [_ _]
+  (fn [req]
+    (if (admin? (get-login req))
+      (view/alert-form req)
+      [::response/forbidden "admin only"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/alert! [_ _]
+  (fn [{{:keys [alert]} :params}]
+    (wcar* (car/set "alert" alert))
+    [::response/ok (str "alert!:" alert)]
+    (redirect "/total/7")))
 
 ;; login
 (defmethod ig/init-key :typing-ex.handler.core/login [_ _]
@@ -93,16 +117,15 @@
     <link rel='icon' href='/favicon.ico'>
   </head>
   <body>"
-      ;; DON'T FORGET
+      ;; DON'T FORGET. mandatory.
       (anti-forgery-field)
       (login-field (get-login req))
-      ;;
       "<div class='container'>
     <div id='app'>
       core/typing
     </div>
     <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
-    <script src='js/compiled/main.js' type='text/javascript'></script>
+    <script src='/js/compiled/main.js' type='text/javascript'></script>
     <script>typing_ex.typing.init();</script>
     </div>
   </body>
@@ -131,13 +154,6 @@
           ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
-;; (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
-;;   (fn [{[_ n] :ataraxy/result :as req}]
-;;     (let [days (Integer/parseInt n)
-;;           login (get-login req)
-;;           ex-days (results/find-ex-days db days)]
-;;       (view/ex-days-page ex-days login days))))
-
 (defn days [all login]
   (let [ret (filter (fn [x] (= login (:login x))) all)]
     (->> ret
@@ -146,23 +162,52 @@
          (filter #(< 9 %))
          count)))
 
-(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
-  (fn [{[_ n] :ataraxy/result :as req}]
-    (let [logins (results/users db)
+(defn- users-all [db]
+  (if-let [users-all (wcar* (car/get "users-all"))]
+    (edn/read-string users-all)
+    (let [ret (results/users db)]
+      (wcar* (car/setex "users-all" redis-expire (str ret)))
+      ret)))
+
+;; ----------------------
+;; FIXME: tagged literal
+;; ----------------------
+;; (defn- login-timestamp [db]
+;;   (if-let [login-timestamp (wcar* (car/get "login-timestamp"))]
+;;     (edn/read-string {:readers *data-readers*} login-timestamp)
+;;     (let [ret (results/login-timestamp db)]
+;;       (wcar* (car/setex "login-timestamp" 30 (str ret)))
+;;       ret)))
+
+(defn- training-days
+  "redis キャッシュ付きでバージョンアップ。"
+  [req db]
+  (tap> "training-days")
+  (if-let [training-days (wcar* (car/get "training-days"))]
+    (do
+      (tap> "hit")
+      training-days)
+    (let [logins (users-all db)
           all (results/login-timestamp db)
-          self (get-login req)]
+          training-days (->> (for [{:keys [login]} logins]
+                               [login (days all login)])
+                             (sort-by second >))]
+      (tap> "miss")
+      (wcar* (car/setex "training-days" redis-expire training-days))
+      training-days)))
+
+(defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
+  (fn [req]
+    (let [training-days (training-days req db)]
       (view/ex-days-page
-       self
-       (->> (for [{:keys [login]} logins]
-              [login (days all login)])
-            (sort-by second >))))))
+       (get-login req)
+       training-days))))
 
 ;; meta endpoint, dispatches to /total, /days and /max.
 (defmethod ig/init-key :typing-ex.handler.core/recent [_ _]
   (fn [req]
     (let [days (get-in req [:params :n])
           kind (get-in req [:query-params "kind"])]
-      ;; (println "kind" kind)
       (case kind
         "total" (redirect (str "/total/" days))
         "training days"  (redirect (str "/days/" days))
@@ -236,12 +281,13 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
-    (let [ret (->> (roll-calls/rc db (get-login req))
+    (let [login (get-login req)
+          ret (->> (roll-calls/rc db login)
                    (map :created_at)
                    (map date-only)
                    dedupe)]
       ;; (println (str ret))
-      (view/rc-page ret))))
+      (view/rc-page ret login))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]
   (fn [{{:keys [pt]} :params :as req}]
