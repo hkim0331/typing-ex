@@ -28,7 +28,7 @@
 - test mode enhanced
 - docker hub にプッシュするスクリプト。
 
-## v2.9.899 / 2024-05-01
+## v2.9.907 / 2024-05-01
 - post "/exam"
   - resources/typing_ex/config.edn:
   [post "/exam"]
