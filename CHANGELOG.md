@@ -28,6 +28,9 @@
 - test mode enhanced
 - docker hub にプッシュするスクリプト。
 
+## v2.9-SNAPSHOT
+- `% git remote prune origin`
+
 
 ## v2.8.893 / 2024-04-29
 - display end `datetime` in `/rc`.
