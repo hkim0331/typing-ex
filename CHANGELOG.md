@@ -27,6 +27,13 @@
 - good/bad last word
 - test mode enhanced
 
+## v2.9-SNAPSHOT
+- resources/typing_ex/config.edn:
+  [post "/exam"]
+- src/typing_ex/handler/core.clj:
+  (defmethod exam!)
+- src/typing_ex/typing.cljs:
+  (defn- exam-point! [login count pt])
 
 ## v2.8.893 / 2024-04-29
 - display end `datetime` in `/rc`.

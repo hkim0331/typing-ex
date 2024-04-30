@@ -9,7 +9,6 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-
 (def ^:private version "v2.8.893")
 
 (def ^:private timeout 60)
@@ -88,12 +87,25 @@ of yonder warehouses will not suffice."])
              (= all (+ goods bads)) (+ score seconds (- bs))
              :else (- score bs)))))
 
+(defn- exam-point!
+  "check mode, "
+  [login count pt]
+  (go (let [stat (-> (<! (http/get "/stat")) :body)]
+        (when (= stat "exam")
+          (let [ret (<! (http/post
+                         "/exam"
+                         {:form-params
+                          {:__anti-forgery-token (csrf-token),
+                           :login login
+                           :count count
+                           :pt pt}}))]
+            (.log js/console (str "exam-point! /exam" ret)))))))
+
 (defn show-score
   [pt]
   (if (empty? (:results @app-state))
     (js/alert (str "コピペはダメよ"))
-    (let [;; pt (:pt @app-state)
-          login (get-login)
+    (let [login (get-login)
           s1 (str login " さんのスコアは " pt " 点です。")
           s2 (condp <= pt
                100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -115,6 +127,9 @@ of yonder warehouses will not suffice."])
   (go (when-let [{:keys [body]} (<! (http/get "/alert"))]
         (when (re-find #"\S" body)
           (js/alert body))))
+  ;; 試験成績を記録するならここ。
+  ;; pt @mt-counter login
+  (exam-point! (get-login) @mt-counter pt)
   ;;
   (swap! app-state update :todays-trials inc)
   (when (< todays-limit (:todays-trials @app-state))

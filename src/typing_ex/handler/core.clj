@@ -47,6 +47,13 @@
     (name (get-in req [:session :identity]))
     (catch Exception _ nil)))
 
+;; exam!
+(defmethod ig/init-key :typing-ex.handler.core/exam! [_ _]
+  (fn [{{:keys [login count pt]} :params}]
+    (let [key (str login ":" count)]
+      (wcar* (car/set key pt))
+      [::response/ok "exam!"])))
+
 ;; alert
 (defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
   (fn [_]
