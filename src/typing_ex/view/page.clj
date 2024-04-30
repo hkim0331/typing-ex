@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.8.893")
+(def ^:private version "v2.9.907")
 
 ;--------------------------------
 ;; FIXME
@@ -345,7 +345,7 @@
    [:h2 "Typing: 出席データ(" login ")"]
    [:p "タイピングの背景が黄色い間にタイプ練習終了した時刻を記録している。"
     "タイピングのバージョンが 1.16.7 より低い時は"
-    "2 週目でやった「閲覧履歴の消去」でバージョンアップしよう。"
+    "「閲覧履歴の消去」でバージョンアップしよう。"
     [:a {:href "/stat-page"} "[admin only]"]]
    [:ul {:class "roll-call"}
     (for [r ret]

@@ -47,11 +47,18 @@
     ;; alert -- returns (wcar* (cat/get "alert"))
     [:get "/alert"] ^:auth [:typing-ex.handler.core/alert]
     [:get "/alert-form"] ^:auth [:typing-ex.handler.core/alert-form]
-    [:post "/alert"] [:typing-ex.handler.core/alert!]}
+    [:post "/alert"] [:typing-ex.handler.core/alert!]
+    ;; exam
+    [:post "/exam"] [:typing-ex.handler.core/exam!]
+    [:get "/exam/" login "/" ct] [:typing-ex.handler.core/exam login ct]}
 
    :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
+
+  ;; exam
+  :typing-ex.handler.core/exam! {}
+  :typing-ex.handler.core/exam {}
 
   ;; alert
   :typing-ex.handler.core/alert {}

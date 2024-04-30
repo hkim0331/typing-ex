@@ -26,7 +26,17 @@
 - スコアが二度提出されることがある。
 - good/bad last word
 - test mode enhanced
+- docker hub にプッシュするスクリプト。
 
+## v2.9.907 / 2024-05-01
+- post "/exam"
+  - resources/typing_ex/config.edn:
+  [post "/exam"]
+  - src/typing_ex/handler/core.clj:
+  (defmethod exam!)
+  - src/typing_ex/typing.cljs:
+  (defn- exam-point! [login count pt])
+- get "/exam/:login/:ct"
 
 ## v2.8.893 / 2024-04-29
 - display end `datetime` in `/rc`.
