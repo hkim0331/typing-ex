@@ -27,10 +27,22 @@
 - good/bad last word
 - test mode enhanced
 - docker hub にプッシュするスクリプト。
+- exam 記録に時刻。
+- exam モードにタイムアウト。
 
 ## v2.9-SNAPSHOT
 - `% git remote prune origin`
 
+
+## v2.9.907 / 2024-05-01
+- post "/exam"
+  - resources/typing_ex/config.edn:
+  [post "/exam"]
+  - src/typing_ex/handler/core.clj:
+  (defmethod exam!)
+  - src/typing_ex/typing.cljs:
+  (defn- exam-point! [login count pt])
+- get "/exam/:login/:ct"
 
 ## v2.8.893 / 2024-04-29
 - display end `datetime` in `/rc`.
