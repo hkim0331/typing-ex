@@ -54,6 +54,13 @@
       (wcar* (car/set key pt))
       [::response/ok "exam!"])))
 
+(defmethod ig/init-key :typing-ex.handler.core/exam [_ {:keys [db]}]
+  (fn [{[_ login ct] :ataraxy/result}]
+    (let [key (str login ":" ct)
+          ret (wcar* (car/get key))]
+      (prn "exam " key ret)
+      [::response/ok ret])))
+
 ;; alert
 (defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
   (fn [_]
