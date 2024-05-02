@@ -25,7 +25,30 @@
   -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
+- test mode enhanced
+- docker hub にプッシュするスクリプト。
+- exam 記録に時刻。時刻よりも日付。
+- exam モードにタイムアウト。
 
+
+## v2.9.917 / 2024-05-02
+- `% git remote prune origin`
+- added 5 lyrics.
+- improve drills/fetch-drill
+
+## v2.9.907 / 2024-05-01
+- post "/exam"
+  - resources/typing_ex/config.edn:
+  [post "/exam"]
+  - src/typing_ex/handler/core.clj:
+  (defmethod exam!)
+  - src/typing_ex/typing.cljs:
+  (defn- exam-point! [login count pt])
+- get "/exam/:login/:ct"
+
+## v2.8.893 / 2024-04-29
+- display end `datetime` in `/rc`.
+- 小窓の font-size 12pt.
 
 ## v2.8.888 / 2024-04-29
 - input alert message from /alert-form.

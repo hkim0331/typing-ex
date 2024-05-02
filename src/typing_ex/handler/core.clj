@@ -31,7 +31,7 @@
 
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
-(def ^:private redis-expire 3600)
+(def ^:private redis-expire 1200) ;; was 3600
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
 
@@ -46,6 +46,20 @@
   (try
     (name (get-in req [:session :identity]))
     (catch Exception _ nil)))
+
+;; exam!
+(defmethod ig/init-key :typing-ex.handler.core/exam! [_ _]
+  (fn [{{:keys [login count pt]} :params}]
+    (let [key (str login ":" count)]
+      (wcar* (car/set key pt))
+      [::response/ok "exam!"])))
+
+(defmethod ig/init-key :typing-ex.handler.core/exam [_ {:keys [db]}]
+  (fn [{[_ login ct] :ataraxy/result}]
+    (let [key (str login ":" ct)
+          ret (wcar* (car/get key))]
+      (prn "exam " key ret)
+      [::response/ok ret])))
 
 ;; alert
 (defmethod ig/init-key :typing-ex.handler.core/alert [_ _]
@@ -274,19 +288,25 @@
     (stat/stat! db stat)
     (redirect "/")))
 
-(defn- date-only
-  "datetime is a java.time.LocalDateTime object"
-  [datetime]
-  (first (str/split (str datetime) #"T")))
+;; (defn- date-only
+;;   "datetime is a java.time.LocalDateTime object"
+;;   [datetime]
+;;   (first (str/split (str datetime) #"T")))
+
+(defn- time-str
+  "Returns a string representation of a datetime in the local time zone."
+  [instant]
+  (jt/format
+   (jt/with-zone (jt/formatter "yyyy-MM-dd hh:mm a") (jt/zone-id))
+   instant))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc [_ {:keys [db]}]
   (fn [req]
     (let [login (get-login req)
           ret (->> (roll-calls/rc db login)
                    (map :created_at)
-                   (map date-only)
+                   (map time-str)
                    dedupe)]
-      ;; (println (str ret))
       (view/rc-page ret login))))
 
 (defmethod ig/init-key :typing-ex.handler.core/rc! [_ {:keys [db]}]

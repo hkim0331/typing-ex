@@ -9,8 +9,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-
-(def ^:private version "v2.8.888")
+(def ^:private version "v2.9.917")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -34,6 +33,7 @@
 (defn csrf-token []
   (.-value (.getElementById js/document "__anti-forgery-token")))
 
+
 (def little-prince
   ["An aviator whose plane is forced down in the Sahara Desert
 encounters a little prince from a small planet who relates
@@ -49,7 +49,6 @@ anyone be frightened by a hat?' My drawing did not represent
 a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
 
-;; from Moby-Dick
 (def moby-dick
   ["Call me Ishmael. Some years ago—never mind how long precisely
 having little or no money in my purse, and nothing particular to
@@ -88,12 +87,25 @@ of yonder warehouses will not suffice."])
              (= all (+ goods bads)) (+ score seconds (- bs))
              :else (- score bs)))))
 
+(defn- exam-point!
+  "check mode, "
+  [login count pt]
+  (go (let [stat (-> (<! (http/get "/stat")) :body)]
+        (when (= stat "exam")
+          (let [ret (<! (http/post
+                         "/exam"
+                         {:form-params
+                          {:__anti-forgery-token (csrf-token),
+                           :login login
+                           :count count
+                           :pt pt}}))]
+            (.log js/console (str "exam-point! /exam" ret)))))))
+
 (defn show-score
   [pt]
   (if (empty? (:results @app-state))
     (js/alert (str "コピペはダメよ"))
-    (let [;; pt (:pt @app-state)
-          login (get-login)
+    (let [login (get-login)
           s1 (str login " さんのスコアは " pt " 点です。")
           s2 (condp <= pt
                100 "すばらしい。最高点取れた？平均で 80 点越えよう。"
@@ -111,12 +123,13 @@ of yonder warehouses will not suffice."])
                    (apply str (:results @app-state))
                    "\n\n"
                    (:text  @app-state))))))
-  ;; VScode, 2024-04-26
-  ;; (when (< (:todays-trials @app-state) 3)
-  ;;   (js/alert "VScode?"))
+  ;; /alert で取れる情報(文字列)をアラートに出す。
   (go (when-let [{:keys [body]} (<! (http/get "/alert"))]
         (when (re-find #"\S" body)
           (js/alert body))))
+  ;; 試験成績を記録するならここ。
+  ;; pt @mt-counter login
+  (exam-point! (get-login) @mt-counter pt)
   ;;
   (swap! app-state update :todays-trials inc)
   (when (< todays-limit (:todays-trials @app-state))
@@ -218,10 +231,11 @@ of yonder warehouses will not suffice."])
   (fn []
     [:div {:class (:stat @app-state)}
      [:h2 "Typing: Challenge"]
-     [:p {:class "red"}
-      "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
+     #_[:p {:class "red"}
+        "ノーミスゴールでボーナス。単語間のスペースは一個で。"]
      [:pre {:id "example"} (:text @app-state)]
      [:textarea {:name "answer"
+                 :placeholder "ノーミスゴールでボーナス。単語間のスペースは一個で。キーボード見るなよ。"
                  :id "drill"
                  :value (:answer @app-state)
                  :on-key-up #(check-key (.-key %))
