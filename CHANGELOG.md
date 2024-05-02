@@ -27,9 +27,14 @@
 - good/bad last word
 - test mode enhanced
 - docker hub にプッシュするスクリプト。
-- exam 記録に時刻。
+- exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 
+
+## v2.9.917 / 2024-05-02
+- `% git remote prune origin`
+- added 5 lyrics.
+- improve drills/fetch-drill
 
 ## v2.9.907 / 2024-05-01
 - post "/exam"
