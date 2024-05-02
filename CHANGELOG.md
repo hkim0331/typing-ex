@@ -31,7 +31,7 @@
 - exam モードにタイムアウト。
 
 
-## v2.9-SNAPSHOT
+## v2.9.923 / 2024-05-02
 - link to rp.melt in header.
 
 
