@@ -58,7 +58,7 @@
    (form-to
     [:post "/alert"]
     (anti-forgery-field)
-    (text-field {:placeholder "alert" :size 40} "alert")
+    (text-field {:placeholder "alert" :size 70} "alert")
     [:br]
     (submit-button  "set"))))
 
@@ -91,11 +91,6 @@
     ;;       :class "btn btn-info btn-sm"}
     ;;   "Py99"]
     ;;  "&nbsp;"
-     ;; literacy reports
-     ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
-     ;;       :class "btn btn-info btn-sm"}
-     ;;   "RP"]
-     ;;  "&nbsp;"
      [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
@@ -113,6 +108,10 @@
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
       "L22"]
+     "&nbsp;"
+     [:a {:href "http://rp.melt.kyutech.ac.jp/"
+          :class "btn btn-success btn-sm"}
+      "RP"]
      "&nbsp;"
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
    [:div.row
@@ -158,9 +157,7 @@
               " "
               [:a {:href (str "/record/" login)
                    :class (if (= login user) "yes" "other")}
-               login]])])]
-  ;;  (headline days)
-   ))
+               login]])])]))
 
 (defn- count-ex-days
   [days login]
