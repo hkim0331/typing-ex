@@ -33,6 +33,8 @@
 
 ## v2.9-SNAPSHOT
 - `% git remote prune origin`
+- added 5 lyrics.
+- improve drills/fetch-drill
 
 ## v2.9.907 / 2024-05-01
 - post "/exam"
