@@ -31,7 +31,7 @@
 - exam モードにタイムアウト。
 
 
-## v2.9-SNAPSHOT
+## v2.9.917 / 2024-05-02
 - `% git remote prune origin`
 - added 5 lyrics.
 - improve drills/fetch-drill
