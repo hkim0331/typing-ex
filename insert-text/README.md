@@ -6,15 +6,11 @@
     % neil add dep com.github.seancorfield/next.jdbc
     % neil add dep org.postgresql/postgresql
 
-## Installation
-
 ## Usage
 
-## Options
-
-
-## Examples
-
+    % for i in resouces/*.txt; do
+    > clj -M:main $i
+    > done
 
 ### Bugs
 

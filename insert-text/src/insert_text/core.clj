@@ -47,5 +47,5 @@
   (-main "resources/count_on_me.txt")
   (-main "resources/shape_of_you.txt")
   (-main "resources/suddenly.txt")
-  (sql/query ds ["select text from drills where id=?" 702]) cd
+  (sql/query ds ["select text from drills where id=?" 702])
   :rcf)
