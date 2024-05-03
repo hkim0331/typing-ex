@@ -14,7 +14,6 @@
 (def ^:private version "v2.9.923")
 
 ;--------------------------------
-;; FIXME
 (defn- ss
   "shorten string"
   [s]
@@ -223,7 +222,7 @@
       [:br]
       "TOTAL は全スコア、TODAYS は本日分（10回以上練習）、
           DAY BY DAY は一日平均。"]
-     ;; FIXME: start date
+     ;; start date
      [:div.d-inline-flex
       [:div.px-2.mx-auto
        (scatter 300 150 (map :pt scores))
@@ -237,8 +236,8 @@
       [:div.px-2]]
 
      ;; 最初の日から今日までの日付を横軸とするグラフを（別に）書く。
-     ;; FIXME: start date を合わせなくちゃ。
-     ;;        欠測の日もあるので、scores からは start-day を出せない。
+     ;; start date を合わせなくちゃ。
+     ;; 欠測の日もあるので、scores からは start-day を出せない。
      [:div.px-2
       (scatter 300 150 (average-day-by-day
                         (or (env :tp-start) "2023-04-01")
