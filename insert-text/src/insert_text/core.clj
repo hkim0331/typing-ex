@@ -28,8 +28,9 @@
   "SQL: insert into drills (text) values (s)"
   [s]
   (tap> s)
-  (let [ret (sql/insert! ds :drills {:text s})]
-    ret))
+  (dotimes [_ 2]
+    (let [ret (sql/insert! ds :drills {:text s})]
+      ret)))
 
 (defn insert-from-file
   [filename]

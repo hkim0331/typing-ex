@@ -3,7 +3,8 @@
  {:duct.core/project-ns typing-ex
 
   :duct.router/ataraxy
-  {:routes
+  {:middleware {:auth #ig/ref :typing-ex.middleware/auth}
+   :routes
    {[:get  "/login"] [:typing-ex.handler.core/login]
     [:post "/login" {params :form-params}] [:typing-ex.handler.core/login-post params]
     [:get  "/logout"] [:typing-ex.handler.core/logout]
@@ -50,9 +51,7 @@
     [:post "/alert"] [:typing-ex.handler.core/alert!]
     ;; exam
     [:post "/exam"] [:typing-ex.handler.core/exam!]
-    [:get "/exam/" login "/" ct] [:typing-ex.handler.core/exam login ct]}
-
-   :middleware {:auth #ig/ref :typing-ex.middleware/auth}}
+    [:get "/exam/" login "/" ct] [:typing-ex.handler.core/exam login ct]}}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
 
