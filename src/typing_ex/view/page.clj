@@ -290,10 +290,9 @@
                   :class (if (= login (:login r)) "yes" "other")}
               (:login r)]
              "&nbsp;"
-             #_[:a {:href (str "https://hp.melt.kyutech.ac.jp/"
-                               (:login r))}
-                "(RP)"]]))]
-   #_(headline 7)))
+             [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
+                             (:login r))}
+              "(RP)"]]))]))
 
 (defn sums-page [ret user n]
   (page

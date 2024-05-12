@@ -38,7 +38,6 @@
 (defn db []
   (-> system (ig/find-derived-1 :duct.database/sql) val :spec))
 
-(db)
 (defn q [sql]
   (jdbc/query (db) sql))
 

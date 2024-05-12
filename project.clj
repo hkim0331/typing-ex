@@ -15,9 +15,6 @@
                  [environ "1.2.0"]
                  [hato "0.9.0"]
                  [hiccup "1.0.5"]
-                 ;; develop only?
-                 ;; [integrant/repl "0.3.2"]
-                 ;;
                  [com.taoensso/carmine "3.3.2"]
                  [org.clojure/clojure "1.11.3"]
                  [org.postgresql/postgresql "42.7.3"]]
