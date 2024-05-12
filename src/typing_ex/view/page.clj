@@ -290,9 +290,11 @@
                   :class (if (= login (:login r)) "yes" "other")}
               (:login r)]
              "&nbsp;"
+             ;; 2024-05-12, need VPN
              [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
                              (:login r))}
-              "(RP)"]]))]))
+              "(RP)"]
+             ]))]))
 
 (defn sums-page [ret user n]
   (page

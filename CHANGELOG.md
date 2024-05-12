@@ -30,6 +30,8 @@
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 
+## v2.9-SNAPSHOT
+- link to report page.
 
 ## v2.9.923 / 2024-05-02
 - link to rp.melt in header.
