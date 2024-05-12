@@ -28,8 +28,9 @@
   "SQL: insert into drills (text) values (s)"
   [s]
   (tap> s)
-  (let [ret (sql/insert! ds :drills {:text s})]
-    ret))
+  (dotimes [_ 2]
+    (let [ret (sql/insert! ds :drills {:text s})]
+      ret)))
 
 (defn insert-from-file
   [filename]
@@ -47,5 +48,5 @@
   (-main "resources/count_on_me.txt")
   (-main "resources/shape_of_you.txt")
   (-main "resources/suddenly.txt")
-  (sql/query ds ["select text from drills where id=?" 702]) cd
+  (sql/query ds ["select text from drills where id=?" 702])
   :rcf)
