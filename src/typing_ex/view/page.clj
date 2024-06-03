@@ -11,10 +11,9 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.9.917")
+(def ^:private version "v2.10.932")
 
 ;--------------------------------
-;; FIXME
 (defn- ss
   "shorten string"
   [s]
@@ -58,7 +57,7 @@
    (form-to
     [:post "/alert"]
     (anti-forgery-field)
-    (text-field {:placeholder "alert" :size 40} "alert")
+    (text-field {:placeholder "alert" :size 70} "alert")
     [:br]
     (submit-button  "set"))))
 
@@ -91,11 +90,6 @@
     ;;       :class "btn btn-info btn-sm"}
     ;;   "Py99"]
     ;;  "&nbsp;"
-     ;; literacy reports
-     ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
-     ;;       :class "btn btn-info btn-sm"}
-     ;;   "RP"]
-     ;;  "&nbsp;"
      [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
@@ -113,6 +107,10 @@
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
       "L22"]
+     "&nbsp;"
+     [:a {:href "http://rp.melt.kyutech.ac.jp/"
+          :class "btn btn-success btn-sm"}
+      "RP"]
      "&nbsp;"
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
    [:div.row
@@ -158,9 +156,7 @@
               " "
               [:a {:href (str "/record/" login)
                    :class (if (= login user) "yes" "other")}
-               login]])])]
-  ;;  (headline days)
-   ))
+               login]])])]))
 
 (defn- count-ex-days
   [days login]
@@ -226,7 +222,7 @@
       [:br]
       "TOTAL は全スコア、TODAYS は本日分（10回以上練習）、
           DAY BY DAY は一日平均。"]
-     ;; FIXME: start date
+     ;; start date
      [:div.d-inline-flex
       [:div.px-2.mx-auto
        (scatter 300 150 (map :pt scores))
@@ -240,8 +236,8 @@
       [:div.px-2]]
 
      ;; 最初の日から今日までの日付を横軸とするグラフを（別に）書く。
-     ;; FIXME: start date を合わせなくちゃ。
-     ;;        欠測の日もあるので、scores からは start-day を出せない。
+     ;; start date を合わせなくちゃ。
+     ;; 欠測の日もあるので、scores からは start-day を出せない。
      [:div.px-2
       (scatter 300 150 (average-day-by-day
                         (or (env :tp-start) "2023-04-01")

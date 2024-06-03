@@ -30,6 +30,12 @@
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 
+## v2.10.932 / 2024-06-03
+- postgresql 14.12
+-
+## v2.9.923 / 2024-05-02
+- link to rp.melt in header.
+
 
 ## v2.9.917 / 2024-05-02
 - `% git remote prune origin`
