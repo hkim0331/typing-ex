@@ -63,7 +63,8 @@ and seemingly bound for a dive. Strange! Nothing will content them
 but the extremest limit of the land; loitering under the shady lee
 of yonder warehouses will not suffice."])
 
-(def mt little-prince)
+;; (def mt little-prince)
+(def mt moby-dick)
 
 (defonce ^:private mt-counter (atom 0))
 
