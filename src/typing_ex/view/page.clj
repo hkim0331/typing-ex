@@ -291,9 +291,8 @@
               (:login r)]
              "&nbsp;"
              ;; 2024-05-12, need VPN
-            ;;  [:a {:href (str "https://hp.melt.kyutech.ac.jp/" (:login r))}
-            ;;   "(RP)"]]
-             ]))]))
+             [:a {:href (str "https://hp.melt.kyutech.ac.jp/" (:login r))}
+              "(RP)"]]))]))
 
 (defn sums-page [ret user n]
   (page
