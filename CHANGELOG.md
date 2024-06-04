@@ -30,6 +30,8 @@
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 
+## v2.11-SNAPSHOT
+
 ## v2.11.945 / 2024-06-04
 - enabled links to report pages again.
 - set (str "login:" (mod (Integer/parseInt count) 3) pt) to redis.
