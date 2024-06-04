@@ -50,7 +50,8 @@
 ;; exam!
 (defmethod ig/init-key :typing-ex.handler.core/exam! [_ _]
   (fn [{{:keys [login count pt]} :params}]
-    (let [key (str login ":" count)]
+    ;; (println "handler.core " login count pt)
+    (let [key (str login ":" (mod (Integer/parseInt count) 3))]
       (wcar* (car/set key pt))
       [::response/ok "exam!"])))
 

@@ -31,13 +31,13 @@
 - exam モードにタイムアウト。
 
 ## v2.11-SNAPSHOT
-- enabled links to report pages.
+- enabled links to report pages again.
+- set (str "login:" (mod (Integer/parseInt count) 3) pt) to redis.
 
 ## v2.10.932 / 2024-06-03
 - postgresql 14.12
 ## v2.9.923 / 2024-05-02
 - link to rp.melt in header.
-
 
 ## v2.9.917 / 2024-05-02
 - `% git remote prune origin`
