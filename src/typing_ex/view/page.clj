@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.9.935")
+(def ^:private version "v2.11.945")
 
 ;--------------------------------
 (defn- ss
@@ -291,10 +291,8 @@
               (:login r)]
              "&nbsp;"
              ;; 2024-05-12, need VPN
-             [:a {:href (str "https://hp.melt.kyutech.ac.jp/"
-                             (:login r))}
-              "(RP)"]
-             ]))]))
+             [:a {:href (str "https://hp.melt.kyutech.ac.jp/" (:login r))}
+              "(RP)"]]))]))
 
 (defn sums-page [ret user n]
   (page
