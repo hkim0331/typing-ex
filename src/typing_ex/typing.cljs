@@ -9,7 +9,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "v2.11.945")
+(def ^:private version "v2.11.952")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)
@@ -50,7 +50,7 @@ a hat. It was supposed to be a boa constrictor digesting elephant.
 "])
 
 (def moby-dick
-  ["Call me Ishmael. Some years ago—never mind how long precisely
+  ["Call me Ishmael. Some years ago-never mind how long precisely
 having little or no money in my purse, and nothing particular to
 interest me on shore, I thought I would sail about a little
 and see the watery part of the world."
@@ -66,7 +66,7 @@ of yonder warehouses will not suffice."])
 ;; (def mt little-prince)
 (def mt moby-dick)
 
-(defonce ^:private mt-counter (atom 0))
+(defonce ^:private mt-counter (atom -1))
 
 (def points-debug (atom {}))
 
