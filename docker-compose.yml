@@ -30,9 +30,9 @@ services:
       - data:/var/lib/postgresql/data
 
   redis:
-    image: redis
+    image: redis:6
     volumes:
-      - redis:/data
+      - ./db-dumps/redis:/data
 
 volumes:
   data:
@@ -41,5 +41,5 @@ volumes:
     external: true
   m2:
     external: true
-  redis:
-    driver: local
+  # redis:
+  #   driver: local

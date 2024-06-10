@@ -30,6 +30,14 @@
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 
+## v2.12-SNAPSHOT
+- updated libraries.
+
+| :file       | :name                             | :current | :latest |
+|------------ | --------------------------------- | -------- | --------|
+| project.clj | com.github.seancorfield/next.jdbc | 1.3.925  | 1.3.939 |
+|             | com.taoensso/carmine              | 3.3.2    | 3.4.1   |
+
 ## v2.11.952 / 2024-06-04
 - fixed something wrong char in moby-dick inside 'ago-never'.
 
