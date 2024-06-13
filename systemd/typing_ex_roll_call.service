@@ -2,8 +2,8 @@
 Description=typing_ex stat=roll_call
 
 [Service]
-WorkingDirectory=/home/hkim/typing-ex/systemd
+WorkingDirectory=/home/ubuntu/typing-ex/systemd
 Environment=PGPASSWORD=password
-ExecStart=/bin/sh update-stat.sh roll_call
-User=hkim
+ExecStart=/bin/sh stat-update.sh roll_call
+User=ubuntu
 Type=oneshot

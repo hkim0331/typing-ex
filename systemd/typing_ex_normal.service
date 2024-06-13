@@ -2,8 +2,8 @@
 Description=typing_ex stat=normal
 
 [Service]
-WorkingDirectory=/home/hkim/typing-ex/systemd
+WorkingDirectory=/home/ubuntu/typing-ex/systemd
 Environment=PGPASSWORD=password
-ExecStart=/bin/sh update-stat.sh normal
-User=hkim
+ExecStart=/bin/sh stat-update.sh normal
+User=ubuntu
 Type=oneshot
