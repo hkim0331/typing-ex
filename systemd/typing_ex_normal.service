@@ -1,0 +1,9 @@
+[Unit]
+Description=typing_ex stat=normal
+
+[Service]
+WorkingDirectory=/home/ubuntu/typing-ex/systemd
+Environment=PGPASSWORD=password
+ExecStart=/bin/sh stat-update.sh normal
+User=ubuntu
+Type=oneshot

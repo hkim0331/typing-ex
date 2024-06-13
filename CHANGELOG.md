@@ -11,24 +11,34 @@
 ## Unreleased
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- hiccup.page/html5 は警告されない。hiccup.form/form-to は警告される理由。
 - 環境変数の参照以外に develop/production を判定する方法。
   devcontainer 時、(env :tp-dev) が解決できてない。
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
 - n 回で強制的にやめさすには？
 - (reset) が必要になるケースはどんなケース？
-- redis が使えない時、デグレードする。
-  -> redis がない時は考えなくていい。コンテナで開発するならいつでも redis は手に入る。
 - テストモード、3回の平均で ⭕️ ❌ をつける。
 - 「授業中は練習なしよ」モード
   -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
-- test mode enhanced
 - docker hub にプッシュするスクリプト。
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
+- systemd timer, `normal.sh` and `roll-call.sh`.
+
+
+## v2.12.965 / 2024-06-13
+- added `systemd` dir. to provide realtime timer facilities.
+  to enter `roll-call` mode at 08:45 and leave back to `normal` mode at 09:00.
+  Duct requires anti-forgery-token provided when POST.
+  Directry change typing_ex.stat value from script invoked from systemd-timer.
+- updated libraries.
+
+| :file       | :name                             | :current | :latest |
+|------------ | --------------------------------- | -------- | --------|
+| project.clj | com.github.seancorfield/next.jdbc | 1.3.925  | 1.3.939 |
+|             | com.taoensso/carmine              | 3.3.2    | 3.4.1   |
 
 ## v2.11.952 / 2024-06-04
 - fixed something wrong char in moby-dick inside 'ago-never'.

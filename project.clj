@@ -1,4 +1,4 @@
-(defproject typing-ex "v2.11.952"
+(defproject typing-ex "v2.12.965"
   :description "typing exercises for literacy classes"
   :url "https://tp.melt.kyutech.ac.jp"
   :min-lein-version "2.0.0"
@@ -6,7 +6,7 @@
                  [buddy/buddy-hashers "2.0.167"]
                  [cheshire/cheshire "5.13.0"]
                  [clojure.java-time/clojure.java-time "1.4.2"]
-                 [com.github.seancorfield/next.jdbc "1.3.925"]
+                 [com.github.seancorfield/next.jdbc "1.3.939"]
                  [duct/core "0.8.1"]
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
@@ -15,7 +15,7 @@
                  [environ "1.2.0"]
                  [hato "0.9.0"]
                  [hiccup "1.0.5"]
-                 [com.taoensso/carmine "3.3.2"]
+                 [com.taoensso/carmine "3.4.1"]
                  [org.clojure/clojure "1.11.3"]
                  [org.postgresql/postgresql "42.7.3"]]
   :plugins [[duct/lein-duct "0.12.3"]]
