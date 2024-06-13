@@ -26,12 +26,13 @@
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
 - systemd timer, `normal.sh` and `roll-call.sh`.
+
+
+## v2.12-SNAPSHOT
 - added `systemd` dir. to provide realtime timer facilities.
   to enter `roll-call` mode at 08:45 and leave back to `normal` mode at 09:00.
   Duct requires anti-forgery-token provided when POST.
   Directry change typing_ex.stat value from script invoked from systemd-timer.
-
-## v2.12-SNAPSHOT
 - updated libraries.
 
 | :file       | :name                             | :current | :latest |

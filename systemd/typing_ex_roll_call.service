@@ -4,6 +4,6 @@ Description=typing_ex stat=roll_call
 [Service]
 WorkingDirectory=/home/ubuntu/typing-ex/systemd
 Environment=PGPASSWORD=password
-ExecStart=/bin/sh stat-update.sh roll_call
+ExecStart=/bin/sh stat-update.sh roll-call
 User=ubuntu
 Type=oneshot

@@ -173,6 +173,7 @@ of yonder warehouses will not suffice."])
                         :body))
             words (str/split drill #"\s+")
             next (first words)]
+        (js/console.log (str "reset-display! stat " stat))
         (swap! app-state assoc
                :stat stat
                :text drill
