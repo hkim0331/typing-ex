@@ -28,7 +28,7 @@
 - systemd timer, `normal.sh` and `roll-call.sh`.
 
 
-## v2.12-SNAPSHOT
+## v2.12.965 / 2024-06-13
 - added `systemd` dir. to provide realtime timer facilities.
   to enter `roll-call` mode at 08:45 and leave back to `normal` mode at 09:00.
   Duct requires anti-forgery-token provided when POST.
