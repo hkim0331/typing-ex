@@ -1,0 +1,11 @@
+[Unit]
+Description=typing_ex stat=normal
+
+[Service]
+WorkingDirectory=/home/ubuntu/typing_ex
+ExecStart=/bin/sh update-stat.sh normal
+User=ubuntu
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+[Unit]
+Description=typing_ex stat=normal
+
+[Timer]
+OnCalendar=Wed *-*-* 8:45,10:25
+
+[Install]
+WantedBy=timers.target
