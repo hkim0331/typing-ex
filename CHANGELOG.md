@@ -27,6 +27,8 @@
 - exam モードにタイムアウト。
 - systemd timer, `normal.sh` and `roll-call.sh`.
 
+## v2.12-SNAPSHOT
+- プロダクションでは (js.console/log) を出さないの？
 
 ## v2.12.965 / 2024-06-13
 - added `systemd` dir. to provide realtime timer facilities.
