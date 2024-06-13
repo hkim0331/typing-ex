@@ -35,8 +35,8 @@
 
     ;; TODO ^:auth when deploy
     [:get  "/stat-page"] ^:auth [:typing-ex.handler.core/stat-page]
-    [:get  "/stat"] [:typing-ex.handler.core/stat]
-    [:post "/stat"] [:typing-ex.handler.core/stat!]
+    [:get  "/stat"]             [:typing-ex.handler.core/stat]
+    [:post "/stat"]             [:typing-ex.handler.core/stat!]
 
     [:get  "/rc"] ^:auth [:typing-ex.handler.core/rc]
     [:post "/rc"]        [:typing-ex.handler.core/rc!]
@@ -46,18 +46,18 @@
     [:post "/restarts"]             [:typing-ex.handler.core/restarts!]
 
     ;; alert -- returns (wcar* (cat/get "alert"))
-    [:get "/alert"] ^:auth [:typing-ex.handler.core/alert]
+    [:get "/alert"] ^:auth      [:typing-ex.handler.core/alert]
     [:get "/alert-form"] ^:auth [:typing-ex.handler.core/alert-form]
-    [:post "/alert"] [:typing-ex.handler.core/alert!]
+    [:post "/alert"]            [:typing-ex.handler.core/alert!]
     ;; exam
-    [:post "/exam"] [:typing-ex.handler.core/exam!]
+    [:post "/exam"]              [:typing-ex.handler.core/exam!]
     [:get "/exam/" login "/" ct] [:typing-ex.handler.core/exam login ct]}}
 
   :typing-ex.middleware/auth  {:db #ig/ref :duct.database/sql}
 
   ;; exam
   :typing-ex.handler.core/exam! {}
-  :typing-ex.handler.core/exam {}
+  :typing-ex.handler.core/exam  {}
 
   ;; alert
   :typing-ex.handler.core/alert {}
