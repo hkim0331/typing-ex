@@ -25,10 +25,12 @@
 - docker hub にプッシュするスクリプト。
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
-- systemd timer, `normal.sh` and `roll-call.sh`.
+
+- プロダクションでは (js.console/log) を出さないの？
 
 ## v2.12-SNAPSHOT
-- プロダクションでは (js.console/log) を出さないの？
+### Fixed
+- systemd timer.
 
 ## v2.12.965 / 2024-06-13
 - added `systemd` dir. to provide realtime timer facilities.
