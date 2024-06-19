@@ -6,10 +6,18 @@ start:
 	systemctl start typing_ex_normal.timer
 	systemctl start typing_ex_roll_call.timer
 
+enable:
+	systemctl enable typing_ex_normal.timer
+	systemctl enable typing_ex_roll_call.timer
+
 stop:
 	systemctl stop typing_ex_normal.timer
 	systemctl stop typing_ex_roll_call.timer
 
-uninstall:
+disable: stop
+	systemctl disable typing_ex_normal.timer
+	systemctl disable typing_ex_roll_call.timer
+
+suninstall:
 	${RM} /lib/systemd/system/typing_ex_normal.*
 	${RM} /lib/systemd/system/typing_ex_roll_call.*
