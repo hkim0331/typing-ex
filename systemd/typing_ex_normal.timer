@@ -2,8 +2,9 @@
 Description=typing_ex stat=normal
 
 [Timer]
-OnCalendar=Wed 9:00
-OnCalendar=Wed 10:40
+OnCalendar=*:*:00
+#OnCalendar=Wed 9:00
+#OnCalendar=Wed 10:40
 
 [Install]
 WantedBy=timers.target
