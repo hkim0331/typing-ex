@@ -24,14 +24,14 @@
 ;; (remove-tap prn)
 
 (defonce my-conn-pool (car/connection-pool {}))
-(def     my-conn-spec {:uri "redis://redis:6379"})
+(def     my-conn-spec {:uri "redis://db:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 ;; changed by me, not ~my-wcar-opts.
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
-(def ^:private redis-expire 1200) ;; was 3600
+(def ^:private redis-expire 3600)
 
 (def typing-start (or (env :tp-start) "2024-04-01"))
 

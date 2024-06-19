@@ -25,8 +25,11 @@
 - docker hub にプッシュするスクリプト。
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
-
 - プロダクションでは (js.console/log) を出さないの？
+
+## v2.12-SNAPSHOT
+### Changed
+- redis://redis:6379 -> redis://db:6379
 
 ## v2.12.975 / 2024-06-19
 ### Fixed
