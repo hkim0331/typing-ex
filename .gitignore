@@ -16,9 +16,9 @@ pom.xml.asc
 ## clojure
 !/initdb.d/*.sql
 /.calva
-/.clj-kondo
+/.clj-kondo/.cache
 /.env
-/.lsp
+/.lsp/.cache
 /.m2
 /.shadow-cljs
 /.nrepl-port
