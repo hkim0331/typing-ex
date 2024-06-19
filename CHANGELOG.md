@@ -28,7 +28,7 @@
 
 - プロダクションでは (js.console/log) を出さないの？
 
-## v2.12-SNAPSHOT
+## v2.12.975 / 2024-06-19
 ### Fixed
 - systemd timer.
 
