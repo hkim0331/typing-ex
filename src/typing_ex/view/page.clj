@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.12.965")
+(def ^:private version "2.13.981")
 
 ;--------------------------------
 (defn- ss
@@ -320,7 +320,7 @@
   [stat]
   ;; (println "stat " stat)
   (page
-   [:h2 "Typing: Stat"]
+   [:h2 "Typing: Stat (Redis)"]
    (form-to
     [:post "/stat"]
     (anti-forgery-field)
@@ -331,6 +331,7 @@
           {:type "radio" :name "stat" :value val :checked "checked"}
           {:type "radio" :name "stat" :value val})
         val]])
+    [:input {:name "minutes" :value "15"}]
     [:input.btn.btn-primary.btn-sm {:type "submit" :value "change"}])))
 
 ;; roll-call

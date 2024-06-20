@@ -27,11 +27,10 @@ or from VScode, choose  REPL -> Leiningen after `yarn watch`.
 
     $ make deploy
 
-
 ## require
 
-* postgresql 14.*
-* redis
+* postgresql 14
+* redis 6
 * jre >= 11
 
 

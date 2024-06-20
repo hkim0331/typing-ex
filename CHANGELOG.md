@@ -25,10 +25,19 @@
 - docker hub にプッシュするスクリプト。
 - exam 記録に時刻。時刻よりも日付。
 - exam モードにタイムアウト。
-
 - プロダクションでは (js.console/log) を出さないの？
+- want change stat by httpie, but,
+```
+% http -pb :3000 stat=exam minites=1
+<h1>Invalid anti-forgery token</h1>
+```
 
-## v2.12-SNAPSHOT
+## 2.13.981 / 2024-06-20
+### Changed
+- redis://redis:6379 -> redis://db:6379
+- use redis administrating `stat`.
+
+## v2.12.975 / 2024-06-19
 ### Fixed
 - systemd timer.
 
