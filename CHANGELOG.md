@@ -32,7 +32,7 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
-## 2.13.981 / 2024-06-20
+## v2.13.984 / 2024-06-20
 ### Changed
 - redis://redis:6379 -> redis://db:6379
 - use redis administrating `stat`.
