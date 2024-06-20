@@ -26,7 +26,7 @@
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://db:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
-;; changed by me, not ~my-wcar-opts.
+
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
 
@@ -274,19 +274,26 @@
                    reverse)]
       (view/todays-act-page ret (get-login req)))))
 
-(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
-  (fn [_]
-    [::response/ok (:stat (stat/stat db))]))
+(defn- current-stat []
+  (if-let [stat (wcar* (car/get "stat"))]
+    stat
+    "normal"))
 
 (defmethod ig/init-key :typing-ex.handler.core/stat-page [_ {:keys [db]}]
   (fn [req]
     (if (= "hkimura" (get-login req))
-      (view/stat-page (:stat (stat/stat db)))
+      (view/stat-page (current-stat))
       [::response/forbidden "ACCESS FORBIDDEN"])))
 
+(defmethod ig/init-key :typing-ex.handler.core/stat [_ {:keys [db]}]
+  (fn [_]
+    [::response/ok (current-stat)]))
+
 (defmethod ig/init-key :typing-ex.handler.core/stat! [_ {:keys [db]}]
-  (fn [{{:keys [stat]} :params}]
-    (stat/stat! db stat)
+  (fn [{{:keys [stat minutes]} :params}]
+    (wcar* (car/setex "stat"
+                      (* 60 (Long/parseLong minutes))
+                      stat))
     (redirect "/")))
 
 ;; (defn- date-only

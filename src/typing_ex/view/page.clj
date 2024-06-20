@@ -320,7 +320,7 @@
   [stat]
   ;; (println "stat " stat)
   (page
-   [:h2 "Typing: Stat"]
+   [:h2 "Typing: Stat (Redis)"]
    (form-to
     [:post "/stat"]
     (anti-forgery-field)
@@ -331,6 +331,7 @@
           {:type "radio" :name "stat" :value val :checked "checked"}
           {:type "radio" :name "stat" :value val})
         val]])
+    [:input {:name "minutes" :value "15"}]
     [:input.btn.btn-primary.btn-sm {:type "submit" :value "change"}])))
 
 ;; roll-call
