@@ -32,6 +32,10 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
+## v2.14-SNAPSHOT
+- re-re-exam.
+  データベースをバックアップし、typing_ex.results テーブルの全データをデリートした。
+
 ## v2.13.984 / 2024-06-20
 ### Changed
 - redis://redis:6379 -> redis://db:6379
