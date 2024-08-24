@@ -32,7 +32,7 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
-## v2.14-SNAPSHOT
+## v2.14.991 / 2024-08-24
 - re-re-exam.
   データベースをバックアップし、typing_ex.results テーブルの全データをデリートした。
 - update core.clj/day to take a new argument `n`.
