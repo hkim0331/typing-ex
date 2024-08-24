@@ -9,7 +9,7 @@
    [reagent.dom :as rdom]
    [typing-ex.plot :refer [bar-chart]]))
 
-(def ^:private version "v2.13.984")
+(def ^:private version "v2.14.991")
 
 (def ^:private timeout 60)
 (def ^:private todays-limit 10)

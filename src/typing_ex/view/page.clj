@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.13.984")
+(def ^:private version "v2.14.991")
 
 ;--------------------------------
 (defn- ss
@@ -171,7 +171,7 @@
    data はソーティング済みの[[login days] ...]"
   [self data]
   (page
-   [:h2 "Typing: 10 回以上練習した日数"]
+   [:h2 "Typing: 30 回以上練習した日数"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
     [:p "毎日ちょっとずつが伸びる秘訣。"]

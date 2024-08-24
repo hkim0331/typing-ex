@@ -32,7 +32,27 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
-## 2.13.981 / 2024-06-20
+## v2.14.991 / 2024-08-24
+- re-re-exam.
+  データベースをバックアップし、typing_ex.results テーブルの全データをデリートした。
+- update core.clj/day to take a new argument `n`.
+```
+(defn days
+  "ユーザloginがn回以上練習した日数"
+  [all login n]
+  (let [ret (filter (fn [x] (= login (:login x))) all)]
+    (->> ret
+         (group-by :timestamp)
+         (map (fn [x] (count (val x))))
+         (filter #(<= n %))
+         count)))
+```
+- core.clj/ex-days calls days as
+```
+(training-days 30 req db)
+```
+
+## v2.13.984 / 2024-06-20
 ### Changed
 - redis://redis:6379 -> redis://db:6379
 - use redis administrating `stat`.
@@ -174,6 +194,17 @@
 |                 | org.postgresql/postgresql           | 42.6.0   | 42.7.3  |
 | shadow-cljs.edn | cljs-http                           | 0.1.46   | 0.1.48  |
 
+- duct から shadow-cljs で作成したページを読めるようになった。
+- docker compose
+- basic routing. login/logout, /typing, score/:id, scores.
+- src/core.cljs -> src/typing.cljs.
+  should modify public/index.html at the same time.
+- reagent 1.0.0.
+  reagent/render-component(0.8.0) -> reagent.dom/render(1.0.0)
+- lein new duct typing-ex +site +ataraxy +postgres
+- lein new shadow-cljs typing-ex :force +reagent
+- mv public/ resources/
+- bump-version.sh
 
 ## 1.22.0 - 2023-09-10
 - fixed: DAY BY DAY プロット
@@ -1030,16 +1061,3 @@ https://clojurians-log.clojureverse.org/shadow-cljs/2019-08-25
 - typing が見せかけでも動くようになったので 0.1.x のタグを打つ。
   auth に通ったら / に行き、cljs のページを表示できる。
   勇気づけのための 0.1.0. まだ typing-ex の動作はしない。
-
-## 1.23.778 / 2024-04-08
-- duct から shadow-cljs で作成したページを読めるようになった。
-- docker compose
-- basic routing. login/logout, /typing, score/:id, scores.
-- src/core.cljs -> src/typing.cljs.
-  should modify public/index.html at the same time.
-- reagent 1.0.0.
-  reagent/render-component(0.8.0) -> reagent.dom/render(1.0.0)
-- lein new duct typing-ex +site +ataraxy +postgres
-- lein new shadow-cljs typing-ex :force +reagent
-- mv public/ resources/
-- bump-version.sh
