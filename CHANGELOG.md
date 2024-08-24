@@ -35,6 +35,22 @@
 ## v2.14-SNAPSHOT
 - re-re-exam.
   データベースをバックアップし、typing_ex.results テーブルの全データをデリートした。
+- update core.clj/day to take a new argument `n`.
+```
+(defn days
+  "ユーザloginがn回以上練習した日数"
+  [all login n]
+  (let [ret (filter (fn [x] (= login (:login x))) all)]
+    (->> ret
+         (group-by :timestamp)
+         (map (fn [x] (count (val x))))
+         (filter #(<= n %))
+         count)))
+```
+- core.clj/ex-days calls days as
+```
+(training-days 30 req db)
+```
 
 ## v2.13.984 / 2024-06-20
 ### Changed

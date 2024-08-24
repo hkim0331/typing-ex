@@ -169,12 +169,14 @@
           ex-days "dummy"]
       (view/scores-page max-pt ex-days login days))))
 
-(defn days [all login]
+(defn days
+  "ユーザloginがn回以上練習した日数"
+  [all login n]
   (let [ret (filter (fn [x] (= login (:login x))) all)]
     (->> ret
          (group-by :timestamp)
          (map (fn [x] (count (val x))))
-         (filter #(< 9 %))
+         (filter #(<= n %))
          count)))
 
 (defn- users-all [db]
@@ -196,7 +198,7 @@
 
 (defn- training-days
   "redis キャッシュ付きでバージョンアップ。"
-  [req db]
+  [n req db]
   (tap> "training-days")
   (if-let [training-days (wcar* (car/get "training-days"))]
     (do
@@ -205,7 +207,7 @@
     (let [logins (users-all db)
           all (results/login-timestamp db)
           training-days (->> (for [{:keys [login]} logins]
-                               [login (days all login)])
+                               [login (days all login n)])
                              (sort-by second >))]
       (tap> "miss")
       (wcar* (car/setex "training-days" redis-expire training-days))
@@ -213,7 +215,8 @@
 
 (defmethod ig/init-key :typing-ex.handler.core/ex-days [_ {:keys [db]}]
   (fn [req]
-    (let [training-days (training-days req db)]
+    ;; changed: takes a day parameter, 30. 2024-08-24
+    (let [training-days (training-days 30 req db)]
       (view/ex-days-page
        (get-login req)
        training-days))))
