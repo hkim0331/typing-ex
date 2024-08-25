@@ -32,6 +32,12 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
+## v2.15-SNAPSHOT
+- day-by-day のスタート日...環境変数でセットするのが楽。
+```
+(def typing-start (or (env :tp-start) "2024-04-01"))
+```
+
 ## v2.14.991 / 2024-08-24
 - re-re-exam.
   データベースをバックアップし、typing_ex.results テーブルの全データをデリートした。
