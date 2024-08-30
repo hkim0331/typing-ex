@@ -9,6 +9,7 @@
 * (docker, docker-compose)
 
 ## Unreleased
+- セッション終わりに間違った単語を表示。
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 環境変数の参照以外に develop/production を判定する方法。
@@ -30,6 +31,12 @@
 ```
 % http -pb :3000 stat=exam minites=1
 <h1>Invalid anti-forgery token</h1>
+```
+
+## v2.15.998 / 2024-08-31
+- day-by-day のスタート日...環境変数でセットするのが楽。
+```
+(def typing-start (or (env :tp-start) "2024-04-01"))
 ```
 
 ## v2.14.991 / 2024-08-24
