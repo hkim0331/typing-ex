@@ -33,7 +33,7 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
-## v2.15-SNAPSHOT
+## v2.15.998 / 2024-08-31
 - day-by-day のスタート日...環境変数でセットするのが楽。
 ```
 (def typing-start (or (env :tp-start) "2024-04-01"))
