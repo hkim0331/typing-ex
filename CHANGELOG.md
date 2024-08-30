@@ -9,6 +9,7 @@
 * (docker, docker-compose)
 
 ## Unreleased
+- セッション終わりに間違った単語を表示。
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - 環境変数の参照以外に develop/production を判定する方法。
