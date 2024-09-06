@@ -33,7 +33,7 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
-## v2.16-SNAPSHOT
+## v2.16.1003 / 2024-09-06
 - updated libraries
 
 | :file       | :name                     | :current | :latest |
