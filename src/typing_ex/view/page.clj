@@ -100,9 +100,9 @@
           :class "btn btn-info btn-sm"}
       "QA"]
      "&nbsp;"
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+     [:a {:href "http://mx.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
-      "MT"]
+      "MX"]
      "&nbsp;"
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
