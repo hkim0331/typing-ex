@@ -43,6 +43,8 @@
 |             | org.postgresql/postgresql | 42.7.3   | 42.7.4  |
 
 - change display MT -> MX according to site url change.
+- npm install
+- npm audit fix
 
 ## v2.15.998 / 2024-08-31
 - day-by-day のスタート日...環境変数でセットするのが楽。
