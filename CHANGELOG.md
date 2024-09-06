@@ -33,6 +33,19 @@
 <h1>Invalid anti-forgery token</h1>
 ```
 
+## v2.16.1003 / 2024-09-06
+- updated libraries
+
+| :file       | :name                     | :current | :latest |
+|------------ | ------------------------- | -------- | --------|
+| project.clj | hato/hato                 | 0.9.0    | 1.0.0   |
+|             | org.clojure/clojure       | 1.11.3   | 1.12.0  |
+|             | org.postgresql/postgresql | 42.7.3   | 42.7.4  |
+
+- change display MT -> MX according to site url change.
+- npm install
+- npm audit fix
+
 ## v2.15.998 / 2024-08-31
 - day-by-day のスタート日...環境変数でセットするのが楽。
 ```

@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.15.998")
+(def ^:private version "v2.16.1003")
 
 ;--------------------------------
 (defn- ss
@@ -100,9 +100,9 @@
           :class "btn btn-info btn-sm"}
       "QA"]
      "&nbsp;"
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+     [:a {:href "http://mx.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
-      "MT"]
+      "MX"]
      "&nbsp;"
      [:a {:href "http://l22.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
