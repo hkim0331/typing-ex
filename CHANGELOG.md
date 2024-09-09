@@ -32,7 +32,7 @@
 % http -pb :3000 stat=exam minites=1
 <h1>Invalid anti-forgery token</h1>
 ```
-## v2.17-SNAPSHOT
+## v2.17.1008 / 2024-09-09
 - changed systemd/typing_ex_roll_call
   start was saved on postgres,
   now is saved on redis with expiration period, 900 second.
