@@ -316,7 +316,7 @@
    ))
 
 (defn stat-page
-  "stat は現在値が渡ってくる。
+  "stat は redis-cli> get stat の結果。
    返すべき値は [normal roll-call exam] のどれか。"
   [stat]
   ;; (println "stat " stat)

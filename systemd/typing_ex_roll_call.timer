@@ -1,10 +1,12 @@
 [Unit]
-Description=typing_ex stat=normal
+Description=typing_ex stat=roll-call on Calendar time
 
 [Timer]
 #OnCalendar=*:*:30
-OnCalendar=Wed 8:45:00
-OnCalendar=Wed 10:25:00
+OnCalendar=Tue 8:45:00
+OnCalendar=Tue 10:25:00
+OnCalendar=Thu 8:45:00
+OnCalendar=Thu 10:25:00
 
 [Install]
 WantedBy=timers.target
