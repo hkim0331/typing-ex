@@ -14,7 +14,7 @@
    [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
-   [typing-ex.boundary.stat :as stat]
+   ;; [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car :refer [wcar]]
@@ -28,7 +28,6 @@
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
-
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 (def ^:private redis-expire 3600)
@@ -116,35 +115,63 @@
                #"xxx"
                login))
 
-;; index.
-;; DON't FORGET: anti-forgery-field と login を埋め込む。
+(defn- remote-ip [req]
+  (or
+   (get-in req [:headers "cf-connecting-ip"])
+   (get-in req [:headers "x-real-ip"])
+   (get req :remote-addr)))
+
+(defn- roll-call-time? []
+  (->(wcar* (car/get "stat"))
+   some?))
+
+;; (roll-call-time?)
+
+(defn typing-ex [req]
+  [::response/ok
+   (str
+    "<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset='UTF-8'>
+      <meta name='viewport' content='width=device-width, initial-scale=1'>
+      <link href='/css/bootstrap.min.css' rel='stylesheet'>
+      <link href='/css/style.css' rel='stylesheet' type='text/css'>
+      <link rel='icon' href='/favicon.ico'>
+    </head>
+    <body>"
+        ;; DON'T FORGET. mandatory.
+    (anti-forgery-field)
+    (login-field (get-login req))
+    "<div class='container'>
+      <div id='app'>
+        core/typing
+      </div>
+      <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
+      <script src='/js/compiled/main.js' type='text/javascript'></script>
+      <script>typing_ex.typing.init();</script>
+      </div>
+    </body>
+  </html>")])
+
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
-    [::response/ok
-     (str
-      "<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link href='/css/bootstrap.min.css' rel='stylesheet'>
-    <link href='/css/style.css' rel='stylesheet' type='text/css'>
-    <link rel='icon' href='/favicon.ico'>
-  </head>
-  <body>"
-      ;; DON'T FORGET. mandatory.
-      (anti-forgery-field)
-      (login-field (get-login req))
-      "<div class='container'>
-    <div id='app'>
-      core/typing
-    </div>
-    <script src='/js/bootstrap.bundle.min.js' type='text/javascript'></script>
-    <script src='/js/compiled/main.js' type='text/javascript'></script>
-    <script>typing_ex.typing.init();</script>
-    </div>
-  </body>
-</html>")]))
+    (if (roll-call-time?)
+      (try
+        (let [addr (str (remote-ip req))]
+          (println "addr" addr)
+          (when-not (str/starts-with? addr "150.69")
+            (throw (Exception.)))
+          (when (str/starts-with? addr "150.69.77")
+            (throw (Exception.)))
+          ;; debug
+          (when (str/starts-with? addr "0:0")
+            (throw (Exception.))))
+        (typing-ex req)
+        (catch Exception _
+          (println "exception occurred")
+          [::response/ok "出席取れるのは教室内から。"]))
+      (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
   (fn [{[_ n] :ataraxy/result :as req}]
