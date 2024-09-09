@@ -166,11 +166,13 @@
             (throw (Exception.)))
           ;; debug
           (when (str/starts-with? addr "0:0")
+            (throw (Exception.)))
+          (when (str/starts-with? addr "150.69.90.34")
             (throw (Exception.))))
         (typing-ex req)
         (catch Exception _
           (println "exception occurred")
-          [::response/ok "出席取れるのは教室内から。"]))
+          [::response/ok "出席取れるのは教室内、大学 WiFi から。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
