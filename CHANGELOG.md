@@ -1,11 +1,12 @@
 # typing-ex
 
-## Required
+## Requires
 * Clojure/ClojureScript
 * duct
 * shadow-cljs
 * yarn
 * postgresql
+* redis
 * (docker, docker-compose)
 
 ## Unreleased
@@ -17,21 +18,23 @@
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
 - n 回で強制的にやめさすには？
-- (reset) が必要になるケースはどんなケース？
 - テストモード、3回の平均で ⭕️ ❌ をつける。
 - 「授業中は練習なしよ」モード
   -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
-- docker hub にプッシュするスクリプト。
 - exam 記録に時刻。時刻よりも日付。
-- exam モードにタイムアウト。
 - プロダクションでは (js.console/log) を出さないの？
 - want change stat by httpie, but,
 ```
 % http -pb :3000 stat=exam minites=1
 <h1>Invalid anti-forgery token</h1>
 ```
+
+
+## v2.18-SNAPSHOT / 2024-09-09
+- 出席取れるのは大学WiFiから。VPN 不可。
+
 ## v2.17.1008 / 2024-09-09
 - changed systemd/typing_ex_roll_call
   start was saved on postgres,
