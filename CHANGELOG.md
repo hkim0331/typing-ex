@@ -32,10 +32,15 @@
 ```
 
 
-## v2.18-snapshot / 2024-09-09
+## v2.18-snapshot-2
+
 - 出席取れるのは大学WiFiから。VPN 不可。
+- 09-10 失敗: systemd-timer 起動せず。
+- 09-10 失敗: 214 から roll-call できる。
+- bump version to v2.18-snapshot-2
 
 ## v2.17.1008 / 2024-09-09
+
 - changed systemd/typing_ex_roll_call
   start was saved on postgres,
   now is saved on redis with expiration period, 900 second.
