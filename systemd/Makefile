@@ -22,6 +22,7 @@ stop:
 disable: stop
 #	systemctl disable typing_ex_normal.timer
 	systemctl disable typing_ex_roll_call.timer
+	systemctl daemon-reload
 
 uninstall: disable
 	${RM} /lib/systemd/system/typing_ex_normal.*
