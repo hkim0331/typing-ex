@@ -75,7 +75,7 @@
 (defmethod ig/init-key :typing-ex.handler.core/alert! [_ _]
   (fn [{{:keys [alert]} :params}]
     (wcar* (car/set "alert" alert))
-    [::response/ok (str "alert!:" alert)]
+    ;; [::response/ok (str "alert!:" alert)]
     (redirect "/total/7")))
 
 ;; login
@@ -125,8 +125,6 @@
   (->(wcar* (car/get "stat"))
    some?))
 
-;; (roll-call-time?)
-
 (defn typing-ex [req]
   [::response/ok
    (str
@@ -140,7 +138,7 @@
       <link rel='icon' href='/favicon.ico'>
     </head>
     <body>"
-        ;; DON'T FORGET. mandatory.
+    ;; DON'T FORGET.
     (anti-forgery-field)
     (login-field (get-login req))
     "<div class='container'>
@@ -226,7 +224,7 @@
 ;;       ret)))
 
 (defn- training-days
-  "redis キャッシュ付きでバージョンアップ。"
+  "redis キャッシュを有効にする。"
   [n req db]
   (tap> "training-days")
   (if-let [training-days (wcar* (car/get "training-days"))]
