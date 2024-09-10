@@ -38,6 +38,9 @@
 - 09-10 失敗: systemd-timer 起動せず。
 - 09-10 失敗: 214 から roll-call できる。
 - bump version to v2.18-snapshot-2
+- redis: `stat` は説明不足。tying-ex-statくらいが適当。
+- (NG) redis-cli setex stat roll-call ex 900
+- (GOOD) redis-cli set stat roll-call ex 900
 
 ## v2.17.1008 / 2024-09-09
 
