@@ -1,11 +1,10 @@
 [Unit]
-Description=typing_ex stat=roll_call
+Description=typing_ex stat=>roll_call
 
 [Service]
 user=ubuntu
 Type=oneshot
 WorkingDirectory=/home/ubuntu/typing-ex/systemd
-Environment=PGPASSWORD=password
-ExecStart=/bin/sh stat-update.sh roll-call
+ExecStart=/bin/sh update-stat.sh
 StandardOutput=append:/home/ubuntu/typing-ex/log/systemd.log
 StandardError=append:/home/ubuntu/typing-ex/log/systemd.log
