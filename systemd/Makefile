@@ -1,3 +1,8 @@
+PROD=app.melt:typing-ex/systemd/
+
+upload:
+	scp Makefile update-stat.sh typing_ex_roll_call.* ${PROD}
+
 install:
 	cp *.service *.timer /lib/systemd/system
 	systemctl daemon-reload
@@ -17,7 +22,8 @@ stop:
 disable: stop
 #	systemctl disable typing_ex_normal.timer
 	systemctl disable typing_ex_roll_call.timer
+	systemctl daemon-reload
 
-uninstall:
+uninstall: disable
 	${RM} /lib/systemd/system/typing_ex_normal.*
 	${RM} /lib/systemd/system/typing_ex_roll_call.*

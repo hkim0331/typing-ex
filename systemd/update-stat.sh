@@ -4,4 +4,6 @@
 #    -c "update stat set stat='$1', updated_at=now()"
 # echo `date` typing-ex stat $1
 
-redis-cli setex stat roll-call ex 900
+redis-cli set stat roll-call ex 900
+
+echo `date` exec typing-ex/systemd/update-stat.sh
