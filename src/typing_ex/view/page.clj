@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.15.998")
+(def ^:private version "v2.18.1023")
 
 ;--------------------------------
 (defn- ss
@@ -85,33 +85,32 @@
     [:div.d-inline-
      [:a {:href "/" :class "btn btn-primary btn-sm"} "Go!"]
      "&nbsp;"
-     ;;py99
-    ;;  [:a {:href "https://py99.melt.kyutech.ac.jp/"
-    ;;       :class "btn btn-info btn-sm"}
-    ;;   "Py99"]
-    ;;  "&nbsp;"
+     [:a {:href "https://py99.melt.kyutech.ac.jp/"
+          :class "btn btn-info btn-sm"}
+      "Py99"]
+     "&nbsp;"
      [:a {:href "/rc" :class "btn roll-call btn-sm"} "RC"]
      "&nbsp;"
      [:a {:href "https://wil.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
       "WIL"]
      "&nbsp;"
-     [:a {:href "http://qa.melt.kyutech.ac.jp/"
+     [:a {:href "https://qa.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
       "QA"]
      "&nbsp;"
-     [:a {:href "http://mt.melt.kyutech.ac.jp/"
+     [:a {:href "https://mx.melt.kyutech.ac.jp/"
           :class "btn btn-info btn-sm"}
-      "MT"]
+      "MX"]
      "&nbsp;"
-     [:a {:href "http://l22.melt.kyutech.ac.jp/"
+     [:a {:href "https://l22.melt.kyutech.ac.jp/"
           :class "btn btn-success btn-sm"}
       "L22"]
      "&nbsp;"
-     [:a {:href "http://rp.melt.kyutech.ac.jp/"
-          :class "btn btn-success btn-sm"}
-      "RP"]
-     "&nbsp;"
+    ;;  [:a {:href "https://rp.melt.kyutech.ac.jp/"
+    ;;       :class "btn btn-success btn-sm"}
+    ;;   "RP"]
+    ;;  "&nbsp;"
      [:a {:href "/logout" :class "btn btn-warning btn-sm"} "Logout"]]]
    [:div.row
     [:div.d-inline-flex
@@ -316,7 +315,7 @@
    ))
 
 (defn stat-page
-  "stat は現在値が渡ってくる。
+  "stat は redis-cli> get stat の結果。
    返すべき値は [normal roll-call exam] のどれか。"
   [stat]
   ;; (println "stat " stat)

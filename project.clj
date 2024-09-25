@@ -1,4 +1,4 @@
-(defproject typing-ex "v2.15.998"
+(defproject typing-ex "v2.18.1023"
   :description "typing exercises for literacy classes"
   :url "https://tp.melt.kyutech.ac.jp"
   :min-lein-version "2.0.0"
@@ -13,11 +13,11 @@
                  [duct/module.sql "0.6.1"]
                  [duct/module.web "0.7.3"]
                  [environ "1.2.0"]
-                 [hato "0.9.0"]
+                 [hato "1.0.0"]
                  [hiccup "1.0.5"]
                  [com.taoensso/carmine "3.4.1"]
-                 [org.clojure/clojure "1.11.3"]
-                 [org.postgresql/postgresql "42.7.3"]]
+                 [org.clojure/clojure "1.12.0"]
+                 [org.postgresql/postgresql "42.7.4"]]
   :plugins [[duct/lein-duct "0.12.3"]]
   :main ^:skip-aot typing-ex.main
   :resource-paths ["resources" "target/resources"]
