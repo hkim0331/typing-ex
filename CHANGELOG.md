@@ -30,7 +30,9 @@
 % http -pb :3000 stat=exam minites=1
 <h1>Invalid anti-forgery token</h1>
 ```
+## v2.19-snapshot / 2024-09-25
 
+- safari loses again
 
 ## v2.18-snapshot-2
 

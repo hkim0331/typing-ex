@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.18.1023")
+(def ^:private version "v2.19-snapshot")
 
 ;--------------------------------
 (defn- ss
@@ -64,6 +64,7 @@
 (defn login-page [req]
   (page
    [:h2 "Typing: Login"]
+   [:p "しばらく Safari 以外で。昔の Explorer みたいだ。"]
    [:div.text-danger (:flash req)]
    (form-to
     [:post "/login"]
