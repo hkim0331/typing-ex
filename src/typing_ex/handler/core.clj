@@ -89,9 +89,10 @@
     body))
 
 ;; FIXME: 環境変数以外の方法は？
+;; (= "true" (env :tp-dev)) で認証なし。
 (defn auth? [login password]
   (or
-   (= "true" (env :tp-dev))
+   (= "false" (env :tp-dev))
    (let [ret (find-user login)]
      (and (some? ret)
           (hashers/check password (:password ret))))))
