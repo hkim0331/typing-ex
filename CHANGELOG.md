@@ -32,7 +32,7 @@
 ```
 ## v2.19-snapshot / 2024-09-25
 
-- safari loses again
+- can not login from safari 18.0.
 
 ## v2.18-snapshot-2
 
