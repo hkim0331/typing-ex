@@ -10,7 +10,7 @@ clean:
 
 uberjar:
 	make clean
-	yarn release
+	npx shadow-cljs release app
 	lein uberjar
 
 deploy: uberjar
