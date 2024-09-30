@@ -123,8 +123,9 @@
    (get req :remote-addr)))
 
 (defn- roll-call-time? []
-  (->(wcar* (car/get "stat"))
-   some?))
+  (->  (wcar * (car/get "stat"))
+       (= "roll-call")))
+
 
 (defn typing-ex [req]
   [::response/ok
@@ -153,6 +154,10 @@
     </body>
   </html>")])
 
+(comment
+  (roll-call-time?)
+  :rcf)
+
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     (if (roll-call-time?)
@@ -171,7 +176,7 @@
         (typing-ex req)
         (catch Exception _
           (println "exception occurred")
-          [::response/ok "出席取れるのは教室内、大学 WiFi から。VPN 不可。"]))
+          [::response/ok "授業時間の最初、背景黄色の時、ログインできるのは教室内の WiFi からのみです。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]

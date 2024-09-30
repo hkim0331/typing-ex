@@ -28,6 +28,17 @@
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 ```
 
+## v2.19-SNAPSHOT
+
+- fixed core/roll-call-time?
+  redis "stat" には "normal", "roll-call", "exam" のいずれかの文字列が入る。
+
+```
+(defn- roll-call-time? []
+  (->  (wcar * (car/get "stat"))
+       (= "roll-call"))) ; was some?
+```
+
 ## v2.19.1034 / 2024-09-25
 
 - can not login from safari 18.0. cause Hide IP address.
