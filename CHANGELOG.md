@@ -13,11 +13,9 @@
 - セッション終わりに間違った単語を表示。
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- 環境変数の参照以外に develop/production を判定する方法。
-  devcontainer 時、(env :tp-dev) が解決できてない。
 - @app-state を廃止したい。
 - drills 一括ダウンロード。
-- n 回で強制的にやめさすには？
+- n 回で強制的にやめさす。
 - テストモード、3回の平均で ⭕️ ❌ をつける。
 - 「授業中は練習なしよ」モード
   -> 授業中の空き時間にタイプしている人もいる。
@@ -25,14 +23,15 @@
 - good/bad last word
 - exam 記録に時刻。時刻よりも日付。
 - プロダクションでは (js.console/log) を出さないの？
-- want change stat by httpie, but,
+- WARNING が取れない。
 ```
-% http -pb :3000 stat=exam minites=1
-<h1>Invalid anti-forgery token</h1>
+; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 ```
+
 ## v2.19-snapshot / 2024-09-25
 
 - can not login from safari 18.0.
+- explain yellow background
 
 ## v2.18-snapshot-2
 

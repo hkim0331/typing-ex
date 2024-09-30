@@ -64,7 +64,7 @@
 (defn login-page [req]
   (page
    [:h2 "Typing: Login"]
-   [:p "しばらく Safari 以外で。昔の Explorer みたいだ。"]
+   [:p "授業はじめの出席取りの時間（背景が黄色）は教室外部からログインできない。"]
    [:div.text-danger (:flash req)]
    (form-to
     [:post "/login"]
