@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.18.1023")
+(def ^:private version "v2.19.1034")
 
 ;--------------------------------
 (defn- ss
@@ -64,6 +64,7 @@
 (defn login-page [req]
   (page
    [:h2 "Typing: Login"]
+   [:p "授業はじめの出席取りの時間（背景が黄色）は教室外部からログインできない。"]
    [:div.text-danger (:flash req)]
    (form-to
     [:post "/login"]

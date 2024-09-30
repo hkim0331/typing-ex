@@ -88,13 +88,14 @@
         body (:body (hc/get url {:as :json}))]
     body))
 
-;; FIXME: 環境変数以外の方法は？
-(defn auth? [login password]
-  (or
-   (= "true" (env :tp-dev))
-   (let [ret (find-user login)]
-     (and (some? ret)
-          (hashers/check password (:password ret))))))
+(defn auth?
+  "when TP_DEV defined, check login only."
+  [login password]
+  (if (env :tp-dev)
+    (and (= "hkimura" login) true)
+    (let [ret (find-user login)]
+      (and (some? ret)
+           (hashers/check password (:password ret))))))
 
 (defmethod ig/init-key :typing-ex.handler.core/login-post [_ _]
   (fn [{[_ {:strs [login password]}] :ataraxy/result}]
