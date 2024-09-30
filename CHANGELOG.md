@@ -28,20 +28,18 @@
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 ```
 
-## v2.19-snapshot / 2024-09-25
+## v2.19.1034 / 2024-09-25
 
-- can not login from safari 18.0.
-- explain yellow background
-
-## v2.18-snapshot-2
-
-- 出席取れるのは大学WiFiから。VPN 不可。
+- can not login from safari 18.0. cause Hide IP address.
+- explain roll-call mode in Login page.
+- 出席取れるのは大学 WiFi から。VPN 不可。Works?
 - 09-10 失敗: systemd-timer 起動せず。
 - 09-10 失敗: 214 から roll-call できる。
-- bump version to v2.18-snapshot-2
 - redis: `stat` は説明不足。tying-ex-statくらいが適当。
-- (NG) redis-cli setex stat roll-call ex 900
-- (GOOD) redis-cli set stat roll-call ex 900
+- NG:   redis-cli setex stat roll-call ex 900
+- GOOD: redis-cli set stat roll-call ex 900
+  NG で ex が余計か？
+
 
 ## v2.17.1008 / 2024-09-09
 
