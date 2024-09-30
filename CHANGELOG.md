@@ -28,7 +28,7 @@
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 ```
 
-## v2.19-SNAPSHOT
+## v2.19.1038 / 2024-09-30
 
 - fixed core/roll-call-time?
   redis "stat" には "normal", "roll-call", "exam" のいずれかの文字列が入る。
