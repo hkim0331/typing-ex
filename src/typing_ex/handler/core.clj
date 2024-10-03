@@ -17,6 +17,7 @@
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car :refer [wcar]]
+   [taoensso.telemere :as t]
    [clojure.edn :as edn]))
 
 ;; (add-tap prn)
@@ -153,30 +154,28 @@
     </body>
   </html>")])
 
-(comment
-  (roll-call-time?)
-  :rcf)
 
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     (if (roll-call-time?)
       (try
         (let [addr (str (remote-ip req))]
-          (println "addr" addr)
-          (when-not (str/starts-with? addr "150.69")
-            (throw (Exception.)))
-          (when (str/starts-with? addr "150.69.77")
-            (throw (Exception.)))
+          (t/log! :info addr)
           ;; debug
-          (when (str/starts-with? addr "0:0")
-            (throw (Exception.)))
-          (when (str/starts-with? addr "150.69.90.34")
-            (throw (Exception.))))
-        (typing-ex req)
-        (catch Exception _
-          (println "exception occurred")
+          ;; (when (str/starts-with? addr "0:0")
+          ;;   (throw (Exception. addr)))
+          ;; (when (str/starts-with? addr "150.69.90.34")
+          ;;   (throw (Exception. addr)))
+          (when-not (or
+                     (str/starts-with? addr "0:0") ; debug
+                     (str/starts-with? addr "150.69"))
+            (throw (Exception. (str "when-not:" addr))))
+          (when (str/starts-with? addr "150.69.77")
+            (throw (Exception. (str "when;" addr))))
+          (typing-ex req))
+        (catch Exception msg (t/log! :info msg)
           [::response/ok
-           (str "背景黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。")]))
+           "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]

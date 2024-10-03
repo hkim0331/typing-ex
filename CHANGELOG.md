@@ -30,6 +30,7 @@
 ```
 ## v2.20-SNAPSHOT
 
+- required? [com.taoensso/encore "3.121.0"]
 - dev/resources/dev/deps.edn: jetty port 3003
 - [com.taoensso/telemere "1.0.0-beta25"]
 - [dev.weavejester/medley "1.8.1"]
