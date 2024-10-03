@@ -1,4 +1,4 @@
-(defproject typing-ex "v2.19.1038"
+(defproject typing-ex "v2.20-SNAPSHOT"
   :description "typing exercises for literacy classes"
   :url "https://tp.melt.kyutech.ac.jp"
   :min-lein-version "2.0.0"
@@ -17,6 +17,7 @@
                  [hato "1.0.0"]
                  [hiccup "1.0.5"]
                  [com.taoensso/carmine "3.4.1"]
+                 [com.taoensso/encore "3.121.0"]
                  [com.taoensso/telemere "1.0.0-beta25"]
                  [org.clojure/clojure "1.12.0"]
                  [org.postgresql/postgresql "42.7.4"]]
