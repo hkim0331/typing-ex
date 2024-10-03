@@ -21,7 +21,7 @@ check postgres alive,
     $ open http://localhost:3000
 
 
-or from VScode, choose  REPL -> Leiningen after `yarn watch`.
+or from VScode, choose  REPL -> Leiningen after `npx shadow-cljs watch app`.
 
 ## deploy
 

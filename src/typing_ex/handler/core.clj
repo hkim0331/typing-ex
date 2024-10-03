@@ -14,7 +14,6 @@
    [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
-   ;; [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car :refer [wcar]]
@@ -176,7 +175,8 @@
         (typing-ex req)
         (catch Exception _
           (println "exception occurred")
-          [::response/ok "授業時間の最初、背景黄色の時、ログインできるのは教室内の WiFi からのみです。VPN 不可。"]))
+          [::response/ok
+           (str "背景黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。")]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]

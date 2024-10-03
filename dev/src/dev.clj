@@ -40,8 +40,3 @@
 
 (defn q [sql]
   (jdbc/query (db) sql))
-
-(comment
-  (q "select (1+(random() * (max(id)-1)))::int from drills")
-  ()
-  :rcf)

@@ -1,2 +1,2 @@
 {:duct.database/sql {:connection-uri "jdbc:postgresql://db/typing_ex?user=postgres"}
- :duct.server.http/jetty {:port 3000}}
+ :duct.server.http/jetty {:port 3003}}
