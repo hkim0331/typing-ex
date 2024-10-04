@@ -14,18 +14,17 @@
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - @app-state を廃止したい。
-- drills 一括ダウンロード。
 - n 回で強制的にやめさす。
 - テストモード、3回の平均で ⭕️ ❌ をつける。
-- 「授業中は練習なしよ」モード
-  -> 授業中の空き時間にタイプしている人もいる。
+- 「授業中は練習なしよ」モード -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
 - good/bad last word
 - exam 記録に時刻。時刻よりも日付。
 - プロダクションでは (js.console/log) を出さないの？
 - WARNING が取れない。
 ```
-; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
+; WARNING: abs already refers to: #'clojure.core/abs in namespace:
+  medley.core, being replaced by: #'medley.core/abs
 ```
 
 ## v2.19.1038 / 2024-09-30
