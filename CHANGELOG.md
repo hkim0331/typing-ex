@@ -26,6 +26,12 @@
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace:
   medley.core, being replaced by: #'medley.core/abs
 ```
+## v2.20-SNAPSHOT / 2024-10-03
+
+- required? [com.taoensso/encore "3.121.0"]
+- dev/resources/dev/deps.edn: jetty port 3003
+- [com.taoensso/telemere "1.0.0-beta25"]
+- [dev.weavejester/medley "1.8.1"]
 
 ## v2.19.1038 / 2024-09-30
 
