@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v2.20-SNAPSHOT")
+(def ^:private version "v2.20.1050")
 
 ;--------------------------------
 (defn- ss
@@ -174,15 +174,16 @@
    [:h2 "Typing: 30 回以上練習した日数"]
    (headline 7)
    [:div {:style "margin-left:1rem;"}
-    [:p "毎日ちょっとずつが伸びる秘訣。"]
+    [:p "30回以上練習した日が1日以上ある人のリスト。"]
     (into [:ol
            (for [[login n] data]
-             [:li
-              (format "(%d) " n)
-              " "
-              [:a {:href (str "/record/" login)
-                   :class (if (= login self) "yes" "other")}
-               login]])])]))
+             (when (pos? n)
+               [:li
+                (format "(%d) " n)
+                " "
+                [:a {:href (str "/record/" login)
+                     :class (if (= login self) "yes" "other")}
+                 login]]))])]))
 
 (defn- select-count-distinct
   "select count(distinct(timestamp::DATE)) from results
@@ -270,8 +271,8 @@
 (defn- todays-msg
   []
   (let [msg ["好き嫌い言わずになんでも食べるのが健康の元だ。"
-             "一日一回、QAも見るんだぞ。答えられる Q には A をつけよう。"
-             "ガンバッてる人とそうでない人と、割れてきたように見えないか？"]]
+             "タイピングは基本的スキルのひとつ。練習すれば誰でもできるようになる。"
+             "ガンバッてる人と出席取りだけの人、差がついて来たように見えないか？"]]
     (get msg (rand-int (count msg)))))
 
 ;; view of /todays
