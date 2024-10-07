@@ -26,6 +26,7 @@
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace:
   medley.core, being replaced by: #'medley.core/abs
 ```
+
 ## v2.20-SNAPSHOT / 2024-10-03
 
 - required? [com.taoensso/encore "3.121.0"]
