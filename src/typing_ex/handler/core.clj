@@ -126,7 +126,6 @@
   (->  (wcar * (car/get "stat"))
        (= "roll-call")))
 
-
 (defn typing-ex [req]
   [::response/ok
    (str
