@@ -12,7 +12,7 @@
                  [duct/module.ataraxy "0.3.0"]
                  [duct/module.logging "0.5.0"]
                  [duct/module.sql "0.6.1"]
-                 [duct/module.web "0.7.3"] ; 0.7.3
+                 [duct/module.web "0.7.4"] ; 0.7.3
                  [environ "1.2.0"]
                  [hato "1.0.0"]
                  [hiccup "1.0.5"]
