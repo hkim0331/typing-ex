@@ -32,7 +32,7 @@
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 (def ^:private redis-expire 3600)
 
-(def typing-start (or (env :tp-start) "2024-04-01"))
+(def typing-start (or (env :tp-start) "2025-01-01"))
 
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -153,7 +153,6 @@
     </body>
   </html>")])
 
-
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     (if (roll-call-time?)
@@ -173,8 +172,8 @@
             (throw (Exception. (str "when;" addr))))
           (typing-ex req))
         (catch Exception msg (t/log! :info msg)
-          [::response/ok
-           "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
+               [::response/ok
+                "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
