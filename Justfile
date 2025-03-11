@@ -4,22 +4,25 @@ watch:
     npx shadow-cljs watch app
 
 repl:
-    docker compose up -d
-    docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
-
-#uberjar:
-#    docker compose up -d
-#    docker exec -it typing-ex-typing-ex-1 lein uberjar
+    lein repl
 
 uberjar:
     lein uberjar
 
-bash:
+docker-repl:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
+
+docker-bash:
     docker compose up -d
     docker exec -it typing-ex-typing-ex-1 bash
 
-# need improve
-run:
+docker-uberjar:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 lein uberjar
+    need improve
+
+docker-run:
     docker compose up -d
     docker exec -it typing-ex-typing-ex-1 sh run.sh
 
