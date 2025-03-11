@@ -23,13 +23,21 @@
 ;; (add-tap prn)
 ;; (remove-tap prn)
 
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+
+(comment
+  (:body (hc/get (str l22 "hkimura")))
+  :rcf)
+
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://db:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
-
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
-(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+(comment
+  (wcar* (car/set "a" "hello")) ;=> ConnectionException: Connection refused
+  :rcf)
+
 (def ^:private redis-expire 3600)
 
 (def typing-start (or (env :tp-start) "2025-01-01"))
@@ -123,7 +131,7 @@
    (get req :remote-addr)))
 
 (defn- roll-call-time? []
-  (->  (wcar * (car/get "stat"))
+  (->  (wcar* (car/get "stat"))
        (= "roll-call")))
 
 (defn typing-ex [req]

@@ -23,7 +23,7 @@
 - exam 記録に時刻。時刻よりも日付。
 - container
 - remove example
-
+- lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。
 
 ## v2.20.1050 / 2024-10-07
 

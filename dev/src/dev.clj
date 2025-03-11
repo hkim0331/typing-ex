@@ -40,3 +40,9 @@
 
 (defn q [sql]
   (jdbc/query (db) sql))
+
+(comment
+  (keys system)
+  (db)
+  (q "select * from results limit 5")
+  :rcf)
