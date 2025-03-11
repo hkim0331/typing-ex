@@ -17,7 +17,7 @@
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car]
-   [taoensso.telemere :as t]
+   ;; [taoensso.telemere :as t]
    [clojure.edn :as edn]))
 
 ;; (add-tap prn)
@@ -170,7 +170,7 @@
     (if (roll-call-time?)
       (try
         (let [addr (str (remote-ip req))]
-          (t/log! :info addr)
+          ;; (t/log! :info addr)
           ;; debug
           ;; (when (str/starts-with? addr "0:0")
           ;;   (throw (Exception. addr)))
@@ -183,9 +183,9 @@
           (when (str/starts-with? addr "150.69.77")
             (throw (Exception. (str "when;" addr))))
           (typing-ex req))
-        (catch Exception msg (t/log! :info msg)
-               [::response/ok
-                "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
+        (catch Exception _ ;; (t/log! :info msg)
+          [::response/ok
+           "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
