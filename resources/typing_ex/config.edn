@@ -96,4 +96,4 @@
 
  :duct.module/logging {}
  :duct.module.web/site {}
- :duct.module/sql {:database-url "jdbc:postgresql://localhost/typing_ex?user=postgres&password=password"}}
+ :duct.module/sql {:database-url "jdbc:postgresql://db/typing_ex?user=postgres&password=password"}}

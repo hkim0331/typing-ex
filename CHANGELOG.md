@@ -23,6 +23,10 @@
 - exam 記録に時刻。時刻よりも日付。
 - remove example
 
+## v3.32-SNAPSHOT
+
+- changed application port 3000, docker forwards it to 3003.
+
 ## v3.31.1065 / 2025-03-11
 
 - lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。

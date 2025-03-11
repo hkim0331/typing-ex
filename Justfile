@@ -9,15 +9,17 @@ repl:
 
 uberjar:
     docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 lein uberjar
+
+bash:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 bash
 
 # need improve
 run:
     docker compose up -d
     docker exec -it typing-ex-typing-ex-1 sh run.sh
 
-echo:
-    @echo hello world ${DATABASE_URL}
-
-stop:
+down:
     # must stop shadow-cljs
     docker compose down
