@@ -3,8 +3,8 @@ Description=typing exercise for hkimura literacy classes
 
 [Service]
 WorkingDirectory=/home/ubuntu/typing-ex
-ExecStart=/bin/sh start.sh
-ExecStop=/bin/sh stop.sh
+ExecStart=/bin/sh tp-start.sh
+ExecStop=/bin/sh tp-stop.sh
 TimeoutSec=300
 Type=simple
 User=ubuntu
