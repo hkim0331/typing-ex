@@ -22,13 +22,15 @@
 - 最後の1文字の正誤の表示が遅れる。
 - exam 記録に時刻。時刻よりも日付。
 - remove example
-- container の中で実行すると connection refused エラーになる。
-  (wcar* (car/set "a" "hello")) ;=> ConnectionException: Connection refused
-  (wcar* (car/get "a"))
 
-## v3.21-SNAPSHOT
+## v3.31.1065 / 2025-03-11
 
 - lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。
+- fixed: container の中で実行すると connection refused エラーになる。uri が間違っていた。
+
+```
+(def my-conn-spec {:uri "redis://redis:6379"})
+```
 
 ## v2.20.1050 / 2024-10-07
 
