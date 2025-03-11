@@ -16,7 +16,7 @@
    [typing-ex.boundary.results :as results]
    [typing-ex.view.page :as view]
    ;;
-   [taoensso.carmine :as car :refer [wcar]]
+   [taoensso.carmine :as car]
    [taoensso.telemere :as t]
    [clojure.edn :as edn]))
 
@@ -35,8 +35,10 @@
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
 (comment
+  (wcar* (car/set "a" "hello"))
   ; container の中で実行すると connection refused エラーになる。
-  (wcar* (car/set "a" "hello")) ;=> ConnectionException: Connection refused
+  (wcar* (car/set "a" "hello"))
+  ;=> ConnectionException: Connection refused
   (wcar* (car/get "a"))
   :rcf)
 
