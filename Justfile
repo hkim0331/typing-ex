@@ -7,9 +7,12 @@ repl:
     docker compose up -d
     docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
 
+#uberjar:
+#    docker compose up -d
+#    docker exec -it typing-ex-typing-ex-1 lein uberjar
+
 uberjar:
-    docker compose up -d
-    docker exec -it typing-ex-typing-ex-1 lein uberjar
+    lein uberjar
 
 bash:
     docker compose up -d
@@ -23,3 +26,4 @@ run:
 down:
     # must stop shadow-cljs
     docker compose down
+
