@@ -1,0 +1,15 @@
+[Unit]
+Description=typing exercise for hkimura literacy classes
+
+[Service]
+WorkingDirectory=/home/ubuntu/typing-ex
+ExecStart=/bin/sh start.sh
+ExecStop=/bin/sh stop.sh
+TimeoutSec=300
+Type=simple
+User=ubuntu
+StandardOutput=append:/home/ubuntu/typing-ex/log/typing-ex.log
+StandardError=append:/home/ubuntu/typing-ex/log/typing-ex.log
+
+[Install]
+WantedBy=multi-user.target

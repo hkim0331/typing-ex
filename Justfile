@@ -30,3 +30,15 @@ down:
     # must stop shadow-cljs
     docker compose down
 
+# SERV := app.melt
+SERV := app.melt.kyutech.ac.jp
+DEST := ubuntu@{{SERV}}:typing-ex
+
+prep:
+    scp systemd/typing-ex.service {{DEST}}/
+    scp systemd/typing-ex_roll-call.* {{DEST}}/
+
+deploy: uberjar
+    scp target/typing-ex-*-standalone.jar {{DEST}}/tp.jar
+    ssh {{SERV}} sudo systemctl restart typing-ex
+    ssh {{SERV}} systemctl status typing-ex
