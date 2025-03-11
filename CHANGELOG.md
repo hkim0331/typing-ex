@@ -1,32 +1,43 @@
 # typing-ex
 
 ## Requires
+
 * Clojure/ClojureScript
 * duct
 * shadow-cljs
-* yarn
 * postgresql
 * redis
-* (docker, docker-compose)
+
 
 ## Unreleased
-- セッション終わりに間違った単語を表示。
+
+- セッション終わりに間違った単語を一覧表示。
 - 日本語例文。
 - 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
 - @app-state を廃止したい。
-- drills 一括ダウンロード。
 - n 回で強制的にやめさす。
 - テストモード、3回の平均で ⭕️ ❌ をつける。
-- 「授業中は練習なしよ」モード
-  -> 授業中の空き時間にタイプしている人もいる。
+- 「授業中は練習なしよ」モード -> 授業中の空き時間にタイプしている人もいる。
 - スコアが二度提出されることがある。
-- good/bad last word
+- 最後の1文字の正誤の表示が遅れる。
 - exam 記録に時刻。時刻よりも日付。
-- プロダクションでは (js.console/log) を出さないの？
-- WARNING が取れない。
+- remove example
+
+## v3.31.1065 / 2025-03-11
+
+- lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。
+- fixed: container の中で実行すると connection refused エラーになる。uri が間違っていた。
+
 ```
-; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
+(def my-conn-spec {:uri "redis://redis:6379"})
 ```
+
+## v2.20.1050 / 2024-10-07
+
+- required? [com.taoensso/encore "3.121.0"]
+- dev/resources/dev/deps.edn: jetty port 3003
+- [com.taoensso/telemere "1.0.0-beta25"]
+- [dev.weavejester/medley "1.8.1"]
 
 ## v2.19.1038 / 2024-09-30
 

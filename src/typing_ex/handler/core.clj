@@ -14,25 +14,37 @@
    [typing-ex.boundary.roll-calls :as roll-calls]
    [typing-ex.boundary.restarts :as restarts]
    [typing-ex.boundary.results :as results]
-   ;; [typing-ex.boundary.stat :as stat]
    [typing-ex.view.page :as view]
    ;;
-   [taoensso.carmine :as car :refer [wcar]]
+   [taoensso.carmine :as car]
+   [taoensso.telemere :as t]
    [clojure.edn :as edn]))
 
 ;; (add-tap prn)
 ;; (remove-tap prn)
 
-(defonce my-conn-pool (car/connection-pool {}))
-(def     my-conn-spec {:uri "redis://db:6379"})
-(def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
+(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
+(comment
+  (:body (hc/get (str l22 "hkimura")))
+  :rcf)
+
+(defonce my-conn-pool (car/connection-pool {}))
+(def     my-conn-spec {:uri "redis://redis:6379"})
+(def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
-(def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
+(comment
+  (wcar* (car/set "a" "hello"))
+  ; container の中で実行すると connection refused エラーになる。
+  (wcar* (car/set "a" "hello"))
+  ;=> ConnectionException: Connection refused
+  (wcar* (car/get "a"))
+  :rcf)
+
 (def ^:private redis-expire 3600)
 
-(def typing-start (or (env :tp-start) "2024-04-01"))
+(def typing-start (or (env :tp-start) "2025-01-01"))
 
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -123,9 +135,8 @@
    (get req :remote-addr)))
 
 (defn- roll-call-time? []
-  (->  (wcar * (car/get "stat"))
+  (->  (wcar* (car/get "stat"))
        (= "roll-call")))
-
 
 (defn typing-ex [req]
   [::response/ok
@@ -154,29 +165,27 @@
     </body>
   </html>")])
 
-(comment
-  (roll-call-time?)
-  :rcf)
-
 (defmethod ig/init-key :typing-ex.handler.core/typing [_ _]
   (fn [req]
     (if (roll-call-time?)
       (try
         (let [addr (str (remote-ip req))]
-          (println "addr" addr)
-          (when-not (str/starts-with? addr "150.69")
-            (throw (Exception.)))
-          (when (str/starts-with? addr "150.69.77")
-            (throw (Exception.)))
+          (t/log! :info addr)
           ;; debug
-          (when (str/starts-with? addr "0:0")
-            (throw (Exception.)))
-          (when (str/starts-with? addr "150.69.90.34")
-            (throw (Exception.))))
-        (typing-ex req)
-        (catch Exception _
-          (println "exception occurred")
-          [::response/ok "授業時間の最初、背景黄色の時、ログインできるのは教室内の WiFi からのみです。VPN 不可。"]))
+          ;; (when (str/starts-with? addr "0:0")
+          ;;   (throw (Exception. addr)))
+          ;; (when (str/starts-with? addr "150.69.90.34")
+          ;;   (throw (Exception. addr)))
+          (when-not (or
+                     (str/starts-with? addr "0:0") ; debug
+                     (str/starts-with? addr "150.69"))
+            (throw (Exception. (str "when-not:" addr))))
+          (when (str/starts-with? addr "150.69.77")
+            (throw (Exception. (str "when;" addr))))
+          (typing-ex req))
+        (catch Exception msg (t/log! :info msg)
+               [::response/ok
+                "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]

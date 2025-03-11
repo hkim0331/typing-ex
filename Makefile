@@ -1,9 +1,5 @@
 SERV=app.melt
 DEST=${SERV}:typing-ex/tp.jar
-TAG=hkim0331/typing-ex:0.4.0
-
-build:
-	docker build --pull -t ${TAG} .
 
 clean:
 	${RM} -r target
@@ -18,8 +14,15 @@ deploy: uberjar
 	ssh ${SERV} sudo systemctl restart typing-ex && \
 	ssh ${SERV} systemctl status typing-ex
 
-# amd/arm　multi　binaries
-# need amd?
+# -------------
+# docker
+
+TAG=hkim0331/typing-ex:0.4.0
+
+build:
+	docker build --pull -t ${TAG} .
+
+
 docker-hub: security clean manifest
 
 security:
