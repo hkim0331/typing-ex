@@ -10,18 +10,17 @@ ClojureScript でフロントを書く練習。
 
 ## develop
 
-check postgres alive,
+use docker container.
 
-    $ npm install
-    $ npx shadow-cljs watch app
-    $ lein repl
-    user> (dev)
-    user> (go)
+    npm install
+    npx shadow-cljs watch app
+    docker-compose up -d
+    docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
+    > (dev)
+    > (go)
+    $ subl .
+    $ open http://localhost:3003
 
-    $ open http://localhost:3000
-
-
-or from VScode, choose  REPL -> Leiningen after `npx shadow-cljs watch app`.
 
 ## deploy
 
@@ -36,7 +35,7 @@ or from VScode, choose  REPL -> Leiningen after `npx shadow-cljs watch app`.
 
 ## License
 
-Copyright © 2021-2024 hkimura
+Copyright © 2021-2025 hkimura
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
