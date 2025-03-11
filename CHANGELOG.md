@@ -21,8 +21,13 @@
 - スコアが二度提出されることがある。
 - 最後の1文字の正誤の表示が遅れる。
 - exam 記録に時刻。時刻よりも日付。
-- container
 - remove example
+- container の中で実行すると connection refused エラーになる。
+  (wcar* (car/set "a" "hello")) ;=> ConnectionException: Connection refused
+  (wcar* (car/get "a"))
+
+## v3.21-SNAPSHOT
+
 - lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。
 
 ## v2.20.1050 / 2024-10-07

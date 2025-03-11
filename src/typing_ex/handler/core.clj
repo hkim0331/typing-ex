@@ -35,7 +35,9 @@
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
 (comment
+  ; container の中で実行すると connection refused エラーになる。
   (wcar* (car/set "a" "hello")) ;=> ConnectionException: Connection refused
+  (wcar* (car/get "a"))
   :rcf)
 
 (def ^:private redis-expire 3600)
