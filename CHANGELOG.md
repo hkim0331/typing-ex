@@ -23,9 +23,12 @@
 - exam 記録に時刻。時刻よりも日付。
 - remove example
 
+
 ## 4.31.0-SNAPSHOT
 
-- npm
+- 2025 started
+- npm install
+- [com.taoensso/encore "3.142.0"]
 - clj -Tantq outdated :upgrade true
 
 | :file           | :name                               | :current | :latest |
