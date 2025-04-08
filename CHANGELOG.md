@@ -24,11 +24,12 @@
 - remove example
 
 
-## 4.31.0-SNAPSHOT
+## 4.31.0 (2025-04-08)
 
 - 2025 started
 - npm install
 - [com.taoensso/encore "3.142.0"]
+- /etc/hosts redis server definition.
 - clj -Tantq outdated :upgrade true
 
 | :file           | :name                               | :current | :latest |
