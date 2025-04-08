@@ -29,6 +29,7 @@
 - 2025 started
 - npm install
 - [com.taoensso/encore "3.142.0"]
+- /etc/hosts redis server definition.
 - clj -Tantq outdated :upgrade true
 
 | :file           | :name                               | :current | :latest |
