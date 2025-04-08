@@ -24,7 +24,7 @@
 - remove example
 
 
-## 4.31.0-SNAPSHOT
+## 4.31.0 (2025-04-08)
 
 - 2025 started
 - npm install
