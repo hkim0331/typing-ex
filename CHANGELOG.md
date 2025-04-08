@@ -23,6 +23,21 @@
 - exam 記録に時刻。時刻よりも日付。
 - remove example
 
+
+## 4.31.0 (2025-04-08)
+
+- 2025 started
+- npm install
+- [com.taoensso/encore "3.142.0"]
+- /etc/hosts redis server definition.
+- clj -Tantq outdated :upgrade true
+
+| :file           | :name                               | :current | :latest |
+|---------------- | ----------------------------------- | -------- | --------|
+| project.clj     | clojure.java-time/clojure.java-time | 1.4.2    | 1.4.3   |
+|                 | fipp/fipp                           | 0.6.26   | 0.6.27  |
+| shadow-cljs.edn | reagent                             | 1.2.0    | 1.3.0   |
+
 ## v3.31.1065 / 2025-03-11
 
 - lein repl :start :host 0.0.0.0 :port 6666 でスタートできる。
