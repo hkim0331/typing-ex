@@ -5,7 +5,7 @@
   :dependencies [[buddy/buddy-auth "3.0.323"]
                  [buddy/buddy-hashers "2.0.167"]
                  [cheshire/cheshire "5.13.0"]
-                 [clojure.java-time/clojure.java-time "1.4.2"]
+                 [clojure.java-time/clojure.java-time "1.4.3"]
                  [com.github.seancorfield/next.jdbc "1.3.1002"] ; 1002
                  [dev.weavejester/medley "1.8.1"]
                  [duct/core "0.8.1"]
@@ -17,8 +17,8 @@
                  [hato "1.0.0"]
                  [hiccup "1.0.5"]
                  [com.taoensso/carmine "3.4.1"]
-                 ;; [com.taoensso/encore "3.121.0"]
-                 ;; [com.taoensso/telemere "1.0.0-beta25"]
+                 [com.taoensso/encore "3.142.0"]
+                 [com.taoensso/telemere "1.0.0-RC5"]
                  [org.clojure/clojure "1.12.0"]
                  [org.postgresql/postgresql "42.7.5"];; 42.7.4
                  ]
@@ -38,5 +38,5 @@
                   :dependencies   [[integrant/repl "0.4.0"]
                                    [hawk "0.2.11"]
                                    [eftest "0.6.0"]
-                                   [fipp "0.6.26"]
+                                   [fipp "0.6.27"]
                                    [kerodon "0.9.1"]]}})
