@@ -17,7 +17,7 @@
 * umask 077 はオープンソースにそぐわない。
 * cheshire 6.0.0.
 
-## v4.32.2-SNAPSHOT / 2025-04-17
+## v4.32.2 / 2025-04-18
 
 * added .env
 * added LICENSE
