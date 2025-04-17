@@ -25,26 +25,14 @@
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
-(comment
-  (:body (hc/get (str l22 "hkimura")))
-  :rcf)
-
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://redis:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
-(comment
-  (wcar* (car/set "a" "hello"))
-  ; container の中で実行すると connection refused エラーになる。
-  (wcar* (car/set "a" "hello"))
-  ;=> ConnectionException: Connection refused
-  (wcar* (car/get "a"))
-  :rcf)
-
 (def ^:private redis-expire 3600)
 
-(def typing-start (or (env :tp-start) "2025-01-01"))
+(def typing-start (or (env :tp-start) "2025-04-09"))
 
 (defn admin? [s]
   (let [admins #{"hkimura"}]

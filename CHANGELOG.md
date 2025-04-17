@@ -1,39 +1,37 @@
 # typing-ex
 
-## Requires
-
-* Clojure/ClojureScript
-* duct
-* shadow-cljs
-* postgresql
-* redis
-
-
 ## Unreleased
 
-- セッション終わりに間違った単語を一覧表示。
-- 日本語例文。
-- 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
-- @app-state を廃止したい。
-- n 回で強制的にやめさす。
-- テストモード、3回の平均で ⭕️ ❌ をつける。
-- 「授業中は練習なしよ」モード -> 授業中の空き時間にタイプしている人もいる。
-- スコアが二度提出されることがある。
-- 最後の1文字の正誤の表示が遅れる。
-- exam 記録に時刻。時刻よりも日付。
-- remove example
+* セッション終わりに間違った単語を一覧表示。
+* 日本語例文。
+* 頑張ってる人、頑張ってない人にコメントを出せる。redis? pub/sub?
+* @app-state を廃止したい。
+* n 回で強制的にやめさす。
+* テストモード、3回の平均で ⭕️ ❌ をつける。
+* 「授業中は練習なしよ」モード -> 授業中の空き時間にタイプしている人もいる。
+* スコアが二度提出されることがある。
+* 最後の1文字の正誤の表示が遅れる。
+* exam 記録に時刻。時刻よりも日付。
+* remove example
 
-## v4.31.1 / 2025-04-08
 
-- v でバージョン番号を書いたプロジェクトは v を続けないとどれが新しいのかわからないぞ。
+## v4.32.2-SNAPSHOT
 
-## 4.31.0 (2025-04-08)
+* added .env
+* added LICENSE
+* core.clj: (def typing-start (or (env :tp-start) "2025-04-09"))
 
-- 2025 started
-- npm install
-- [com.taoensso/encore "3.142.0"]
-- /etc/hosts redis server definition.
-- clj -Tantq outdated :upgrade true
+## v4.31.1 (2025-04-08)
+
+* v でバージョン番号を書いたプロジェクトは v を続けないとどれが新しいのかわからないぞ。
+
+## v4.31.0 (2025-04-08)
+
+* 2025 started
+* npm install
+* [com.taoensso/encore "3.142.0"]
+* /etc/hosts redis server definition.
+* clj -Tantq outdated :upgrade true
 
 | :file           | :name                               | :current | :latest |
 |---------------- | ----------------------------------- | -------- | --------|

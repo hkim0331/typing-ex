@@ -1,14 +1,16 @@
 # typing-ex
 
-情報リテラシー 2022 授業用タイプ練習アプリ。
+情報リテラシー授業用タイプ練習アプリ。
 
 Duct(ataraxy, postgres, buddy-auth) でバックエンドを書き、
 ClojureScript でフロントを書く練習。
 
-    % lein new duct typing-ex +site +ataraxy +postgres
-    % lein new shadow-cljs typing-ex :force +reagent
+started by:
 
-## develop
+    lein new duct typing-ex +site +ataraxy +postgres
+    lein new shadow-cljs typing-ex :force +reagent
+
+## Develop
 
 use docker container.
 
@@ -18,19 +20,25 @@ use docker container.
     docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
     > (dev)
     > (go)
-    $ subl .
-    $ open http://localhost:3003
+    open http://localhost:3000
 
+## Requirements
 
-## deploy
+* Clojure/ClojureScript
+* duct
+* shadow-cljs
+* postgresql
+* redis
 
-    $ make deploy
+## Deploy
 
-## require
+    just deploy
 
-* postgresql 14
-* redis 6
-* jre >= 11
+## requires
+
+* postgresql
+* redis
+* jre
 
 
 ## License

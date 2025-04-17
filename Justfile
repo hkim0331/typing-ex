@@ -1,7 +1,9 @@
 set dotenv-load
 
+prep:
+  npm install
+
 watch:
-  # npm install
   npx shadow-cljs watch app
 
 repl:
@@ -9,6 +11,16 @@ repl:
 
 uberjar:
     lein uberjar
+
+systemd:
+    scp systemd/typing-ex.service ${DEST}/
+    scp systemd/typing-ex_roll-call.* ${DEST}/
+
+deploy: uberjar
+    scp target/typing-ex-*-standalone.jar ${DEST}/tp.jar
+    ssh ${SERV} sudo systemctl restart typing-ex
+    ssh ${SERV} sudo systemctl restart typing-ex_roll-call.timer
+    ssh ${SERV} systemctl status typing-ex
 
 docker-repl:
     docker compose up -d
@@ -30,16 +42,3 @@ docker-run:
 down:
     # must stop shadow-cljs
     docker compose down
-
-# SERV := app.melt
-SERV := app.melt.kyutech.ac.jp
-DEST := ubuntu@{{SERV}}:typing-ex
-
-prep:
-    scp systemd/typing-ex.service {{DEST}}/
-    scp systemd/typing-ex_roll-call.* {{DEST}}/
-
-deploy: uberjar
-    scp target/typing-ex-*-standalone.jar {{DEST}}/tp.jar
-    ssh {{SERV}} sudo systemctl restart typing-ex
-    ssh {{SERV}} systemctl status typing-ex
