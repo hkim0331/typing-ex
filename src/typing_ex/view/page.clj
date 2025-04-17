@@ -11,7 +11,7 @@
    [typing-ex.plot :refer [scatter]]
    #_[clojure.test :as t]))
 
-(def ^:private version "v4.31.1")
+(def ^:private version "v4.32.2-SNAPSHOT")
 
 ;--------------------------------
 (defn- ss
