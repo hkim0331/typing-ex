@@ -12,12 +12,12 @@ pom.xml.asc
 /profiles.clj
 /dev/resources/local.edn
 /dev/src/local.clj
+/.env
 
 ## clojure
 !/initdb.d/*.sql
 /.calva
 /.clj-kondo/.cache
-/.env
 /.lsp/.cache
 /.m2
 /.shadow-cljs
@@ -36,7 +36,7 @@ pom.xml.asc
 !/db-dumps/*.sh
 !/resources/migrations/*.sql
 
-# not depend on global gitignore
+# do not depend on global gitignore
 .DS_Store
 
 start.sh

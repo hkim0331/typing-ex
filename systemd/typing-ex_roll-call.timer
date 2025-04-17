@@ -7,7 +7,7 @@ Description=typing_ex stat=roll-call on Calendar time
 # OnCalendar=Tue 10:25:00
 # OnCalendar=Thu 8:45:00
 # OnCalendar=Thu 10:25:00
-# 2025
+# 2025, first semester.
 OnCalendar=Wed 8:45:00
 
 [Install]

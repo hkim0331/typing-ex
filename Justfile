@@ -1,28 +1,44 @@
+set dotenv-load
+
+prep:
+  npm install
+
 watch:
-  # npm install
   npx shadow-cljs watch app
 
-dev:
-  lein repl
+repl:
+    lein repl
 
-dev-container:
-  docker compose up -d
-  docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
+uberjar:
+    lein uberjar
 
-stop:
-  # must stop shadow-cljs
-  docker compose down
+systemd:
+    scp systemd/typing-ex.service ${DEST}/
+    scp systemd/typing-ex_roll-call.* ${DEST}/
 
-clean:
-  rm -r target
-
-uberjar: clean
-  npx shadow-cljs release app
-  lein uberjar
-
-SERV:='app.melt'
-DEST:='app.melt:typing-ex/tp.jar'
 deploy: uberjar
-  scp target/typing-ex-*-standalone.jar {{DEST}} && \
-  ssh {{SERV}} sudo systemctl restart typing-ex && \
-  ssh {{SERV}} systemctl status typing-ex
+    scp target/typing-ex-*-standalone.jar ${DEST}/tp.jar
+    ssh ${SERV} sudo systemctl restart typing-ex
+    ssh ${SERV} sudo systemctl restart typing-ex_roll-call.timer
+    ssh ${SERV} systemctl status typing-ex
+
+docker-repl:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 sh start-repl.sh
+
+docker-bash:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 bash
+
+docker-uberjar:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 lein uberjar
+    need improve
+
+docker-run:
+    docker compose up -d
+    docker exec -it typing-ex-typing-ex-1 sh run.sh
+
+down:
+    # must stop shadow-cljs
+    docker compose down

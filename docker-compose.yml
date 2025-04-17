@@ -13,7 +13,7 @@ services:
       - sleep
       - infinity
     ports:
-      - 3003:3003
+      - 8530:3000
       - 6666:6666
 
   db:
@@ -36,8 +36,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./db-dumps/redis:/data
-    ports:
-      - 6380:6379
+    # ports:
+    #   - 6380:6379
 
 volumes:
   # data:

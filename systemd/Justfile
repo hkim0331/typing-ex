@@ -1,0 +1,22 @@
+# this must exec on DEST, app.melt.kyutech.ac.jp.
+install:
+  sudo cp typing-ex.service /lib/systemd/system
+  sudo cp typing-ex_roll-call.service /lib/systemd/system
+  sudo cp typing-ex_roll-call.timer /lib/systemd/system  
+  sudo systemctl daemon-reload
+
+start:
+  sudo systemctl start typing-ex.service
+  sudo systemctl start typing-ex_roll-call.timer
+
+enable:
+  sudo systemctl enable typing-ex.service
+  sudo systemctl enable typing-ex_roll-call.timer
+
+stop:
+  sudo systemctl stop typing-ex.service
+  sudo systemctl stop typing-ex_roll-call.timer
+
+disable:
+  sudo systemctl disable typing-ex.service
+  sudo systemctl disable typing-ex_roll-call.timer

@@ -17,7 +17,7 @@
    [typing-ex.view.page :as view]
    ;;
    [taoensso.carmine :as car]
-   [taoensso.telemere :as t]
+   ;; [taoensso.telemere :as t]
    [clojure.edn :as edn]))
 
 ;; (add-tap prn)
@@ -25,26 +25,14 @@
 
 (def ^:private l22 "https://l22.melt.kyutech.ac.jp/api/user/")
 
-(comment
-  (:body (hc/get (str l22 "hkimura")))
-  :rcf)
-
 (defonce my-conn-pool (car/connection-pool {}))
 (def     my-conn-spec {:uri "redis://redis:6379"})
 (def     my-wcar-opts {:pool my-conn-pool, :spec my-conn-spec})
 (defmacro wcar* [& body] `(car/wcar my-wcar-opts ~@body))
 
-(comment
-  (wcar* (car/set "a" "hello"))
-  ; container の中で実行すると connection refused エラーになる。
-  (wcar* (car/set "a" "hello"))
-  ;=> ConnectionException: Connection refused
-  (wcar* (car/get "a"))
-  :rcf)
-
 (def ^:private redis-expire 3600)
 
-(def typing-start (or (env :tp-start) "2025-01-01"))
+(def typing-start (or (env :tp-start) "2025-04-09"))
 
 (defn admin? [s]
   (let [admins #{"hkimura"}]
@@ -170,7 +158,7 @@
     (if (roll-call-time?)
       (try
         (let [addr (str (remote-ip req))]
-          (t/log! :info addr)
+          ;; (t/log! :info addr)
           ;; debug
           ;; (when (str/starts-with? addr "0:0")
           ;;   (throw (Exception. addr)))
@@ -183,9 +171,9 @@
           (when (str/starts-with? addr "150.69.77")
             (throw (Exception. (str "when;" addr))))
           (typing-ex req))
-        (catch Exception msg (t/log! :info msg)
-               [::response/ok
-                "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
+        (catch Exception _ ;; (t/log! :info msg)
+          [::response/ok
+           "背景が黄色の時、ログインできるのは教室内の WiFi です。VPN 不可。"]))
       (typing-ex req))))
 
 (defmethod ig/init-key :typing-ex.handler.core/total [_ {:keys [db]}]
